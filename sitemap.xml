@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-<url> <loc>https://gatsby-casper.netlify.com/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://gatsby-casper.netlify.com/serialization-marshalling/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://gatsby-casper.netlify.com/reflection/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://gatsby-casper.netlify.com/JVM-GC/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://gatsby-casper.netlify.com/AOP/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://gatsby-casper.netlify.com/tags/직렬화/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://gatsby-casper.netlify.com/tags/스트림/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://gatsby-casper.netlify.com/tags/마샬링/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://gatsby-casper.netlify.com/tags/reflection/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://gatsby-casper.netlify.com/tags/java/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://gatsby-casper.netlify.com/tags/jvm/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://gatsby-casper.netlify.com/tags/garbage-collector/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://gatsby-casper.netlify.com/tags/aop/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://gatsby-casper.netlify.com/tags/spring/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://gatsby-casper.netlify.com/author/ghost/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://gatsby-casper.netlify.com/author/another-author/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://gatsby-casper.netlify.com/author/thxwelchs/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://gatsby-casper.netlify.com/about/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/serialization-marshalling/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/reflection/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/JVM-GC/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/AOP/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/tags/직렬화/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/tags/스트림/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/tags/마샬링/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/tags/reflection/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/tags/java/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/tags/jvm/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/tags/garbage-collector/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/tags/aop/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/tags/spring/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/author/ghost/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/author/another-author/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/author/thxwelchs/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/about/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 </urlset>
