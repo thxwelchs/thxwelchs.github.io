@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[GDD blog]]></title><description><![CDATA[오늘도 열심히 GDD(Google Driven Development)]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Sun, 19 Jan 2020 04:18:05 GMT</lastBuildDate><item><title><![CDATA[AOP 관점지향프로그래밍]]></title><description><![CDATA[AOP…]]></description><link>https://thxwelchs.github.io/AOP/</link><guid isPermaLink="false">https://thxwelchs.github.io/AOP/</guid><pubDate>Fri, 22 Nov 2019 19:11:55 GMT</pubDate><content:encoded>&lt;h1&gt;AOP&lt;/h1&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[GDD blog]]></title><description><![CDATA[오늘도 열심히 GDD(Google Driven Development)]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Mon, 20 Jan 2020 13:58:09 GMT</lastBuildDate><item><title><![CDATA[AOP 관점지향프로그래밍]]></title><description><![CDATA[AOP…]]></description><link>https://thxwelchs.github.io/AOP/</link><guid isPermaLink="false">https://thxwelchs.github.io/AOP/</guid><pubDate>Fri, 22 Nov 2019 19:11:55 GMT</pubDate><content:encoded>&lt;h1&gt;AOP&lt;/h1&gt;
 &lt;p&gt;직역하면 &lt;strong&gt;관점지향프로그래밍&lt;/strong&gt; 인데, 한국말로 들으면 전혀 와닿지 않습니다.&lt;/p&gt;
 &lt;p&gt;좀 더 이해가 가기 쉬운 의미로 해석해보자면, &lt;strong&gt;애플리케이션 전체에 걸쳐 사용되는 기능을 재사용하도록 지원하는 것&lt;/strong&gt;입니다.&lt;/p&gt;
 &lt;p&gt;실무에서는 흔히 공통적인 흐름의 코드를 적용시켜 줄 때 주로 사용합니다.&lt;/p&gt;
@@ -273,7 +273,56 @@ Parallel GC와 같이 멀티쓰레드로 처리되는 GC이며 대신 Minor GC�
 &lt;p&gt;현재 내 jdk default gc 살펴보기&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ java -XX:+PrintCommandLineFlags -version&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;현재 내 jdk default gc 변경하기&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ java -XX:+UseG1GC -XX:+PrintCommandLineFlags -version&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item><item><title><![CDATA[Welcome to Ghost]]></title><description><![CDATA[👋 Welcome, it’s great to have you here. We know that first impressions are important, so we’ve populated your new site with some initial…]]></description><link>https://thxwelchs.github.io/welcome/</link><guid isPermaLink="false">https://thxwelchs.github.io/welcome/</guid><pubDate>Sun, 06 May 2018 23:46:37 GMT</pubDate><content:encoded>&lt;p&gt;👋 Welcome, it’s great to have you here.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ java -XX:+UseG1GC -XX:+PrintCommandLineFlags -version&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item><item><title><![CDATA[JPA Locking]]></title><description><![CDATA[낙관적 락 충돌이 발생하지 않을 거라고 낙관적으로 가정하는 방법 데이터베이스 레벨이 아닌 JPA레벨에서 버전 관리 기능을 통해 구현되어있음 테이블에 version…]]></description><link>https://thxwelchs.github.io/JPA-locking/</link><guid isPermaLink="false">https://thxwelchs.github.io/JPA-locking/</guid><pubDate>Wed, 22 Aug 2018 19:11:55 GMT</pubDate><content:encoded>&lt;h2&gt;낙관적 락&lt;/h2&gt;
+&lt;p&gt;&lt;em&gt;충돌이 발생하지 않을 거라고 낙관적으로 가정하는 방법&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;데이터베이스 레벨이 아닌 JPA레벨에서 버전 관리 기능을 통해 구현되어있음&lt;/p&gt;
+&lt;p&gt;테이블에 version 관리를 할 컬럼을 지정해놓고&lt;/p&gt;
+&lt;p&gt;읽었을 때의 버전과, 변경 할 때의 버전이 같지 않으면 예외(OptimisticLockException)를 발생시켜서 다른 트랜잭션에서의 데이터 접근을 막습니다.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;낙관적 락 종류&lt;/em&gt; 에는 네가지 타입이 있습니다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;NONE: 낙관적 잠금을 사용하지 않음.&lt;/li&gt;
+&lt;li&gt;VERSION: &lt;code class=&quot;language-text&quot;&gt;@Version&lt;/code&gt; 어노테이션이 붙어있는 컬럼을 조건으로 낙관적 락을 시행 ( 이 컬럼을 기준으로 락 버전을 관리함&lt;/li&gt;
+&lt;li&gt;DIRTY: 변경된 필드에 의해서 낙관적 락 사용&lt;/li&gt;
+&lt;li&gt;ALL: 모든 필드를 충돌감지의 조건으로 사용&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;DIRTY나 ALL  타입으로 낙관적 락을 사용할 경우, 버전 컬럼이 없어도 락을 걸 수 있는데, ALL타입은 전체 컬럼의 값 비교로 락을 컨트롤 합니다. 이 때 주의해야 할 점은 @DynamicUpdate 어노테이션을 달아주는 것이 좋습니다.&lt;/p&gt;
+&lt;p&gt;왜냐하면 하이버네이트는 업데이트 할 엔티티의 상태가 변화할 때, save 메소드를 호출하지 않아도 값이 기존 값과 비교하여 변경됐을 때 값이 어느정도로 변화했는지 체크해서 변경 쿼리를 날립니다. 이 때 상태 변경 감지 하는 걸 Dirty Checking 이라고 하는데, Dirty한 상황이 일어났을 때 하이버네이트는 전체 컬럼에 대한 값 변경을 시도합니다. 이럴 때 진짜 변화가 일어난 컬럼만 업데이트에 반영되도록  @DynamicUpdate 어노테이션을 달아주는 것이 좋다고 합니다.&lt;/p&gt;
+&lt;h2&gt;비관적 락&lt;/h2&gt;
+&lt;p&gt;&lt;em&gt;충돌이 발생할 것이라고 우선적으로 가정하고 락을 거는 방법&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;데이터베이스 레벨에서의 락 기능을 사용하는데, 대표적인 레코드락을 사용&lt;/p&gt;
+&lt;p&gt;FOR UPDATE(exclusive), LOCK IN SHARE MODE(shared mode) 을 거는 방법&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;-- innoDB 테이블에 대해 걸 수 있는 레코드 락은 반드시 auto-commit이 비활성화 상태 이거나, 
+-- 트랜잭션을 직접 제어하는 상태에서만 Lock을 컨트롤 할 수 있습니다.
+-- 현재 AutoCommit 값 확인 ( 1 = O, 0 = X )
+SELECT @@AUTOCOMMIT;
+
+-- AutoCommit 해제
+SET AUTOCOMMIT = 0;
+
+BEGIN;
+
+-- shared mode
+SELECT 
+t.*
+FROM test_table t
+WHERE t.id = 10
+ FOR UPDATE;
+-- LOCK IN SHARE MODE;
+
+
+/**
+실제로 다른 세션에서 해당 t.id = 10인 레코드에 접근하려는 READ(FOR UPDATE), WRITE SQL을 실행했을 때, 
+해당 레코드가 LOCK 이 걸려 있으므로 대기상태로 빠짐 (COMMIT 하기 전 까지)
+*/
+COMMIT;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;shared mode = 내가 락을 건 이상 다른 세션에서 UPDATE나 DELETE는 못하게 하는 것&lt;/p&gt;
+&lt;p&gt;exclusive mode = 내가 락을 걸면 다른 트랜잭션에서는 읽기 쓰기도 못하게 하는 것 ( 읽기를 못한다는 것은, 단순 SELECT 문은 허용되나, exclusive mode를 하려고 하는 읽기에 대한 부분만 해당됩니다, 인덱스가 exclusive lock이 걸려 있다면, 대기상태로 돌려짐)&lt;/p&gt;
+&lt;p&gt;참고&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://effectivesquid.tistory.com/category/Server/JPA&quot;&gt;https://effectivesquid.tistory.com/category/Server/JPA&lt;/a&gt;&lt;br&gt;
+&lt;a href=&quot;https://lng1982.tistory.com/289&quot;&gt;https://lng1982.tistory.com/289&lt;/a&gt;&lt;br&gt;
+&lt;a href=&quot;https://jojoldu.tistory.com/415&quot;&gt;https://jojoldu.tistory.com/415&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</content:encoded></item><item><title><![CDATA[Welcome to Ghost]]></title><description><![CDATA[👋 Welcome, it’s great to have you here. We know that first impressions are important, so we’ve populated your new site with some initial…]]></description><link>https://thxwelchs.github.io/welcome/</link><guid isPermaLink="false">https://thxwelchs.github.io/welcome/</guid><pubDate>Sun, 06 May 2018 23:46:37 GMT</pubDate><content:encoded>&lt;p&gt;👋 Welcome, it’s great to have you here.&lt;/p&gt;
 &lt;p&gt;We know that first impressions are important, so we’ve populated your new site with some initial &lt;strong&gt;getting started&lt;/strong&gt; posts that will help you get familiar with everything in no time. This is the first one!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;A few things you should know upfront&lt;/strong&gt;:&lt;/p&gt;
 &lt;ol&gt;

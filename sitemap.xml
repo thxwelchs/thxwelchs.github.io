@@ -4,6 +4,7 @@
 <url> <loc>https://thxwelchs.github.io/serialization-marshalling/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/reflection/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/JVM-GC/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/JPA-locking/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/AOP/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/직렬화/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/스트림/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -12,6 +13,8 @@
 <url> <loc>https://thxwelchs.github.io/tags/java/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/jvm/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/garbage-collector/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/tags/jpa/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/tags/lock/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/aop/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/spring/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/author/ghost/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
