@@ -1,4 +1,161 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[GDD blog]]></title><description><![CDATA[오늘도 열심히 GDD(Google Driven Development)]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Mon, 20 Jan 2020 13:58:09 GMT</lastBuildDate><item><title><![CDATA[AOP 관점지향프로그래밍]]></title><description><![CDATA[AOP…]]></description><link>https://thxwelchs.github.io/AOP/</link><guid isPermaLink="false">https://thxwelchs.github.io/AOP/</guid><pubDate>Fri, 22 Nov 2019 19:11:55 GMT</pubDate><content:encoded>&lt;h1&gt;AOP&lt;/h1&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[GDD blog]]></title><description><![CDATA[오늘도 열심히 GDD(Google Driven Development)]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Tue, 21 Jan 2020 15:17:23 GMT</lastBuildDate><item><title><![CDATA[SOLID 5원칙]]></title><description><![CDATA[에피소드 예전에 전 직장 동료 분들과 함께 하는 점심 식사 자리에서 데이터 모델링에 대한 심화 적인(?) 주제로 대화를 나누다가
+객체지향에 대한 주제로 번졌고, 그 중 동료분이 “SOLID 아시죠?” 라는 질문에 저는 “가수 SOLID…]]></description><link>https://thxwelchs.github.io/SOLID/</link><guid isPermaLink="false">https://thxwelchs.github.io/SOLID/</guid><pubDate>Tue, 21 Jan 2020 22:01:55 GMT</pubDate><content:encoded>&lt;p&gt;&lt;em&gt;에피소드&lt;/em&gt;&lt;br&gt;
+예전에 전 직장 동료 분들과 함께 하는 점심 식사 자리에서 데이터 모델링에 대한 심화 적인(?) 주제로 대화를 나누다가
+객체지향에 대한 주제로 번졌고,&lt;br&gt;
+그 중 동료분이 “SOLID 아시죠?” 라는 질문에 저는 “가수 SOLID요?” 라고 답을 하고 서로 폭소 했던 기억이 있습니다 ㅋㅋㅋ(실화입니다.) 전공 시간 중 객체지향이라는 과목에서 배우며 넘어갔던 기억이 살짝 스쳤는데 내가 SOLID도 모르고 객체지향 언어를 다루는게 정말 맞는걸까? 라는 생각도 들고 참 여러가지 생각이 많았습니다.&lt;/p&gt;
+&lt;p&gt;어쨌든 지금부터라도 클린 코드를 위해 다시 제대로 알고 가자 라는 의미에서 이 글을 적게 되었습니다. &lt;/p&gt;
+&lt;p&gt;먼저 &lt;em&gt;SOLID&lt;/em&gt;는 다섯개의 원칙인데, 각 원칙의 앞 글자를 모두 따서 S.O.L.I.D가 됩니다.  (정말 앞글자만 따서 SOLID가 된걸까요? 아시는 분 계시면 코멘트 부탁드립니다.)&lt;/p&gt;
+&lt;p&gt;어쨌든 SOLID는 이미 객체지향적 프로그래밍 방법론에 있어서는 거의 성경이라고 불릴 만한 어마어마한 원칙인데요 그럼에도 불구하고 다음과 같은 의문을 가질 수도 있습니다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;SOLID 5원칙을 지키면 훌륭한 객체 지향 디자인을 할 수 있을까요?&lt;/code&gt; 네, 적어도 안 지키는 것보단 나을거라고 생각합니다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;SOLID 5원칙을 지키면 어떤 게 좋은데요?&lt;/code&gt; 유연하고 확장성 있는 객체를 설계하여, 똑똑한 소프트웨어를 만들 수 있습니다. (흔히 말하는 후발 주자로 들어온 개발자가 똥을 치워야 하는 일이 줄어드는!?)&lt;/p&gt;
+&lt;h1&gt;SRP(Single responsibility principle) 단일 책임 원칙&lt;/h1&gt;
+&lt;p&gt;객체(Class) 는 단 &lt;em&gt;하나의 책임을 가진다.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;이는 클래스의 역할과 책임에 너무 많은 것을 부여하려고 하면 안된다 라고 해석해도 될 것 같습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; 계산 &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;int&lt;/span&gt; 사칙연산&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;int&lt;/span&gt; args&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;위 와 같이 계산 클래스가 있다고 가정해봅시다. 이 상태의 계산 클래스는 오직 사칙연산 기능만을 책임지고 있는 것을 볼 수 있습니다.&lt;/p&gt;
+&lt;p&gt;그런데 이 때 만약 이 프로그램이 대대적인 수정이 필요하게 되었다면? 계산 클래스가 수정 될 만한 사유는 사칙연산 메소드에 관련 된 문제 뿐이라고 개발자는 쉽게 판단할 수 있습니다. 이처럼 &lt;strong&gt;단일 책임 원칙&lt;/strong&gt;은 객체(Class)의 목적을 명확히 함으로써 구조가 난잡해지거나 수정사항이 불필요하게 넓게 퍼지는 것을 예방하고 기능을 명확히 분리할 수 있게 합니다.&lt;/p&gt;
+&lt;h1&gt;OCP(Open-Closed Principle) 개방-폐쇄 원칙&lt;/h1&gt;
+&lt;p&gt;&lt;em&gt;객체(Class)는 확장에 대해서는 개방적이고 수정에 대해서는 폐쇄적이어야 한다&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; 유닛 &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;// 공통필드...&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; 이름&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Integer&lt;/span&gt; 체력&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Double&lt;/span&gt; 속도&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; 이동&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;int&lt;/span&gt; x&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;int&lt;/span&gt; y&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;// ...&lt;/span&gt;
+
+    
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;위 와 같이 스타크래프트의 유닛을 객체로 디자인하고 있습니다.  이런저런 공통사항을 생각하며 메소드와 필드를 정의하고, 이 중에는 이동 메소드도 있습니다. 이동 메소드는 단순히 이동 위치를 매개변수로 받아, 유닛 속도에 따라서 대상 위치까지 이동시키는 메소드 입니다. 그런데 브루들링 같은 유닛은 이동시 그냥 이동되지 않고 기묘하게 움직이며 이동 해야 합니다. &lt;/p&gt;
+&lt;p&gt;이럴 때 유닛 클래스의 이동 메소드를 수정하는 것이 아니라, 서브클래스로서 브루들링 이라는 유닛을 상속받는 클래스를 생성한 후  브루들링만의 이동메소드를 재 정의 해주어야 합니다. &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; 브루들링 &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt; 유닛 &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; 이동&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;int&lt;/span&gt; x&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;int&lt;/span&gt; y&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token comment&quot;&gt;//...&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이렇게 하면 기존의 유닛 클래스의 이동 메소드는 수정할 필요 없고(수정 폐쇄), 브루들링 클래스의 이동 메소드를 재정의(확장성 개방) 하여 개방-폐쇄 원칙을 지킬 수 있습니다. &lt;/p&gt;
+&lt;h1&gt;LSP (Liskov Substitution Principle) 리스코프 치환 원칙&lt;/h1&gt;
+&lt;p&gt;&lt;em&gt;서브 클래스는 언제나 슈퍼클래스를 대체할 수 있다&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;is-a 관계가 망가지지 않아야 하는 구조를 말합니다.&lt;/p&gt;
+&lt;p&gt;is-a 관계란? 해석 되는대로 “~는 ~이다.” 가 성립이 되는 관계를 뜻 합니다. &lt;/p&gt;
+&lt;p&gt;예를 들어 위 OCP에서 브루들링은 유닛이다. 가 성립하고 있습니다. 이처럼 상속관계를 is-a 로 표현했을 때 어색하지 않을 것을 is-a 관계가 성립된다고 볼 수 있습니다.&lt;/p&gt;
+&lt;p&gt;또한 업캐스팅이 가능한 상속 관계여야 합니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;브루들링 b &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; 브루들링&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+유닛 u &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;유닛&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; b&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h1&gt;ISP (Interface Segregation Principle) 인터페이스 분리 원칙&lt;/h1&gt;
+&lt;p&gt;&lt;em&gt;클라이언트가 자신이 이용하지 않는 메서드에 의존하지 않아야 한다&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;얼핏 보면 OCP와 비슷하면서도 다른 원칙인데, 또 스타크래프트 도메인을 가지고 예를 들어보겠습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;interface&lt;/span&gt; 공격 &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    공중공격&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    지상공격&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; 저글링 &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt; 유닛 &lt;span class=&quot;token keyword&quot;&gt;implements&lt;/span&gt; 공격 &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Override&lt;/span&gt;
+    공중공격&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// 쓸모없음&lt;/span&gt;
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Override&lt;/span&gt;
+    지상공격&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; 발키리 &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt; 유닛 &lt;span class=&quot;token keyword&quot;&gt;implements&lt;/span&gt; 공격 &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Override&lt;/span&gt;
+    공중공격&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; 
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Override&lt;/span&gt;
+    지상공격&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// 쓸모없음&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;위와 같은 유닛이 공격할 수 있는 메소드를 가지고 있는 공격 인터페이스가 설계 되어 있다면 공격이 가능한 유닛은 위 인터페이스를 구현할 것입니다. 그런데 만약 저글링과 같은 지상 공격만 할 수 있거나, 발키리와 같이 공중공격만 하는 한가지의 공격만 할 수 있는 유닛 타입에서는 강제적으로 다른 타입의 공격메소드도 구현받아야 할 것입니다. 그렇다면 이 구조는 ISP가 지켜지지 않은 구조 이므로 인터페이스 설계를 다시 해야 합니다.  일반적인 방법으론 인터페이스 역할에 맞게 분리하는 방법이 있습니다.&lt;br&gt;
+그렇다고 너무 잘게 쪼개는 것은 비권장되는 방법이라고 합니다. (역할의 기준을 명확하게 나눌 수 있을때만 분리하는 것이 좋을 것 같습니다.)&lt;/p&gt;
+&lt;h1&gt;DIP (Dependency Inversion Principle) 의존성 역전 원칙&lt;/h1&gt;
+&lt;p&gt;&lt;em&gt;추상성이 높고 안정적인 고수준의 클래스는 구체적이고 불안정한 저수준의 클래스에 의존해서는 안된다&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;고수준: 의미있는 단일 기능&lt;/p&gt;
+&lt;p&gt;저수준: 고수준을 구현하기 위해 필요한 하위 기능들&lt;/p&gt;
+&lt;p&gt;위 말 자체로는 되게 추상적이고 바로 와닿지 않아서 제일 이해하기 힘든 부분이었는데, 타 블로그를 많이 서치해보면서 이해하게 되었습니다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“의존관계를 가지게 하려거든, 자주 변하는 대상 보다는 자주 변하지 않을 대상에게 가지게 하자”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;여기서 자주 변할 대상과 자주 변하지 않을 대상은 이렇게 구분할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;자주 변할 대상: 구체적인 방식, 사물&lt;/p&gt;
+&lt;p&gt;자주 변하지 않을 대상: 정책, 전략, 흐름 또는 개념같은 추상적인 것&lt;/p&gt;
+&lt;p&gt;“나는 김치찌개를 먹는다”, “나는 된장찌개를 먹는다” 등 먹는다 라는 사실 자체보다는 먹을 대상에 대한 부분이 변화를 일으킬 가능성이 높음&lt;/p&gt;
+&lt;p&gt;DIP를 만족시키는 설계를 하기 위해서는 인터페이스나 추상클래스는 자주 변하지 않을 대상으로  모델링 하는게 좋고,&lt;/p&gt;
+&lt;p&gt;구현체 클래스는 자주 변할 수 있는 대상을 타겟으로 잡는 것이 좋습니다.&lt;/p&gt;
+&lt;p&gt;DIP가 만족될 시 비로소 DI(의존성 주입)를 적극 활용하여 유연한 소프트웨어를 만들 수 있는 기반을 가지게 할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;DI는 객체 간에 의존성을 최대한 줄이고 외부에서 객체를 생성하여 주입 해줌으로써 변경이 잦은 소프트웨어라 하더라도 의존 관계를 무너뜨리지 않고 수정할 수 있게 합니다. (이미 우리는 DI를 활용하여 프로그래밍 하고 있습니다. &lt;code class=&quot;language-text&quot;&gt;@Autowired&lt;/code&gt; 필드 주입, 생성자 파라미터 주입 등)&lt;/p&gt;
+&lt;h3&gt;참고&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://namu.wiki/w/%EA%B0%9D%EC%B2%B4%20%EC%A7%80%ED%96%A5%20%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D/%EC%9B%90%EC%B9%99#rfn-1&quot;&gt;https://namu.wiki/w/객체 지향 프로그래밍/원칙#rfn-1&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</content:encoded></item><item><title><![CDATA[JPA Locking]]></title><description><![CDATA[낙관적 락 충돌이 발생하지 않을 거라고 낙관적으로 가정하는 방법 데이터베이스 레벨이 아닌 JPA레벨에서 버전 관리 기능을 통해 구현되어있음 테이블에 version…]]></description><link>https://thxwelchs.github.io/JPA-locking/</link><guid isPermaLink="false">https://thxwelchs.github.io/JPA-locking/</guid><pubDate>Mon, 20 Jan 2020 22:11:55 GMT</pubDate><content:encoded>&lt;h2&gt;낙관적 락&lt;/h2&gt;
+&lt;p&gt;&lt;em&gt;충돌이 발생하지 않을 거라고 낙관적으로 가정하는 방법&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;데이터베이스 레벨이 아닌 JPA레벨에서 버전 관리 기능을 통해 구현되어있음&lt;/p&gt;
+&lt;p&gt;테이블에 version 관리를 할 컬럼을 지정해놓고&lt;/p&gt;
+&lt;p&gt;읽었을 때의 버전과, 변경 할 때의 버전이 같지 않으면 예외(OptimisticLockException)를 발생시켜서 다른 트랜잭션에서의 데이터 접근을 막습니다.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;낙관적 락 종류&lt;/em&gt; 에는 네가지 타입이 있습니다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;NONE: 낙관적 잠금을 사용하지 않음.&lt;/li&gt;
+&lt;li&gt;VERSION: &lt;code class=&quot;language-text&quot;&gt;@Version&lt;/code&gt; 어노테이션이 붙어있는 컬럼을 조건으로 낙관적 락을 시행 ( 이 컬럼을 기준으로 락 버전을 관리함&lt;/li&gt;
+&lt;li&gt;DIRTY: 변경된 필드에 의해서 낙관적 락 사용&lt;/li&gt;
+&lt;li&gt;ALL: 모든 필드를 충돌감지의 조건으로 사용&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;DIRTY나 ALL  타입으로 낙관적 락을 사용할 경우, 버전 컬럼이 없어도 락을 걸 수 있는데, ALL타입은 전체 컬럼의 값 비교로 락을 컨트롤 합니다. 이 때 주의해야 할 점은 &lt;code class=&quot;language-text&quot;&gt;@DynamicUpdate&lt;/code&gt; 어노테이션을 달아주는 것이 좋습니다.&lt;/p&gt;
+&lt;p&gt;왜냐하면 하이버네이트는 업데이트 할 엔티티의 상태가 변화할 때, save 메소드를 호출하지 않아도 값이 기존 값과 비교하여 변경됐을 때 값이 어느정도로 변화했는지 체크해서 변경 쿼리를 날립니다. 이 때 상태 변경 감지 하는 걸 Dirty Checking 이라고 하는데, Dirty한 상황이 일어났을 때 하이버네이트는 전체 컬럼에 대한 값 변경을 시도합니다. 이럴 때 진짜 변화가 일어난 컬럼만 업데이트에 반영되도록  &lt;code class=&quot;language-text&quot;&gt;@DynamicUpdate&lt;/code&gt; 어노테이션을 달아주는 것이 좋다고 합니다.&lt;/p&gt;
+&lt;h2&gt;비관적 락&lt;/h2&gt;
+&lt;p&gt;&lt;em&gt;충돌이 발생할 것이라고 우선적으로 가정하고 락을 거는 방법&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;데이터베이스 레벨에서의 락 기능을 사용하는데, 대표적인 레코드락을 사용&lt;/p&gt;
+&lt;p&gt;FOR UPDATE(exclusive), LOCK IN SHARE MODE(shared mode) 을 거는 방법&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;-- innoDB 테이블에 대해 걸 수 있는 레코드 락은 반드시 auto-commit이 비활성화 상태 이거나, 
+-- 트랜잭션을 직접 제어하는 상태에서만 Lock을 컨트롤 할 수 있습니다.
+-- 현재 AutoCommit 값 확인 ( 1 = O, 0 = X )
+SELECT @@AUTOCOMMIT;
+
+-- AutoCommit 해제
+SET AUTOCOMMIT = 0;
+
+BEGIN;
+
+-- shared mode
+SELECT 
+t.*
+FROM test_table t
+WHERE t.id = 10
+ FOR UPDATE;
+-- LOCK IN SHARE MODE;
+
+
+/**
+실제로 다른 세션에서 해당 t.id = 10인 레코드에 접근하려는 READ(FOR UPDATE), WRITE SQL을 실행했을 때, 
+해당 레코드가 LOCK 이 걸려 있으므로 대기상태로 빠짐 (COMMIT 하기 전 까지)
+*/
+COMMIT;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;shared mode = 내가 락을 건 이상 다른 세션에서 UPDATE나 DELETE는 못하게 하는 것&lt;/p&gt;
+&lt;p&gt;exclusive mode = 내가 락을 걸면 다른 트랜잭션에서는 읽기 쓰기도 못하게 하는 것 ( 읽기를 못한다는 것은, 단순 SELECT 문은 허용되나, exclusive mode를 하려고 하는 읽기에 대한 부분만 해당됩니다, 인덱스가 exclusive lock이 걸려 있다면, 대기상태로 돌려짐)&lt;/p&gt;
+&lt;h1&gt;추가 보너스!&lt;/h1&gt;
+&lt;p&gt;위에서 소개한 JPA레벨에서의 잠금을 설정하는 Optimistic Lock (낙관적 잠금)을 할 때
+&lt;code class=&quot;language-text&quot;&gt;@Version&lt;/code&gt; 어노테이션이 존재하는 엔티티에서는 &lt;code class=&quot;language-text&quot;&gt;@DynamicUpdate&lt;/code&gt;를 명시해주는게 좋다고 했었죠? 그런데 어차피 모든 필드를 항상 업데이트 할 것도 아닌데 당연히 명시해주면 무조건 좋은거 아닐까? 라는 생각을 하던 찰나에 선임 분께 찾아볼것을 권유 받았습니다. 그래서 &lt;code class=&quot;language-text&quot;&gt;@DynamicUpdate&lt;/code&gt;를 사용했을 때의 장단점과 어떨 때 사용해야 할지 찾아봤습니다.&lt;/p&gt;
+&lt;h2&gt;&lt;code class=&quot;language-text&quot;&gt;@DynamicUpdate&lt;/code&gt; 장점&lt;/h2&gt;
+&lt;p&gt;상태가 변화된 Dirty한 필드 만을 대상으로 UPDATE SET 절 쿼리를 수행합니다. (Dirty하다는 것은 필드의 데이터 값이 기존의 origin 값과 달라졌다는 뜻입니다.)&lt;/p&gt;
+&lt;h2&gt;&lt;code class=&quot;language-text&quot;&gt;@DynamicUpdate&lt;/code&gt; 단점&lt;/h2&gt;
+&lt;p&gt;JPA 구현체인 hibernate는  애플리케이션이 처음 로드 될 때, 엔티티 들을 스캔 하여 모든 필드를 업데이트 할 쿼리로 캐싱 해놓고 업데이트 할 때 마다 메모리에 캐시 된 쿼리를 사용하는 것인데, @DynamicUpdate를 명시 해주면, 업데이트 할 컬럼만 UPDATE SET 절에 포함시키기 위해 캐시 된 쿼리를 사용하지 못하고 업데이트 할 때마다 동적 쿼리를 생성해야 합니다.
+​&lt;/p&gt;
+&lt;p&gt;따라서 @DynamicUpdate는 업데이트 시 무의미한 필드 들이 많이 존재하는 엔티티 이면서 업데이트 시  오버헤드가 많이 발생하는 경우에 사용해야 할 것 같습니다.&lt;/p&gt;
+&lt;p&gt;​덧붙여서, JPA @Version 어노테이션으로 명시 해놓은 버전 필드가 있는 엔티티의 Optimistic Lock(낙관적 락)을 사용하고자 할 때는 @DynamicUpdate를 사용하는 것이 좋습니다. (@Version 필드만 업데이트 해야 하는 경우가 분명하기 때문에)&lt;/p&gt;
+&lt;p&gt;&lt;u&gt;&lt;span style=&quot;color:#e96900;&quot;&gt;
+혹시나 잘못된 점이 있거나 정보가 틀렸다면 반드시 코멘트 혹은 &lt;a href=&quot;mailto:thxwelchs@gmail.com&quot;&gt;이메일&lt;/a&gt;로 알려주시면 감사하겠습니다!
+&lt;/span&gt;&lt;/u&gt;&lt;/p&gt;
+&lt;h3&gt;참고&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://effectivesquid.tistory.com/category/Server/JPA&quot;&gt;https://effectivesquid.tistory.com/category/Server/JPA&lt;/a&gt;&lt;br&gt;
+&lt;a href=&quot;https://lng1982.tistory.com/289&quot;&gt;https://lng1982.tistory.com/289&lt;/a&gt;&lt;br&gt;
+&lt;a href=&quot;https://jojoldu.tistory.com/415&quot;&gt;https://jojoldu.tistory.com/415&lt;/a&gt;&lt;br&gt;
+&lt;a href=&quot;https://www.baeldung.com/spring-data-jpa-dynamicupdate&quot;&gt;https://www.baeldung.com/spring-data-jpa-dynamicupdate&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</content:encoded></item><item><title><![CDATA[AOP 관점지향프로그래밍]]></title><description><![CDATA[AOP…]]></description><link>https://thxwelchs.github.io/AOP/</link><guid isPermaLink="false">https://thxwelchs.github.io/AOP/</guid><pubDate>Fri, 22 Nov 2019 19:11:55 GMT</pubDate><content:encoded>&lt;h1&gt;AOP&lt;/h1&gt;
 &lt;p&gt;직역하면 &lt;strong&gt;관점지향프로그래밍&lt;/strong&gt; 인데, 한국말로 들으면 전혀 와닿지 않습니다.&lt;/p&gt;
 &lt;p&gt;좀 더 이해가 가기 쉬운 의미로 해석해보자면, &lt;strong&gt;애플리케이션 전체에 걸쳐 사용되는 기능을 재사용하도록 지원하는 것&lt;/strong&gt;입니다.&lt;/p&gt;
 &lt;p&gt;실무에서는 흔히 공통적인 흐름의 코드를 적용시켜 줄 때 주로 사용합니다.&lt;/p&gt;
@@ -273,56 +430,7 @@ Parallel GC와 같이 멀티쓰레드로 처리되는 GC이며 대신 Minor GC�
 &lt;p&gt;현재 내 jdk default gc 살펴보기&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ java -XX:+PrintCommandLineFlags -version&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;현재 내 jdk default gc 변경하기&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ java -XX:+UseG1GC -XX:+PrintCommandLineFlags -version&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item><item><title><![CDATA[JPA Locking]]></title><description><![CDATA[낙관적 락 충돌이 발생하지 않을 거라고 낙관적으로 가정하는 방법 데이터베이스 레벨이 아닌 JPA레벨에서 버전 관리 기능을 통해 구현되어있음 테이블에 version…]]></description><link>https://thxwelchs.github.io/JPA-locking/</link><guid isPermaLink="false">https://thxwelchs.github.io/JPA-locking/</guid><pubDate>Wed, 22 Aug 2018 19:11:55 GMT</pubDate><content:encoded>&lt;h2&gt;낙관적 락&lt;/h2&gt;
-&lt;p&gt;&lt;em&gt;충돌이 발생하지 않을 거라고 낙관적으로 가정하는 방법&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;데이터베이스 레벨이 아닌 JPA레벨에서 버전 관리 기능을 통해 구현되어있음&lt;/p&gt;
-&lt;p&gt;테이블에 version 관리를 할 컬럼을 지정해놓고&lt;/p&gt;
-&lt;p&gt;읽었을 때의 버전과, 변경 할 때의 버전이 같지 않으면 예외(OptimisticLockException)를 발생시켜서 다른 트랜잭션에서의 데이터 접근을 막습니다.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;낙관적 락 종류&lt;/em&gt; 에는 네가지 타입이 있습니다.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;NONE: 낙관적 잠금을 사용하지 않음.&lt;/li&gt;
-&lt;li&gt;VERSION: &lt;code class=&quot;language-text&quot;&gt;@Version&lt;/code&gt; 어노테이션이 붙어있는 컬럼을 조건으로 낙관적 락을 시행 ( 이 컬럼을 기준으로 락 버전을 관리함&lt;/li&gt;
-&lt;li&gt;DIRTY: 변경된 필드에 의해서 낙관적 락 사용&lt;/li&gt;
-&lt;li&gt;ALL: 모든 필드를 충돌감지의 조건으로 사용&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;DIRTY나 ALL  타입으로 낙관적 락을 사용할 경우, 버전 컬럼이 없어도 락을 걸 수 있는데, ALL타입은 전체 컬럼의 값 비교로 락을 컨트롤 합니다. 이 때 주의해야 할 점은 @DynamicUpdate 어노테이션을 달아주는 것이 좋습니다.&lt;/p&gt;
-&lt;p&gt;왜냐하면 하이버네이트는 업데이트 할 엔티티의 상태가 변화할 때, save 메소드를 호출하지 않아도 값이 기존 값과 비교하여 변경됐을 때 값이 어느정도로 변화했는지 체크해서 변경 쿼리를 날립니다. 이 때 상태 변경 감지 하는 걸 Dirty Checking 이라고 하는데, Dirty한 상황이 일어났을 때 하이버네이트는 전체 컬럼에 대한 값 변경을 시도합니다. 이럴 때 진짜 변화가 일어난 컬럼만 업데이트에 반영되도록  @DynamicUpdate 어노테이션을 달아주는 것이 좋다고 합니다.&lt;/p&gt;
-&lt;h2&gt;비관적 락&lt;/h2&gt;
-&lt;p&gt;&lt;em&gt;충돌이 발생할 것이라고 우선적으로 가정하고 락을 거는 방법&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;데이터베이스 레벨에서의 락 기능을 사용하는데, 대표적인 레코드락을 사용&lt;/p&gt;
-&lt;p&gt;FOR UPDATE(exclusive), LOCK IN SHARE MODE(shared mode) 을 거는 방법&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;-- innoDB 테이블에 대해 걸 수 있는 레코드 락은 반드시 auto-commit이 비활성화 상태 이거나, 
--- 트랜잭션을 직접 제어하는 상태에서만 Lock을 컨트롤 할 수 있습니다.
--- 현재 AutoCommit 값 확인 ( 1 = O, 0 = X )
-SELECT @@AUTOCOMMIT;
-
--- AutoCommit 해제
-SET AUTOCOMMIT = 0;
-
-BEGIN;
-
--- shared mode
-SELECT 
-t.*
-FROM test_table t
-WHERE t.id = 10
- FOR UPDATE;
--- LOCK IN SHARE MODE;
-
-
-/**
-실제로 다른 세션에서 해당 t.id = 10인 레코드에 접근하려는 READ(FOR UPDATE), WRITE SQL을 실행했을 때, 
-해당 레코드가 LOCK 이 걸려 있으므로 대기상태로 빠짐 (COMMIT 하기 전 까지)
-*/
-COMMIT;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;shared mode = 내가 락을 건 이상 다른 세션에서 UPDATE나 DELETE는 못하게 하는 것&lt;/p&gt;
-&lt;p&gt;exclusive mode = 내가 락을 걸면 다른 트랜잭션에서는 읽기 쓰기도 못하게 하는 것 ( 읽기를 못한다는 것은, 단순 SELECT 문은 허용되나, exclusive mode를 하려고 하는 읽기에 대한 부분만 해당됩니다, 인덱스가 exclusive lock이 걸려 있다면, 대기상태로 돌려짐)&lt;/p&gt;
-&lt;p&gt;참고&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;a href=&quot;https://effectivesquid.tistory.com/category/Server/JPA&quot;&gt;https://effectivesquid.tistory.com/category/Server/JPA&lt;/a&gt;&lt;br&gt;
-&lt;a href=&quot;https://lng1982.tistory.com/289&quot;&gt;https://lng1982.tistory.com/289&lt;/a&gt;&lt;br&gt;
-&lt;a href=&quot;https://jojoldu.tistory.com/415&quot;&gt;https://jojoldu.tistory.com/415&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;</content:encoded></item><item><title><![CDATA[Welcome to Ghost]]></title><description><![CDATA[👋 Welcome, it’s great to have you here. We know that first impressions are important, so we’ve populated your new site with some initial…]]></description><link>https://thxwelchs.github.io/welcome/</link><guid isPermaLink="false">https://thxwelchs.github.io/welcome/</guid><pubDate>Sun, 06 May 2018 23:46:37 GMT</pubDate><content:encoded>&lt;p&gt;👋 Welcome, it’s great to have you here.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;$ java -XX:+UseG1GC -XX:+PrintCommandLineFlags -version&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item><item><title><![CDATA[Welcome to Ghost]]></title><description><![CDATA[👋 Welcome, it’s great to have you here. We know that first impressions are important, so we’ve populated your new site with some initial…]]></description><link>https://thxwelchs.github.io/welcome/</link><guid isPermaLink="false">https://thxwelchs.github.io/welcome/</guid><pubDate>Sun, 06 May 2018 23:46:37 GMT</pubDate><content:encoded>&lt;p&gt;👋 Welcome, it’s great to have you here.&lt;/p&gt;
 &lt;p&gt;We know that first impressions are important, so we’ve populated your new site with some initial &lt;strong&gt;getting started&lt;/strong&gt; posts that will help you get familiar with everything in no time. This is the first one!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;A few things you should know upfront&lt;/strong&gt;:&lt;/p&gt;
 &lt;ol&gt;
