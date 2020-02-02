@@ -1,4 +1,97 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[GDD blog]]></title><description><![CDATA[오늘도 열심히 GDD(Google Driven Development)]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Thu, 30 Jan 2020 14:25:06 GMT</lastBuildDate><item><title><![CDATA[제네릭 1편 와일드카드 (Generic Wildcard)]]></title><description><![CDATA[Java 와일드카드 제네릭  제네릭은 Unbound wildcard라고 불리며, 어떤 타입이 될지 모른다 라는 의미입니다. wildcard…]]></description><link>https://thxwelchs.github.io/GENERIC-1/</link><guid isPermaLink="false">https://thxwelchs.github.io/GENERIC-1/</guid><pubDate>Thu, 30 Jan 2020 23:11:55 GMT</pubDate><content:encoded>&lt;h1&gt;Java 와일드카드 제네릭&lt;/h1&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[GDD blog]]></title><description><![CDATA[오늘도 열심히 GDD(Google Driven Development)]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Sun, 02 Feb 2020 14:26:08 GMT</lastBuildDate><item><title><![CDATA[Git merge 스마트하게 하기]]></title><description><![CDATA[주요 옵션 : 일단 병합을 한다음에 병합에 실패한 것으로 가정후 커밋은 하지 않습니다. (커밋되지 않은 코드를 스테이지에만 올려놓고 코드를 마지막으로 점검하거나, 리뷰 할 때 쓸만함 ) : fast-forward…]]></description><link>https://thxwelchs.github.io/GIT-MERGE-SQUASH/</link><guid isPermaLink="false">https://thxwelchs.github.io/GIT-MERGE-SQUASH/</guid><pubDate>Fri, 31 Jan 2020 23:11:55 GMT</pubDate><content:encoded>&lt;h2&gt;주요 옵션&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;—no-commit&lt;/code&gt;: 일단 병합을 한다음에 병합에 실패한 것으로 가정후 커밋은 하지 않습니다. (커밋되지 않은 코드를 스테이지에만 올려놓고 코드를 마지막으로 점검하거나, 리뷰 할 때 쓸만함 )&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;—no-ff&lt;/code&gt;: fast-forward 되어질 병합 형태라도 반드시 머지 커밋을 만들어서 병합합니다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;—squash&lt;/code&gt;: 현재 브랜치 위에 단일 커밋을 만들어서 브랜치 병합합니다. ( 커밋 합치기 )&lt;/p&gt;
+&lt;h2&gt;git merge —no-commit —noff를 활용해서 수정된 코드 살펴보기&lt;/h2&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; merge &lt;span class=&quot;token variable&quot;&gt;${commit-hash}&lt;/span&gt; --no-commit --no-ff&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;위 명령으로 fast-forward(빨리감기) 하지않고, 일단 커밋하지 않은 상태에서 수정된 코드를 살펴볼 수 있습니다.&lt;/p&gt;
+&lt;h2&gt;git merge —squash를 활용해서 커밋내역 합쳐보기&lt;/h2&gt;
+&lt;p&gt;설정된 커밋내역에는 다음과 같이 master, squash 두 브랜치가 있습니다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 388px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/b1ddc2bdfad2c2f6e0ec9aeea8d63b0c/edae7/gitkraken_YtRG7HpYvA.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 38.91752577319588%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABlUlEQVQoz1WRW2vbQBSE9Q8Khtram6Vdy3KsqyXZlmyI4tRUIbWpaUtJHtJCoQmlL4Ua+venu5KTug8fZ9jL7J4zVnC9Q7TdI9rcwvVjSC/QhJDjEEN1gTSvsG12GE5zyGyFMF0iyUpk83WLo6anOx1W/fkr0uaAyWUDJidgw5HGA3M8DKiDaF6h+XQHexyBJiXCpEA6WyBO54i0JlyCCfWCVRYFBGV43euBEgIu3BYhJGybYbYosb+/R8/1wZNMG2basECSFoi1pmwIxp0XLLX9jYu3vzBpjvA3jyBuDKYSUIPWdFLAW+/wZvsAe/UD88sDqs1HVNcdzrSGiq4gww4rvP2DbH9EcHOEV38HUfrVUdGhclB/ifH6gPrdT9jVkzZ8j6ubOyzqA2arHdxAG4ZnhvaAoN8nMJUQBq6/bRC67cGAoVgu8eHLN7walxCzHEGcty1L5aOv9814GP+HxfXwhcZUbsJoQzkhRhDSh6sT567Xhtae1Xsd57rD+s/ALJq0WjPVHjCV6iTNOj8l+Xz5XD/zF60B7kxOmkLqAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;git/gitkraken_YtRG7HpYvA.png&quot;
+        title=&quot;git/gitkraken_YtRG7HpYvA.png&quot;
+        src=&quot;/static/b1ddc2bdfad2c2f6e0ec9aeea8d63b0c/edae7/gitkraken_YtRG7HpYvA.png&quot;
+        srcset=&quot;/static/b1ddc2bdfad2c2f6e0ec9aeea8d63b0c/bc34b/gitkraken_YtRG7HpYvA.png 293w,
+/static/b1ddc2bdfad2c2f6e0ec9aeea8d63b0c/edae7/gitkraken_YtRG7HpYvA.png 388w&quot;
+        sizes=&quot;(max-width: 388px) 100vw, 388px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;squash 브랜치를 master에 병합시키고자 하는데, squash 브랜치의 커밋내역들을 합쳐서 병합하고 싶습니다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;—squash&lt;/code&gt; 옵션으로 병합할 때 스쿼시(커밋내역 합치기)를 할 수 있습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; checkout master
+&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; merge --squash&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;그러면 다음과 같이 충돌이 발생합니다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 659px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/9f949bd0459598ceebcbbe97130c2faa/22c2e/mintty_y0wj1kLQ2Y.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 15.326251896813353%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAkklEQVQI11VOQQ6DMAwrXCgIUFMKo2lpD2P8/4ceicSkHSzHjmTbMCdc1wfn+4T3HjlnHEcBM6OWgnme0bYtjDFomkYh+oFo+f0gASklhBAQY8S2bSAi8O09et93DMMA2/daIPc0Tcpd1/0H1lpRyoF1DbqOHGlIjIz15teNlLKulzAir4XOOSzLgnEc1Ze/tRZfabJHEMTICPwAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;git/mintty_y0wj1kLQ2Y.png&quot;
+        title=&quot;git/mintty_y0wj1kLQ2Y.png&quot;
+        src=&quot;/static/9f949bd0459598ceebcbbe97130c2faa/22c2e/mintty_y0wj1kLQ2Y.png&quot;
+        srcset=&quot;/static/9f949bd0459598ceebcbbe97130c2faa/bc34b/mintty_y0wj1kLQ2Y.png 293w,
+/static/9f949bd0459598ceebcbbe97130c2faa/da9f0/mintty_y0wj1kLQ2Y.png 585w,
+/static/9f949bd0459598ceebcbbe97130c2faa/22c2e/mintty_y0wj1kLQ2Y.png 659w&quot;
+        sizes=&quot;(max-width: 659px) 100vw, 659px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;코드를 수정하여 충돌을 잡아주면 깔끔하게 하나의 커밋으로 합쳐졌습니다!&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 419px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/fbc51e033b75a2bd346cb98080fba1b9/1fae5/gitkraken_ugtDBcs6qF.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 41.766109785202865%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABQklEQVQoz3VQ0U7CQBDsXyh37bW0vdbSHvRa6FkMCSSgoAGNPmhiYmJi4v9/wbgt1KCBh8ndzu7MbNYSoxmS3TcG2y/E9x9whhWYK8H7MZgXwZEp9GqL4oF69Q7j6S2uZ+v29ZMKIizgypJQtLCEHEPVL0iqRwRqAcZc2CIEd0LYTgDW/LMam8U7bHmDJNPIVA5dTBDKK/SYoFkP3N7DYnYfl0Q2DUaELQIa8MlsDyYImcFm/QknmUPlBiM9QV4YBHJAGr/VdLBaMW3REfyA5t+E+VGKzdMrLkZLcFVC6QpqWKIc1wijQTtzwrDZ6mBEdWfIKV34EfTdI/T0GSwxGGoDXRoySyE8iU5/wvBvo6sZ98D8FKvlG/xsjjjNEScKjhv+bnesPWt4zHES9ui+lZm2XI9CzunOb/jPtLvpqcBj/ABIhuXd8g1KeQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;git/gitkraken_ugtDBcs6qF.png&quot;
+        title=&quot;git/gitkraken_ugtDBcs6qF.png&quot;
+        src=&quot;/static/fbc51e033b75a2bd346cb98080fba1b9/1fae5/gitkraken_ugtDBcs6qF.png&quot;
+        srcset=&quot;/static/fbc51e033b75a2bd346cb98080fba1b9/bc34b/gitkraken_ugtDBcs6qF.png 293w,
+/static/fbc51e033b75a2bd346cb98080fba1b9/1fae5/gitkraken_ugtDBcs6qF.png 419w&quot;
+        sizes=&quot;(max-width: 419px) 100vw, 419px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[제네릭 1편 와일드카드 (Generic Wildcard)]]></title><description><![CDATA[Java 와일드카드 제네릭  제네릭은 Unbound wildcard라고 불리며, 어떤 타입이 될지 모른다 라는 의미입니다. wildcard…]]></description><link>https://thxwelchs.github.io/GENERIC-1/</link><guid isPermaLink="false">https://thxwelchs.github.io/GENERIC-1/</guid><pubDate>Thu, 30 Jan 2020 23:11:55 GMT</pubDate><content:encoded>&lt;h1&gt;Java 와일드카드 제네릭&lt;/h1&gt;
 &lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;&amp;lt;?&amp;gt;&lt;/code&gt; 제네릭은 Unbound wildcard라고 불리며, 어떤 타입이 될지 모른다 라는 의미입니다. wildcard가 사용된 제네릭은 타입으로 들어온 타입에 대하여 관심이 없다 라는 의미도 되며 기능적인 메소드 외에 원소 값과 관련된 메소드에는 null 값만 허용됩니다.&lt;/p&gt;
 &lt;p&gt;코드로 예를 들어보자면 다음과 같습니다.&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; wildcards &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ArrayList&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -579,7 +672,7 @@ GitHub - &lt;a href=&quot;https://github.com/scttcper/gatsby-casper&quot;&gt;htt
     &gt;
       &lt;span
     class=&quot;gatsby-resp-image-background-image&quot;
-    style=&quot;padding-bottom: 66.3888888888889%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAANABQDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAIDBAX/xAAWAQEBAQAAAAAAAAAAAAAAAAACAAH/2gAMAwEAAhADEAAAAdNuKx1yIr//xAAbEAADAAIDAAAAAAAAAAAAAAAAAQMCEQQSE//aAAgBAQABBQKVMVXkV6r1yENm9H//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAEDAQE/AT//xAAVEQEBAAAAAAAAAAAAAAAAAAABEP/aAAgBAgEBPwFn/8QAGhAAAgIDAAAAAAAAAAAAAAAAAAESMRARIv/aAAgBAQAGPwJ9KOhRLKKx/8QAGhABAQACAwAAAAAAAAAAAAAAAQARITFBUf/aAAgBAQABPyHgCHDEJ7d5JdqPFl6QtC//2gAMAwEAAgADAAAAEC/P/8QAFxEBAAMAAAAAAAAAAAAAAAAAAAERIf/aAAgBAwEBPxCKY//EABYRAQEBAAAAAAAAAAAAAAAAAAEAEf/aAAgBAgEBPxBO2t//xAAbEAEAAwEBAQEAAAAAAAAAAAABABEhcTFB8f/aAAgBAQABPxC41A0D99gqbNHh8ls10JY1OwEGHWCW0cn/2Q==&apos;); background-size: cover; display: block;&quot;
+    style=&quot;padding-bottom: 66.3888888888889%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAANABQDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAIDBAX/xAAWAQEBAQAAAAAAAAAAAAAAAAACAAH/2gAMAwEAAhADEAAAAdNuKx1yIr//xAAbEAADAAIDAAAAAAAAAAAAAAAAAQMCEQQSE//aAAgBAQABBQKVMVXkV6r1yENm9H//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAEDAQE/AT//xAAVEQEBAAAAAAAAAAAAAAAAAAABEP/aAAgBAgEBPwFn/8QAGhAAAgIDAAAAAAAAAAAAAAAAAAESMRARIv/aAAgBAQAGPwJ9KOhRLKKx/8QAGhABAQADAQEAAAAAAAAAAAAAAQARITFBUf/aAAgBAQABPyHgEOGIT27yS7UfFl8QuL//2gAMAwEAAgADAAAAEC/P/8QAFxEBAAMAAAAAAAAAAAAAAAAAAAERIf/aAAgBAwEBPxCKY//EABYRAQEBAAAAAAAAAAAAAAAAAAEAEf/aAAgBAgEBPxBO2t//xAAcEAACAgIDAAAAAAAAAAAAAAABEQAhMXFBUfH/2gAIAQEAAT8QcZQGAe5gVLLGBxGy2wIxZF3AkijZgRGhqf/Z&apos;); background-size: cover; display: block;&quot;
   &gt;&lt;/span&gt;
   &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -601,7 +694,7 @@ GitHub - &lt;a href=&quot;https://github.com/scttcper/gatsby-casper&quot;&gt;htt
     &gt;
       &lt;span
     class=&quot;gatsby-resp-image-background-image&quot;
-    style=&quot;padding-bottom: 56.333333333333336%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAALABQDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAQL/xAAVAQEBAAAAAAAAAAAAAAAAAAABAv/aAAwDAQACEAMQAAABhZNsvAoT/8QAGRABAAMBAQAAAAAAAAAAAAAAAgESMQAR/9oACAEBAAEFAhNSXdOfUMWd/8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAwEBPwE//8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAgEBPwE//8QAGRAAAgMBAAAAAAAAAAAAAAAAACEBAhEg/9oACAEBAAY/AosNI3j/xAAaEAEAAgMBAAAAAAAAAAAAAAABACERMUFh/9oACAEBAAE/IaD1TGXEBk+kJh2PXkSUY7n/2gAMAwEAAgADAAAAEGc//8QAFREBAQAAAAAAAAAAAAAAAAAAEEH/2gAIAQMBAT8Qh//EABYRAQEBAAAAAAAAAAAAAAAAAAARQf/aAAgBAgEBPxDUf//EABkQAQADAQEAAAAAAAAAAAAAAAEAESExQf/aAAgBAQABPxDqCqF9HjAJqYZ4bcegoXkRv1KJEYlGBeE6T//Z&apos;); background-size: cover; display: block;&quot;
+    style=&quot;padding-bottom: 56.333333333333336%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAALABQDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAQL/xAAVAQEBAAAAAAAAAAAAAAAAAAABAv/aAAwDAQACEAMQAAABhZNsvAoT/8QAGRABAAMBAQAAAAAAAAAAAAAAAgESMQAR/9oACAEBAAEFAhNSXdOfUMWd/8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAwEBPwE//8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAgEBPwE//8QAGRAAAgMBAAAAAAAAAAAAAAAAACEBAhEg/9oACAEBAAY/AosNI3j/xAAaEAEAAgMBAAAAAAAAAAAAAAABACERMUFh/9oACAEBAAE/IaD1TGXEBk+kJh2PXkSUYz//2gAMAwEAAgADAAAAEGc//8QAFREBAQAAAAAAAAAAAAAAAAAAEEH/2gAIAQMBAT8Qh//EABYRAQEBAAAAAAAAAAAAAAAAAAARQf/aAAgBAgEBPxDUf//EABkQAQADAQEAAAAAAAAAAAAAAAEAESExQf/aAAgBAQABPxDqCqF9HjAJqYZ4bcegoXkRv1KJEYlGBeE6Z//Z&apos;); background-size: cover; display: block;&quot;
   &gt;&lt;/span&gt;
   &lt;img
         class=&quot;gatsby-resp-image-image&quot;
@@ -878,7 +971,7 @@ Parallel GC와 같이 멀티쓰레드로 처리되는 GC이며 대신 Minor GC�
   &gt;
     &lt;span
     class=&quot;gatsby-resp-image-background-image&quot;
-    style=&quot;padding-bottom: 66.66666666666666%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAANABQDASIAAhEBAxEB/8QAFwABAQEBAAAAAAAAAAAAAAAAAAUBA//EABUBAQEAAAAAAAAAAAAAAAAAAAAB/9oADAMBAAIQAxAAAAGVRn7BxL//xAAaEAADAQADAAAAAAAAAAAAAAACAxIAARAR/9oACAEBAAEFAhKdw9Z4vKWyMZ11/8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAwEBPwE//8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAgEBPwE//8QAHBAAAgICAwAAAAAAAAAAAAAAAREAEAIhMUFh/9oACAEBAAY/AmnN6rhg9QLEAeV//8QAHBAAAgICAwAAAAAAAAAAAAAAAREAMRAhQWGB/9oACAEBAAE/IXRoQARfwq9gsUM4S4US6GDH/9oADAMBAAIAAwAAABCPL//EABYRAQEBAAAAAAAAAAAAAAAAAAARAf/aAAgBAwEBPxC6r//EABURAQEAAAAAAAAAAAAAAAAAAAAR/9oACAECAQE/EIj/xAAeEAEAAgIBBQAAAAAAAAAAAAABABEhMYFBUXGRof/aAAgBAQABPxC/9V7cXCEUqGfg55I1NYo2N6LFwjKFPbtlj0rwz//Z&apos;); background-size: cover; display: block;&quot;
+    style=&quot;padding-bottom: 66.66666666666666%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAANABQDASIAAhEBAxEB/8QAFwABAQEBAAAAAAAAAAAAAAAAAAUBA//EABUBAQEAAAAAAAAAAAAAAAAAAAAB/9oADAMBAAIQAxAAAAGVRno1xL//xAAaEAACAwEBAAAAAAAAAAAAAAACAwABEhAR/9oACAEBAAEFAhLN09ZwvNLZiGeuf//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQMBAT8BP//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQIBAT8BP//EABwQAAICAgMAAAAAAAAAAAAAAAERABACITFBYf/aAAgBAQAGPwJpzeq4YPUCxAHlf//EABwQAAICAgMAAAAAAAAAAAAAAAERADEQIUFhgf/aAAgBAQABPyFVoQARfwq9gsUM4S4US6GDH//aAAwDAQACAAMAAAAQny//xAAWEQEBAQAAAAAAAAAAAAAAAAAAEQH/2gAIAQMBAT8Quq//xAAVEQEBAAAAAAAAAAAAAAAAAAAAEf/aAAgBAgEBPxCI/8QAHRABAAICAgMAAAAAAAAAAAAAAQARITFBgVFxkf/aAAgBAQABPxC+9V8dXCEUqGa6HPZGprFGxvRYuEZQp9dsseK9M//Z&apos;); background-size: cover; display: block;&quot;
   &gt;&lt;/span&gt;
   &lt;img
         class=&quot;gatsby-resp-image-image&quot;

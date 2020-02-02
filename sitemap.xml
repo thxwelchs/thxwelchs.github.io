@@ -10,6 +10,7 @@
 <url> <loc>https://thxwelchs.github.io/SOLID/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/METADATA-EXIF/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/GENERIC-1/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/GIT-MERGE-SQUASH/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/직렬화/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/스트림/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/마샬링/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -31,6 +32,9 @@
 <url> <loc>https://thxwelchs.github.io/tags/kotlin/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/generic/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/제네릭/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/tags/git/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/tags/squash/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/tags/merge/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/author/ghost/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/author/another-author/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/author/thxwelchs/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
