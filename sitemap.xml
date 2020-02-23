@@ -13,6 +13,7 @@
 <url> <loc>https://thxwelchs.github.io/GIT-MERGE-SQUASH/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/kotlin-property/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/react-debug/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/JPA-N+1/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/직렬화/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/스트림/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/마샬링/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -41,6 +42,9 @@
 <url> <loc>https://thxwelchs.github.io/tags/field/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/react/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/deubg/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/tags/springboot/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/tags/n-1/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/tags/fetch-join/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/author/ghost/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/author/another-author/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/author/thxwelchs/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>

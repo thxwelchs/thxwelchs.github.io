@@ -1,4 +1,404 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[GDD blog]]></title><description><![CDATA[오늘도 열심히 GDD(Google Driven Development)]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Tue, 11 Feb 2020 15:55:23 GMT</lastBuildDate><item><title><![CDATA[React debugging 하기]]></title><description><![CDATA[안녕하세요 이번에는 React로 프론트엔드 개발할 때 Visual Studio Code + Debugger for Chrome…]]></description><link>https://thxwelchs.github.io/react-debug/</link><guid isPermaLink="false">https://thxwelchs.github.io/react-debug/</guid><pubDate>Tue, 11 Feb 2020 23:33:04 GMT</pubDate><content:encoded>&lt;p&gt;안녕하세요 이번에는 React로 프론트엔드 개발할 때 Visual Studio Code + Debugger for Chrome 를 활용한 디버깅 하는 방법에 대해 알아보겠습니다.&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[GDD blog]]></title><description><![CDATA[오늘도 열심히 GDD(Google Driven Development)]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Sun, 23 Feb 2020 17:53:55 GMT</lastBuildDate><item><title><![CDATA[JPA N+1현상 삽질]]></title><description><![CDATA[JPA N+1현상 querydsl fetchJoin 삽질한 경험 공유 Kotlin SpringBoot(2.2.4) querydsl(4.2.1) 문제 JPA로 쿼리를 하다보면, N +…]]></description><link>https://thxwelchs.github.io/JPA-N+1/</link><guid isPermaLink="false">https://thxwelchs.github.io/JPA-N+1/</guid><pubDate>Mon, 24 Feb 2020 02:08:55 GMT</pubDate><content:encoded>&lt;h1&gt;JPA N+1현상 querydsl fetchJoin 삽질한 경험 공유&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;Kotlin&lt;/li&gt;
+&lt;li&gt;SpringBoot(2.2.4)&lt;/li&gt;
+&lt;li&gt;querydsl(4.2.1)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;br/&gt;
+&lt;h1&gt;문제&lt;/h1&gt;
+&lt;p&gt;JPA로 쿼리를 하다보면, N + 1 문제를 마주하게 될 수도 있는데요.&lt;/p&gt;
+&lt;p&gt;저는 보통  &lt;code class=&quot;language-text&quot;&gt;@Query&lt;/code&gt; 어노테이션에 JPQL 쿼리를 작성해서 해결하곤 했었습니다.&lt;/p&gt;
+&lt;p&gt;근데 querydsl에도 fetchJoin이 있다는걸 최근(?)에서야 알고 사용해보려고 하는데 문제가 해결이 되지 않았습니다. 그 이유는.. 참 어처구니가 없었는데요 혹시나 이런 경우를 겪고 있는 분이 계실까 해서 공유차 포스팅합니다.&lt;/p&gt;
+&lt;p&gt;이유는 저처럼 join 함수를 잘못 이해하고 사용하면 매개변수 타입에 따라 fetchJoin 함수를 호출하여도 N + 1 문제가 해결이 안될수도 있다는 것인데요 ㅋㅋ&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 241px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/4aaedf67b06c9852ae700e6f222a2bbf/b41b4/Untitled.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 86.72199170124482%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAARCAYAAADdRIy+AAAACXBIWXMAAAsSAAALEgHS3X78AAAETElEQVQ4yyWU+1fSdxjH+b92ds7+ju2HnZ1TbbVyZ2WZLl3LsqyZXbTmpRWIIMolQJEERC4JgoBCkhfkooLcxEtlq3XOa4/f/cThA5/n837ez+v9qA7f1clupQlFvKxuJChW1vG9drGUWmB+wcerWScO1xRPhvrpG3iMw2nHYjVitk6gHRtBb1CTyafw+KZY30yiSq+lWEpG2CykSCTDRGNBMtk0OoMWp3uK+cUA/tAcw+ohxi065oKzTFjGmfW70U2MMvXKhjfo4nXEQzwVRhWJhchvp4nEAvJCilDUT0AKmG0m3L4ZYidKF4MYzAZC8pg/7MNkMzL5yo434GEt94atcobSXo7tWhZVda9E/XCLUjVDub5JdietqBozjeGbnyO6FOJt5g3P1MMMa4YIx0OMS3GL3cyoXsvKeoJyI0e+vM7WXh7V5y/HVPfzcpinVM/SeF9kxjMlLY/iCbhJrERxzEwy+GyA7vt3cHqmeWm38ELznDn5vbZfYKu4RrGaJSdFVR8/HVHZz4nkrFK0UF7DYBwV401y0Ywv6GH470FFYVdPF08H+9Hq1HTfuy0FXTSOtgmG3Gzm0ri906g+icL9D0VqR1tUDrZYy68oFwwTOozS2oPH92lrb+FWdyfdPbfpeXCPtmstnDrzg3ShEd+XpZBDKPEpA1U1DuqKD+GYj5WNJXbFh2gixMioWpQNMfh8gNFxLWrdC7SGEZm0AZegdPKYVs7iyXkMJp3YYmOjkEa1nIqLZw7u3L2F+eW4HL7F7rBgGNdjshgFD49M1Ma0IGR1vGRWJuv2zmCdtDAypqGwm6F6WMQ6bWFaeFXV9yu8WU3IRRe71QLBBT8P+3plgiN45maILM3zoL9XUbqykWT5bRy98GcwjzHjdQodmxSKEgbxczkVRbVdKhBfDiupKO8V2NxeRavX8HSgX3wJKN/jqUUWlyNE5X8Ot10B3R/y4RER5XqOKacV9+w05Zpg84XPHLwvKejUj3ZEQYyB4b941PcQq90k/iaJJReFS70y6RM/J8QaryTmpP1SXcgobrCRTVGqCNj/fP4gYG9TrGd4/6nG2ISGi1cu0vu4F51kNRoLsxAPc/vPLtp+b6Xzzk30Rr0kySg51pKQuB28K1IRuGuHO8Lhv8fU5KAoHO6L0vnFOZouNdEqqNjEeH/Qy+uFAP2DfWj0aiWCbp8LnSi92fUH6bUEDbn/P3pS8FgK7krlnUaWkmTRH/LS++g+LW3NDAw9EX9ku0jrk06bMrCIqHXJlJ8M9NEpBU2ydTputGG06lkXhlUfBezKUYkdCXdDFAal4LWOVi78ck757OhslyGJMmnzZLIuj5O+/kdcvtrMmZ9Pc7ntMucu/MTX33wl20eH6vD4gJ1qTpbCqjC1Ietpht/aWyUNV7l+o52Wa1f48fwZmlsv0dpxld+utynJudB0juYrv3K+6Sw9vXf57vtvOXX2NP8B+SQ+C2CoiKEAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;JPA%20N%201/Untitled.png&quot;
+        title=&quot;JPA%20N%201/Untitled.png&quot;
+        src=&quot;/static/4aaedf67b06c9852ae700e6f222a2bbf/b41b4/Untitled.png&quot;
+        srcset=&quot;/static/4aaedf67b06c9852ae700e6f222a2bbf/b41b4/Untitled.png 241w&quot;
+        sizes=&quot;(max-width: 241px) 100vw, 241px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h1&gt;예제 구성&lt;/h1&gt;
+&lt;p&gt;먼저 상황을 설명하기 위해 &lt;/p&gt;
+&lt;p&gt;제가 구성한 예제 구성은 다음과 같습니다. &lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;Restaurant(식당)&lt;/code&gt;과 &lt;code class=&quot;language-text&quot;&gt;Menu(식당의 메뉴)&lt;/code&gt;를 표현하는 다음과 같은 ERD와 엔티티가 있습니다.&lt;/p&gt;
+&lt;h2&gt;데이터베이스 ERD&lt;/h2&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 280px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/0458039850fbca4e9e1332d4825576ee/b8b05/Untitled1.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 58.92857142857143%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAYAAABiDJ37AAAACXBIWXMAAAsSAAALEgHS3X78AAACLUlEQVQoz32Ta4+aUBCG/f8/pUm/NG3TS/rFdNN23dVFQEEEDnKXi9wEEeHtgNt1Nc2e5GQ4yeGZd96ZM1J2KfggwSLKYBR76FkBNUmh7HK0XYd+dRTPn+fzW2uETsF7XceHxROE+WfM5THKWoYYGSibC7CH9UGOU3w3fDw6LgTXhOA5ED0LEzpn9QkjPQmg+BZsin7qw018ZIcd5kGM6gZ4bIFF6OKdquJen4HjPmIy+wJB+IpHNkV0aDASTRsPszmq/jat9lm6HNcoj6crYG/BHy/HcruFzNaIyhLZ8YCqrSHFOYLyiBHnpdC8CIrpQXdJrb2FYXuYesUz/OJbD34Ka6xMC0t5hZLyHehSc+rI95qApPB+7WK1UiAvJRi6Bk3VEVgm7jQfshMOoKpp0bTd8MMnLcUvh5pn++CkNZykQE05pbg6A+/cPWzLgUrQJC9e1PB+Bos63+urTy351w3gsZVj6u8RuC42jCGOIuB0hJlUiCpqipoeoGkGmM5IevsC1NIazX+m5Kdd0M5h2zZVJg2lWwaDGuaIqf7RhLIxtiGohh3NX5blZNYJ6+Rw1ZR/+8cmwzeWDgI4XsCc58FUBVPmU5c7KtkpYHs+RFGEJMuQZYUqOA4m9yW+BvaL25bkYYHpJsSDscXUDDEzA/y2UqQ1KRyTfF1jWIoCBI6DQfLTKKAX02B/NTaX+OZLuSNPeDfB3NkNcUYZpXAPPqyGzt4q7GexfWXB7f4LbQeL2Yk05hsAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;JPA%20N%201/Untitled1.png&quot;
+        title=&quot;JPA%20N%201/Untitled1.png&quot;
+        src=&quot;/static/0458039850fbca4e9e1332d4825576ee/b8b05/Untitled1.png&quot;
+        srcset=&quot;/static/0458039850fbca4e9e1332d4825576ee/b8b05/Untitled1.png 280w&quot;
+        sizes=&quot;(max-width: 280px) 100vw, 280px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h2&gt;엔티티 ERD&lt;/h2&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 251px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/b427b48566fd34333afd6904d51cd61d/4f2f1/Untitled2.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 203.58565737051794%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,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&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;JPA%20N%201/Untitled2.png&quot;
+        title=&quot;JPA%20N%201/Untitled2.png&quot;
+        src=&quot;/static/b427b48566fd34333afd6904d51cd61d/4f2f1/Untitled2.png&quot;
+        srcset=&quot;/static/b427b48566fd34333afd6904d51cd61d/4f2f1/Untitled2.png 251w&quot;
+        sizes=&quot;(max-width: 251px) 100vw, 251px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h2&gt;Restaurant 엔티티 코드&lt;/h2&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;kotlin&quot;&gt;&lt;pre class=&quot;language-kotlin&quot;&gt;&lt;code class=&quot;language-kotlin&quot;&gt;&lt;span class=&quot;token annotation builtin&quot;&gt;@Entity&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;Restaurant&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; name&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; String &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&quot;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;MutableEntity&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Menu 엔티티 코드&lt;/h2&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;kotlin&quot;&gt;&lt;pre class=&quot;language-kotlin&quot;&gt;&lt;code class=&quot;language-kotlin&quot;&gt;&lt;span class=&quot;token annotation builtin&quot;&gt;@Entity&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;Menu&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;token annotation builtin&quot;&gt;@ManyToOne&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; restaurant&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; Restaurant&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; price&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; BigDecimal &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; BigDecimal&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;ZERO&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; name&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; String &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&quot;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;MutableEntity&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;데이터&lt;/h2&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 323px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/85c053342824f6bf2604fdfa924dd1af/c7ab7/Untitled3.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 26.625386996904027%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAAAsSAAALEgHS3X78AAAA7ElEQVQY033PQU/CQBCG4f7/32NMNKJGBUIREAq6QNstu23ZQmILxZNtX7aewcOTOczkmxnHz74RgSSKDR9yx0ga5ipjLQRxknIsS/K8oCguy63j4UCyz+n7Gc4ijJl6c1ahxv1SdL01/dkS1x3hLQQbnRJvd+jEXKSsODUEasvrQuHItECaktBWX+8Z2bDOi8vNQ5dOd8zd84CJXRS0/SS/KrCUKXCquqH1W1WUpx/7ZsJgOGQ68/CDALFcISNtZ2rqpqGur2tzHJUdUVnJxhwQkWHsCW4fezz13rm3l765MyafIXp/YvM3+78zbhRu8BFmec0AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;JPA%20N%201/Untitled3.png&quot;
+        title=&quot;JPA%20N%201/Untitled3.png&quot;
+        src=&quot;/static/85c053342824f6bf2604fdfa924dd1af/c7ab7/Untitled3.png&quot;
+        srcset=&quot;/static/85c053342824f6bf2604fdfa924dd1af/bc34b/Untitled3.png 293w,
+/static/85c053342824f6bf2604fdfa924dd1af/c7ab7/Untitled3.png 323w&quot;
+        sizes=&quot;(max-width: 323px) 100vw, 323px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 358px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/10da870a8839e8ed23d6f9a223d2c6fc/13038/Untitled4.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 50.27932960893855%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsSAAALEgHS3X78AAACGklEQVQozzWSW3eiQBCE+f8/aF/2ITm72RiNiYhcFRBQFAWEgHJT8+2AJw99TlFdNVN0j7SKElb2ktX2yHwdIbtbTMvC0HV0Tcd3bfRNzNwJmYUplrUiWLvIXozm7dCCiKWhszkkvGhrJM3ZsjAdNHvLu75mojq8TRXmuoOs2SwMh7ERiPIZKxbPLxPeZxqKs2O+3KAK30xd8vap8jRZIMV5RVq0RGnBZp+SflW4/o5EcD2fir66PeEevviUteEyfRWIXkMyeBsO2YUPWR2CScWlpaw68rIiSrIB99XzQ+9csxSHBekZRdGYzhRxYUgxaJpBmxUVC9XAtD2kMDkTJheCKMfeHNmlF7ZxyYMXFRfIvpjdLmf0LvM8+mBueuxPteiVg97bZ0zEGGTDRaqajrq9UZQXjmk24J6rmiuVwJdLjRkmHIoawzQYTabIiiqSNfx406xANyyWjlhKcCjZxGccsUHD3Q/YF1zPB0eBdxn/zFDMMWc803mdavz+MxbLCB9/diyxt6lYis5kbiG13Y2+6qblS6T8+W67K+1V8HWDc8iIyxrP85nJCkvb5RuEp6O73gffynZwvQBpHRV4Is1qk4insxvSrfcFAx+VuOGJV2uP4ic8/x3z6+mN0cwU7/YkdPngdcKMv+P5I+Htfuf+/U3TNGT514B77oe/dh3rOCc59wk9sc0FymIxpGza7qG53fF9D88P+A9Qx+BIAzoPIwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;JPA%20N%201/Untitled4.png&quot;
+        title=&quot;JPA%20N%201/Untitled4.png&quot;
+        src=&quot;/static/10da870a8839e8ed23d6f9a223d2c6fc/13038/Untitled4.png&quot;
+        srcset=&quot;/static/10da870a8839e8ed23d6f9a223d2c6fc/bc34b/Untitled4.png 293w,
+/static/10da870a8839e8ed23d6f9a223d2c6fc/13038/Untitled4.png 358w&quot;
+        sizes=&quot;(max-width: 358px) 100vw, 358px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h2&gt;문제의 코드&lt;/h2&gt;
+&lt;p&gt;문제의 코드 입니다. (어떤게 문제인지 바로 아시겠나요?)&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;kotlin&quot;&gt;&lt;pre class=&quot;language-kotlin&quot;&gt;&lt;code class=&quot;language-kotlin&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; MenuRepositoryCustomImpl&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; MenuRepositoryCustom&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;QuerydslRepositorySupport&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;Menu&lt;span class=&quot;token operator&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;java&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;findAllJoinRestaurant&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; MutableList&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;Menu&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;val&lt;/span&gt; m &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; QMenu&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;menu
+        &lt;span class=&quot;token keyword&quot;&gt;val&lt;/span&gt; r &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; QRestaurant&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;restaurant
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;m&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;leftJoin&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;r&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;r&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;eq&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;m&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;restaurant&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;fetchJoin&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;함수 호출을 위해 테스트코드를 작성하고 실행했습니다.
+( 테스트의 결과값 보다는 N+1 쿼리가 수행되는 것을 보기 위함이므로 일단 테스트는 통과하게끔 했습니다. )&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;kotlin&quot;&gt;&lt;pre class=&quot;language-kotlin&quot;&gt;&lt;code class=&quot;language-kotlin&quot;&gt;&lt;span class=&quot;token annotation builtin&quot;&gt;@Test&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;fun&lt;/span&gt; `Menu 만 조회했는데&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; Restaurant 가 조회되는 N&lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt; 현상 테스트` &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;val&lt;/span&gt; menus &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; menuRepository&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;findAllJoinRestaurant&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;token function&quot;&gt;assertTrue&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 681px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/ca29f3317ce1b991208902715823f9f7/e8a1d/idea64_xOWUXfJUQM.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 96.32892804698973%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAATCAYAAACQjC21AAAACXBIWXMAAA7DAAAOwwHHb6hkAAADC0lEQVQ4y4WS6ZaaQBCFeZiMrCI4LLJvIqBGAZdxlkyScd7/FW6qW3SSSc7Jj+/corr7dlU1QpS20IIQiusTHsamj7EeQTdiKJMZZNuDbHlQWP4+w9jOMZmmUBQHI8mCKNuQKGYqyg6EKGsxblKoRQRtHsMIQ0yjGG6YkGkA2fSGywgnhOrRPifC2Eqhm4QekpHFTSXFhpBULYw0xSSJMfFiiIYHyQog6j4kLYA0cSGZDlU4g0Zr6pSqNlyoJhlPCM27VckN82UP20gwM1LE0xIzt0aSVciyEn6YwcwLmEUNx6vgGhmMwUDk7f6r5aSFOqYEuUuyC1G8bFZVm+bENlNO9XCnznBHh77Q2p1kY3Sr6nKWmbFYSPMOCs1K90JougvX9hHRnPQJPYZGbWouLGrVt3wY+gzufQDPCTCl2Yrc0P0DIS1aKNIUluogMF1Elosu97CMXJSeAz9wMItdZIVHD+UiDmzEtkNjuqcOTMiSAXE0uSGU62co2RvUxRnaiqjfYM/foZfv9OrvkAmJYpHFpHJxhpSdIefv9GcwzlDyD4SsPNIvscTIriE6NSSngWI1GN3XuCOYipxLTqQ1xshi8fIvhCTrkYQbJEFLbOHNaoT+mlrbIA1brjHlI8ol9B16S4q/0t4NXKeETT+6YxekF2iGB8yrJyzqF5QEi8vqeeDlFl/zv68Xi0fkixPpB0K+6BHnVOH/KK66veVSij8j9P0LqkWHvOzohg/ysv3/JZ/ghk2zQ788oG72qEgZ9eqAZnVEUV6ML7CLep7L5pfvfIhZnu3hhhUZbQeDZn3kht3+FfuHn+hJd8cf2B1+oN19u8TElrri2r1QnvYcvqOmc6xKgQXb9Ych037/nR9guh8Mmfnx9HYzYsouYZyezlhvH8mQKizrHVbU9qKmlqnaBbHaPNKGp5uuB+2pEmbWrB+w/Hri6yzedM+cf7bM5tftXocKX3mFzIiN4XD6ydtr+2+81W6okFdLY2DzFOZVj5ooqx1YtYxrBVe9xqwiHvPLH26wHOuAefwCLiufqApM+kkAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;JPA%20N%201/Untitled5.png&quot;
+        title=&quot;JPA%20N%201/Untitled5.png&quot;
+        src=&quot;/static/ca29f3317ce1b991208902715823f9f7/e8a1d/idea64_xOWUXfJUQM.png&quot;
+        srcset=&quot;/static/ca29f3317ce1b991208902715823f9f7/bc34b/idea64_xOWUXfJUQM.png 293w,
+/static/ca29f3317ce1b991208902715823f9f7/da9f0/idea64_xOWUXfJUQM.png 585w,
+/static/ca29f3317ce1b991208902715823f9f7/e8a1d/idea64_xOWUXfJUQM.png 681w&quot;
+        sizes=&quot;(max-width: 681px) 100vw, 681px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 1170px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/529686da0e8c95478ee8f7bb8c2acff1/9d48f/Untitled6.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 4.8233314638250135%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAAADeko4lAAAACXBIWXMAAAsSAAALEgHS3X78AAAAO0lEQVQI12OwtnX/D8KW1q7/bWw9wNjKBigGxLb2nv9t7UB8N7AaGyjbBqoHxDe3dP6vo2v5X1ffCowBaKciVI5FWuoAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;JPA%20N%201/Untitled6.png&quot;
+        title=&quot;JPA%20N%201/Untitled6.png&quot;
+        src=&quot;/static/529686da0e8c95478ee8f7bb8c2acff1/913fc/Untitled6.png&quot;
+        srcset=&quot;/static/529686da0e8c95478ee8f7bb8c2acff1/bc34b/Untitled6.png 293w,
+/static/529686da0e8c95478ee8f7bb8c2acff1/da9f0/Untitled6.png 585w,
+/static/529686da0e8c95478ee8f7bb8c2acff1/913fc/Untitled6.png 1170w,
+/static/529686da0e8c95478ee8f7bb8c2acff1/efb0c/Untitled6.png 1755w,
+/static/529686da0e8c95478ee8f7bb8c2acff1/9d48f/Untitled6.png 1783w&quot;
+        sizes=&quot;(max-width: 1170px) 100vw, 1170px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+해당 함수를 호출해서 query하면!? N + 1현상이 발생합니다.&lt;/p&gt;
+&lt;p&gt;첫번째 쿼리인 menu left outer join restaurant 를 했는데도 불구하고, 밑에 세개의 추가 쿼리가 실행되었습니다.&lt;/p&gt;
+&lt;p&gt;왜 이럴까? 하고 querydsl의 &lt;code class=&quot;language-text&quot;&gt;leftJoin&lt;/code&gt; 함수가 정의된 &lt;code class=&quot;language-text&quot;&gt;JPQLQuery&lt;/code&gt; 인터페이스를 추적 해보았습니다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 460px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/7cd075e617306d11657e6ed3c7d8ad5a/700eb/Untitled7.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 42.173913043478265%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsSAAALEgHS3X78AAABWElEQVQoz3VSa3OCMBDMr7E+ICS85aFIUQpqgVq1dqYd+/9/xPaSQsfp2A/L7u1cNpcbmHBWcIKKUMOyHzVL/wnS3fywV8ImVr5w1/CiBlxmGE99TGYBIew50B6bGBG4s4agQzYFu+FWh6nDKsT2Kx3ohrteU898rz1TLHWfcAp9ZmpGYOpj8xSCgg3Cw8TDaOxoKK1uVXwL5Q3+oAcww0xwjk84zDuETgkpcszoElOudMPowf4/+E+twEya7hgfcQg7RF6NINjDpaf6Saf3Z9k5hQV3p7kHNqMJQ5kj5Atw0mOabkaXTM0YhrWkPWX9Gtx+ClfrAaq+Bcs3r8jqC7L2itX+E3l5QlU2aLcvaOoGxe4d+fMV6/YLRf2GYnNGtf1AvbsgL45IFi3SrPsFM60YXKSwnAzcVhORFgkEQcqEfpEF7ZN8xeSZVgKLaiFTrQ1OL+EDx/gGVfEFJhu/nEUAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;JPA%20N%201/Untitled7.png&quot;
+        title=&quot;JPA%20N%201/Untitled7.png&quot;
+        src=&quot;/static/7cd075e617306d11657e6ed3c7d8ad5a/700eb/Untitled7.png&quot;
+        srcset=&quot;/static/7cd075e617306d11657e6ed3c7d8ad5a/bc34b/Untitled7.png 293w,
+/static/7cd075e617306d11657e6ed3c7d8ad5a/700eb/Untitled7.png 460w&quot;
+        sizes=&quot;(max-width: 460px) 100vw, 460px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;언뜻 보기에 함수의 주석 설명에는&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;주어진 target 매개변수를 기반으로 left join이 생성되어 질 것이고,&lt;/li&gt;
+&lt;li&gt;fetchJoin을 사용하기 위해서는 fetchJoin 파라미터를 해당 join 에 추가 (&lt;strong&gt;정확하게는 파라미터로 이해하기보다는, fetch join 할 join 함수 뒤에 fetchJoin 함수를 추가해주면 됩니다.&lt;/strong&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;하라고 되어있습니다. 이렇게만 보면 제 코드에서 &lt;code class=&quot;language-text&quot;&gt;leftJoin&lt;/code&gt; 함수에 매개변수로 넘겨준 target이 restaurant이니 맞는 것 같기도 합니다만 현재 문제에서 안되는 이유를 찾기 위해 코드를 추적하다 querydsl fetchJoin은 다음과 같이 동작하여 JPQLQuery를 생성한다는 것을 알게되었습니다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 834px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/b1ffa0c14526d6534fbf70eab3e727c2/d5e2e/idea64_G1UvBO54eI.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 70.02398081534771%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAB+0lEQVQ4y5WSW3vSQBCG82cqgbZECKVBICEbciDkRE6Eg1JbngesF970/3/ObkVQKerF+8zsJjP7zUEyrQJdzUWzcQ9F0XCndtFpaZDrKmq1Nmry/yG5XoWht8Y1e8RduINabPEh/YJba4u6+YCG+ZnskcZfkKxxAW0QoqEYuLk10HivQ1YGqCs6+QbZI/wsN/WLSD9Lvu5B1YboMw/eJIfJAvSHHgb6D8jXRz5umhqVplJLOmeRGCm873m4qrchyx0MDB/z5RZpvoEzKYgctpcJn9kzStjDVY36S8Hv5D8RCftUclefoD2wRcI4XSPJPiKerYXPbVps4E1LtNQRlJbxJpLBMpjjksr8BMddY2QlRCwwWPRqT88sJaVzMIo5h+T6JSVMMDRD6ITBQnE+YDmpsCO6N8xA/HN48BySS2Uk8UIMwiaYfVR0ijNdw/aXlDy+nHBEr+fLJ5RhhZCS2+5MBHEYD6YydVI2W7wgLr8J/7SC35Ecv0C2eMIqqlAFJXw/h3dgmmNMD4ysCENaGb42XIVowVsKmZcgozVZRQtEpNAL5uBtmHC1tC6mzRXPhGXCTy4rNKlnafWAVViSwgIp4Th8GK+Y40gMig/kX5CcYIP54wuqfI8826HM9ijKr8jmz8irZyTkp+UeMX0P6FtENsx+JUh34p7b77Nh9ksPOEoDAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;JPA%20N%201/Untitled8.png&quot;
+        title=&quot;JPA%20N%201/Untitled8.png&quot;
+        src=&quot;/static/b1ffa0c14526d6534fbf70eab3e727c2/d5e2e/idea64_G1UvBO54eI.png&quot;
+        srcset=&quot;/static/b1ffa0c14526d6534fbf70eab3e727c2/bc34b/idea64_G1UvBO54eI.png 293w,
+/static/b1ffa0c14526d6534fbf70eab3e727c2/da9f0/idea64_G1UvBO54eI.png 585w,
+/static/b1ffa0c14526d6534fbf70eab3e727c2/d5e2e/idea64_G1UvBO54eI.png 834w&quot;
+        sizes=&quot;(max-width: 834px) 100vw, 834px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;디버그 된 변수를 살펴보시면 &lt;code class=&quot;language-text&quot;&gt;self&lt;/code&gt;에 &lt;code class=&quot;language-text&quot;&gt;JPQLQuery&lt;/code&gt;가 텍스트 로 표현되고 있습니다. &lt;/p&gt;
+&lt;p&gt;가만살펴보니 뭔가 이상합니다. 흠 네.. 지금껏 멍청하게 target을 잘못 전달하고 있었던 것이었습니다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 708px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/44460dcff0f905267982c0ab1e966588/d1f1a/Untitled9.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 76.69491525423729%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsSAAALEgHS3X78AAACYElEQVQ4y22UTU5qQRCF79JYBUtwAQ6IYcjUxD2IjkDCRDD+xiggCAFFUSKo8QcURAQVRVDPy1emfQyspNO3u6tPnTpVfb3v729NDuz4+Fivr68ajUb6/PzUcDjUx8eH3t/f7fvt7U3dbleDwcDuZLNZbW5uamNjQ54mzAHe3d3p8fHRvsfjsYEAzLcbLghBb29vNT8/r62tLXkOZJLhy8uLGo2GXXAGIGtGv99Xq9XSzc2N6vW6nafTaS0sLPwwdEDOSO3+/t6Ybm9va25uTplMxvyur681OzurQCCg1dVVXVxc/O5Ho9H/DL++viwN0sHa7bbptLKyounpaa2trenw8FDPz88ql8sKhUKKxWIWGCNttDSGiEwaMOMCYj89PanX61lxHh4eVKvVDBAC+LrgnCMDknDmAYLDZNoAdjodKwzMna6wdpIQmBkygGPMHkz+MgAQHnAcAS8UCjo9PTVWsAcMP4Ax9j2XGqLCAGYUw6XKmUvn4OBAOzs7v5UG0AXEEomEPC5dXl5aFRGbgVaAkxZiwwAQ1gRg5h6grLGTkxPF43F59NJfRvWoMjOpw4J0K5WKzVdXV1Y4ND47O7MeBMsrFovWnK5dcIBds9k0FrChydEKlkiDJIDxSvANBoM6Ojr6AeT90aCpVMpaA504hAVrlzqg6OtejXuiU1NT2t/f1/n5ufl5yWRSy8vLYt7b29Pu7q7y+bxKpZKq1aoxRStA2Kd5YcKr8Pv9ikQixpw9/LxwOKzFxUVzgCng6+vr9ufI5XImNrpRHB4/jHw+n2ZmZiwA7QR70l9aWtI/Qg1LRYcIKpgAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;JPA%20N%201/Untitled9.png&quot;
+        title=&quot;JPA%20N%201/Untitled9.png&quot;
+        src=&quot;/static/44460dcff0f905267982c0ab1e966588/d1f1a/Untitled9.png&quot;
+        srcset=&quot;/static/44460dcff0f905267982c0ab1e966588/bc34b/Untitled9.png 293w,
+/static/44460dcff0f905267982c0ab1e966588/da9f0/Untitled9.png 585w,
+/static/44460dcff0f905267982c0ab1e966588/d1f1a/Untitled9.png 708w&quot;
+        sizes=&quot;(max-width: 708px) 100vw, 708px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;fetch Join이 되려면 &lt;/p&gt;
+&lt;p&gt;타겟이 restaurant가 아닌 menu의 프로퍼티로 존재하는 menu.restaurant가 되어야 하는것이었습니다.&lt;/p&gt;
+&lt;p&gt;&lt;br&gt;
+그래서 코드를 다음과 같이 수정하고 해결하였습니다!&lt;/p&gt;
+&lt;h2&gt;수정된 코드&lt;/h2&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;kotlin&quot;&gt;&lt;pre class=&quot;language-kotlin&quot;&gt;&lt;code class=&quot;language-kotlin&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; MenuRepositoryCustomImpl&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; MenuRepositoryCustom&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;QuerydslRepositorySupport&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;Menu&lt;span class=&quot;token operator&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;java&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;findAllJoinRestaurant&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; MutableList&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;Menu&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;val&lt;/span&gt; m &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; QMenu&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;menu
+        &lt;span class=&quot;token keyword&quot;&gt;val&lt;/span&gt; r &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; QRestaurant&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;restaurant
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;m&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token comment&quot;&gt;//.leftJoin(r)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;leftJoin&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;m&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;restaurant&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token comment&quot;&gt;//.on(r.id.eq(m.restaurant.id)) entity 연관관계 기반으로 어차피 맵핑되서 join함 on 조건을 주면 fetch 할 때 with 에 property를 에&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;fetchJoin&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;수정 후 쿼리&lt;/h2&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 583px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/35e216d7838ea09162167e1c3dc717aa/a99e1/Untitled10.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 100.6861063464837%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsSAAALEgHS3X78AAADGklEQVQ4y5WT6XLaWBCF9TCJBQJjDGgxBO0rAiEktEFssrhmXLYzmb95gzzBvO6Zvlc4tuMkk/nxVTcNde7pBcGwMihagL44gtqfYnAmQ5tMMJ8oGA3GEMUziCe/j+AFBWZuA+nNDufuAZP0A8bFAbPiGvP4BqfmHt15Q+x+CyGMS+jRFUTrHXrWAbL5EVJwQGdxiTN6QLLe/y8E3cygqj4kau2sM0aHbA+7Q4K10MfJqwd6xCnE14NfIph2DnW6QK93AWVsYzg3odk6LNOBqvg4P3egTCIo8gLDcx2dnkpox/gkl1q4oDaN8Lo7gTTQoMkWevocp7aB8WhOD83Q68/Q77+hXMNJZ/JDREkhQQUC27JGDjs9BV2i0yU6MuUqRppD37lQLhyMZIMwMVasR+izrNqYUN6RZIhdGYLjFtAuIohDmTY9haReQOxRPpjCXjSIkwZhXMF01rDc9AWOn1Fco9tXW0HXr2FYOTxnh9g7wLcq2E4Jx62RpDtkdEI5ET2IEq14Gxm6tcRMX2JupDRDp4DtVfDDSwThFbxgD9ffkWCFYFFwwWx7hU1+hVW6x5Icr+ih9eYt3CDngoadgO3C8WoItpdRMeXFljWHvWrYq28uWO1pq6zG2mWi7Le6teI6Qpq9pRaTZ23wtrhY8kLkKQ919rBuxrwmRHGBfLNHFG15i4yQal6Yccc/WsT3cEFyaVIuOCRQfbhFQ3/BkPLlqsJiyWb6H4LfumjFDGqZ1YWQhlwc/kRFYgUJ5STMXDJB005etPkInUxYww13JJRxUS64oI3V5LAmoX1SoyHRJeWsZdP5mSA593I0119x/fc/iLNbOpmIBDc0w3WD8t0N9iRUU7sxuVssWftbcrnhuEHabpIG3270mBPGMX8Yj+CTUHG4wY5iuaJjZrOk6NGS2El4YU4xO275kcfNP5+tEJKr6j05jLe4XJW4JHc7qqVRjiDY0KFvePt+RDfnp8cxJNzZU9q7XUJI6s9o/viCZnuPbXGPgiiLO1TlJ5TVZ6wpbut7pNVfnKz6hKy8wzJ/zmp7h8XmFv8CfSjNQ8sp3agAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;JPA%20N%201/Untitled10.png&quot;
+        title=&quot;JPA%20N%201/Untitled10.png&quot;
+        src=&quot;/static/35e216d7838ea09162167e1c3dc717aa/a99e1/Untitled10.png&quot;
+        srcset=&quot;/static/35e216d7838ea09162167e1c3dc717aa/bc34b/Untitled10.png 293w,
+/static/35e216d7838ea09162167e1c3dc717aa/a99e1/Untitled10.png 583w&quot;
+        sizes=&quot;(max-width: 583px) 100vw, 583px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;N + 1이 해결 되고 join 쿼리 한번만 수행 되었습니다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 1170px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/bb9c707870a618152342643277064f0c/0d03e/Untitled11.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 2.262443438914027%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAAADeko4lAAAACXBIWXMAAAsSAAALEgHS3X78AAAAMElEQVQI12MwNLb7b2Ri/9/E1OG/gRGUbeYIZ5sC2SAazDaHsEF6jIHqQTRIDJkPABrAIN/Y5pM/AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;JPA%20N%201/Untitled11.png&quot;
+        title=&quot;JPA%20N%201/Untitled11.png&quot;
+        src=&quot;/static/bb9c707870a618152342643277064f0c/913fc/Untitled11.png&quot;
+        srcset=&quot;/static/bb9c707870a618152342643277064f0c/bc34b/Untitled11.png 293w,
+/static/bb9c707870a618152342643277064f0c/da9f0/Untitled11.png 585w,
+/static/bb9c707870a618152342643277064f0c/913fc/Untitled11.png 1170w,
+/static/bb9c707870a618152342643277064f0c/efb0c/Untitled11.png 1755w,
+/static/bb9c707870a618152342643277064f0c/0d03e/Untitled11.png 1768w&quot;
+        sizes=&quot;(max-width: 1170px) 100vw, 1170px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[React debugging 하기]]></title><description><![CDATA[안녕하세요 이번에는 React로 프론트엔드 개발할 때 Visual Studio Code + Debugger for Chrome…]]></description><link>https://thxwelchs.github.io/react-debug/</link><guid isPermaLink="false">https://thxwelchs.github.io/react-debug/</guid><pubDate>Tue, 11 Feb 2020 23:33:04 GMT</pubDate><content:encoded>&lt;p&gt;안녕하세요 이번에는 React로 프론트엔드 개발할 때 Visual Studio Code + Debugger for Chrome 를 활용한 디버깅 하는 방법에 대해 알아보겠습니다.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;이미 디버거를 잘 활용하고 계셨던 분이라면 굳이 이 포스팅을 보실 필요는 없으실 것 같습니다.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;디버깅&lt;/strong&gt;은 코드에 브레이크포인트를 지정하여 프로그램 실행을 정지하고, 콜스택 등의 메모리에 저장된 값을 살펴보며, 실행을 재개하거나, 코드를 단계적으로 실행하는 등의 동작을 할 수 있게 해줍니다.&lt;/p&gt;
 &lt;p&gt;저는 백엔드 개발을 할 때에는 주로 java 혹은 kotlin 언어를 다루기 때문에 IntelliJ를 많이 활용해서 debugger 로 디버깅을 했었지만 &lt;/p&gt;
