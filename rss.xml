@@ -1,4 +1,297 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[GDD blog]]></title><description><![CDATA[오늘도 열심히 GDD(Google Driven Development)]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Sun, 23 Feb 2020 17:53:55 GMT</lastBuildDate><item><title><![CDATA[JPA N+1현상 삽질]]></title><description><![CDATA[JPA N+1현상 querydsl fetchJoin 삽질한 경험 공유 Kotlin SpringBoot(2.2.4) querydsl(4.2.1) 문제 JPA로 쿼리를 하다보면, N +…]]></description><link>https://thxwelchs.github.io/JPA-N+1/</link><guid isPermaLink="false">https://thxwelchs.github.io/JPA-N+1/</guid><pubDate>Mon, 24 Feb 2020 02:08:55 GMT</pubDate><content:encoded>&lt;h1&gt;JPA N+1현상 querydsl fetchJoin 삽질한 경험 공유&lt;/h1&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[GDD blog]]></title><description><![CDATA[오늘도 열심히 GDD(Google Driven Development)]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Tue, 25 Feb 2020 04:01:43 GMT</lastBuildDate><item><title><![CDATA[Spring 중복코드 줄여보기]]></title><description><![CDATA[Spring 다형성, 상속성을 이용한 중복코드 줄여보기 스프링부트를 활용하면 상당 부분 설정이 편리해진 부분이 있었지만, 흔한 MVC 패턴에서(물론 실제 개발은 MVVM…]]></description><link>https://thxwelchs.github.io/SPRING-DUPLICATION/</link><guid isPermaLink="false">https://thxwelchs.github.io/SPRING-DUPLICATION/</guid><pubDate>Tue, 25 Feb 2020 12:51:55 GMT</pubDate><content:encoded>&lt;h1&gt;Spring 다형성, 상속성을 이용한 중복코드 줄여보기&lt;/h1&gt;
+&lt;p&gt;스프링부트를 활용하면 상당 부분 설정이 편리해진 부분이 있었지만, 흔한 MVC 패턴에서(물론 실제 개발은 MVVM 패턴으로 개발중) 엔드포인트 혹은 엔티티가 늘어 날 때마다 반복되는 코드들이 생기는게 불만스러웠습니다. 그래서 고민을 하게 되었습니다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;객체지향스럽게(?) 다형성과 상속성을 지키는 구조로 중복되는 코드들을 줄여보는게 어떨까?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1&gt;공통이되 중복되는 부분 제거&lt;/h1&gt;
+&lt;p&gt;먼저 저의 스프링부트 구조에서 중복을 없앨만한 요소들을 찾아 보았습니다.&lt;/p&gt;
+&lt;p&gt;저의 스프링부트 프로젝트의 모듈구조는 싱글모듈 구조 였고, &lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;controller&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;model&lt;/code&gt;(entity), &lt;code class=&quot;language-text&quot;&gt;service&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;repository&lt;/code&gt; 를 주요 레이어로 가지는 구조였기에&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;entity&lt;/code&gt;가 늘어나면 늘어난 entity 기반으로 &lt;code class=&quot;language-text&quot;&gt;controller&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;repository&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;service&lt;/code&gt;를 생성해주어야 했습니다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 123px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/eb9cd826c2f454a0edfebb81e2a80baf/c9927/Untitled.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 63.41463414634146%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsSAAALEgHS3X78AAACZklEQVQ4y3VT227aQBTkd6q2D63UKiUBG+Mb2Bh8w8bGBhsTYmIuSaMklXpR0yhUVVW1z/2B/uV0d0kICOXh2Md7mZ0Zz5ZExcL1hy8wrD5qvIHz1za+CSkmch9yJ4BlxXC6A8RJDsdL4ZI+Hc3gBRnaZgheMFATO5sq1WULp7MLNFoeRL6N6MDEv+kt/ow/wvATxIMpUgJ2UpwjHJwiG+XIxgvMFlcEfIhqrbULyNfbeHMgo8KvJxQCago2FNEER+YEqcNYcPdF1+8WBVr39wxNxMMccsNhAM8dD6/CGFynB1GyIKk2qAq54aKp+2joHuieBwBa232Jevj1ZgXbiVEmJ700u3BXK7h3K4RBjnmxxLi4xPFkiYvLTziZzAjgI8g2GAOkD+pDtbY2963SQtkLIbgRJMJQIcw1I4DW8mGYfahNd0vqI0N+G1BWHbaArxsw3DmRlYInB3Dku0Le1F966BGvb0CoPVy9vceUSV59/wnLicBLDnrT33BGd7CGn9HtjZDn7zGeFBhkCyTJhP3dKCmQZlOEUQZB3PWzJEgmTDtiRtckGy13BsM7g94toLcDBOEE2fEp3GCMXi9h+bNJHv1ghH58jNqW3I3kg0OVSCOxIRKPVA9l2UWVa+CI0/Gu0kSZ1GGVlkb69fiD5/uSSSSuyE2hqa+IFp4lt6guf6E+vEJLdxkjx09hkRDTJDheAkW1Njnciw3N2LS4QFProqK4eGEv0Lv5C3X5A4E/wPzsGv3hFElWoB+dYJyfQdNIZoUnYkMHqCSO3ck2KrIDyU4haT7zh21iN4RsIH4L4tMZpPUfdoH4dQ8DTtgAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Untitled/Untitled.png&quot;
+        title=&quot;Untitled/Untitled.png&quot;
+        src=&quot;/static/eb9cd826c2f454a0edfebb81e2a80baf/c9927/Untitled.png&quot;
+        srcset=&quot;/static/eb9cd826c2f454a0edfebb81e2a80baf/c9927/Untitled.png 123w&quot;
+        sizes=&quot;(max-width: 123px) 100vw, 123px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;br&gt;
+그래서 controller, repository, service의 공통되는 부분을 묶어서 중복을 제거하고자 했습니다.&lt;/p&gt;
+&lt;p&gt;&lt;br/&gt;&lt;br/&gt;&lt;/p&gt;
+&lt;h2&gt;Service 공통 부분 중복 제거&lt;/h2&gt;
+&lt;p&gt;중복되는 부분은 예를 들어 &lt;code class=&quot;language-text&quot;&gt;service&lt;/code&gt;에서 단순히 &lt;code class=&quot;language-text&quot;&gt;repository&lt;/code&gt;를 통해 처리 한 뒤  &lt;code class=&quot;language-text&quot;&gt;controller&lt;/code&gt;에게 전달해주는 그런 로직들이 대상이 될 것 입니다.  예시 코드입니다. &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;kotlin&quot;&gt;&lt;pre class=&quot;language-kotlin&quot;&gt;&lt;code class=&quot;language-kotlin&quot;&gt;&lt;span class=&quot;token annotation builtin&quot;&gt;@Service&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;MenuService&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;val&lt;/span&gt; menuRepository&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; MenuRepository&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token comment&quot;&gt;// 이런거.. 일일이 굳이 코드로 작성 할 필요는 없지 않을까?&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;menu&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; Menu&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; Menu &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; 
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; menuRepository&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token keyword&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;findAll&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; MutableList&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;Menu&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; menuRepository&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;findAll&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;token operator&quot;&gt;..&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;물론 controller에서 바로 repository를 DI하여 작업을 수행 할 수도 있겠지만
+가능하면 &lt;code class=&quot;language-text&quot;&gt;controller&lt;/code&gt; -&gt; &lt;code class=&quot;language-text&quot;&gt;service&lt;/code&gt; -&gt; &lt;code class=&quot;language-text&quot;&gt;repository&lt;/code&gt; | &lt;code class=&quot;language-text&quot;&gt;other service&lt;/code&gt; 의 레이어 형태를 지키는
+것이 바람직하지 않을까? 라는 생각 하고 있습니다.
+그래서 위 예시코드에 기본적으로 제공되는 메소드들을 굳이 직접 service에 작성하지 않고 호출하는 구조로 만들고 싶어서 다음과 같이 entity를 다루는 service라면 반드시 상속받게 할 BaseEntityService를 생성했습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;kotlin&quot;&gt;&lt;pre class=&quot;language-kotlin&quot;&gt;&lt;code class=&quot;language-kotlin&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;/**
+    * Entity 공통 Service
+    * Generics description
+    * E: Entity, ID: Entity Primary Key (직렬화 할 수 있는 형태의 자료 형태)
+    *
+    * SimpleJpaRepository는 JpaRepository의 실질적인 구현체 클래스입니다.
+    * SimpleJpaRepository를 상속받기 위해선 반드시 super생성자로 클래스를 초기화 해주어야 하는 것 같은데,
+    * 그 super 생성자는 찾아보니 두개의 생성자로 오버로딩 되어 있고, 저는 그 중 하나인 
+    * entity의 클래스 타입과, entityManager를 받는 생성자로 슈퍼클래스 상속받게 했습니다.
+    */&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;abstract&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; BaseEntityService&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;E &lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; Any&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; ID &lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; Serializable&lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+        clazz&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; KClass&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;E&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+        entityManager&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; EntityManager&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; SimpleJpaRepository&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;E&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; ID&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;clazz&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;java&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; entityManager&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;저는 JpaRepository가 어떤 구현체로 이루어져있는지 관심도 없었는데 이번에 처음 관심 갖게 되었고, 살펴보게 되었습니다. &lt;/p&gt;
+&lt;p&gt;다음과 같이 두가지 생성자가 있는데 저는 두번째 타입의 생성자를 통해 상속하고 있습니다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 750px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/739946555da520379ebceb0d8d474aeb/26fb4/Untitled1.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 68.13333333333334%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAAAsSAAALEgHS3X78AAACRElEQVQ4y2VT13LjMBDTx1xsq1GUSKo3W7aT2LmSuUwyc///Hzhw7RRPHjBQWYFY7CqIswFh2iJXvSDOByTFKByqBrEaBIlwL9eKbP2z3NeNrJ94zfq4RKD1JEVWz8QWqX9pZmJCrntoPlf5fBFLO2GlOriMQpqHeHgTrBXB5/oPXH5Ebc8o7Qm5OUKbPSZ7xFP5E5U50F2D1cYQ9soGd+sCq7UR3K0v79ahQ1DkdFXuoMoFKV2ldkbqdtBugSJHdBMlDV1OUHokBmlTVQdpNeN1wTqlG6wjCsYN7VePqAlDYVcfhDMzoCgHlE2Pph9Rd6NwWTOeqoepBtb5GGoeWEu7Ihi6GkWxwBU7tjvC8LSMeeRFh8J2FOhRtRRwraCwhOGwklJENhTxrXpsQmZYMtzKNmh4WktkWSttZQxaESsW/pCc7AdWm08REYpKgTgc7IK5HdDUO1TjGaY9Mk9mYrawHJAz98SRjn1WW7qbEPn2wvJT6ItocLlxMqU7mdRnYRhVH5D72D8rr87sjcN3DhJOOeRuOe5jyX1L3GXqMTn27fO9Yr4pOckm4ZS7mTH3lN9seNiNwzb3Q5hhyDmLteXKcB06fpDL0rd0Roce0Re+4muWsocnLq8tDtA5BYite6DYAbVZkHD/NpKX/TaASwTVNwT7/Qum328Yn14xnl8wnP6iO/zCvLxgWd7Ir5jv/2F+JJZn7uJZUHcn7uwD1+oWgfZ/Avcr4n4Jy3VDxzMKcc0I+I/r61+RZB1SIkmbmwG+4z+9pcHh1kZOWgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Untitled/Untitled%201.png&quot;
+        title=&quot;Untitled/Untitled%201.png&quot;
+        src=&quot;/static/739946555da520379ebceb0d8d474aeb/26fb4/Untitled1.png&quot;
+        srcset=&quot;/static/739946555da520379ebceb0d8d474aeb/bc34b/Untitled1.png 293w,
+/static/739946555da520379ebceb0d8d474aeb/da9f0/Untitled1.png 585w,
+/static/739946555da520379ebceb0d8d474aeb/26fb4/Untitled1.png 750w&quot;
+        sizes=&quot;(max-width: 750px) 100vw, 750px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;그럼 &lt;code class=&quot;language-text&quot;&gt;BaseEntityService&lt;/code&gt;가 완성되었으니 사용하게 될 Service에서 상속만 하면 되겠죠? &lt;/p&gt;
+&lt;p&gt;그 구조는 다음과 같습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;kotlin&quot;&gt;&lt;pre class=&quot;language-kotlin&quot;&gt;&lt;code class=&quot;language-kotlin&quot;&gt;&lt;span class=&quot;token annotation builtin&quot;&gt;@Service&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;MenuService&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;val&lt;/span&gt; menuRepository&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; MenuRepository&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;val&lt;/span&gt; entityManager&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; EntityManager
+&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; BaseEntityService&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;Menu&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; Int&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;Menu&lt;span class=&quot;token operator&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; entityManager&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+
+        &lt;span class=&quot;token comment&quot;&gt;// 이런거.. 일일이 굳이 코드로 작성 할 필요는 없지 않을까?&lt;/span&gt;
+        &lt;span class=&quot;token comment&quot;&gt;// BaseEntityService에 이미 구현되어 있으니&lt;/span&gt;
+        &lt;span class=&quot;token comment&quot;&gt;// 이제 이런 JpaRepository에서 정의된 함수들은 없어도 됌&lt;/span&gt;
+        &lt;span class=&quot;token comment&quot;&gt;/*
+        fun save(menu: Menu): Menu { 
+        return menuRepository.save()
+        }
+
+    fun findAll(): MutableList&amp;lt;Menu&gt; {
+        return menuRepository.findAll()
+    }
+        
+        ...
+        */&lt;/span&gt;
+
+    &lt;span class=&quot;token keyword&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;findAllJoinRestaurant&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; MutableList&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;Menu&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; menuRepository&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;findAllJoinRestaurant&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이 서비스는 &lt;code class=&quot;language-text&quot;&gt;Menu&lt;/code&gt; 엔티티의 비즈니스로직을 처리하는 &lt;code class=&quot;language-text&quot;&gt;Service&lt;/code&gt;이고, Entity 타입과, Entity의 기본키가 될 자료타입을 제네릭으로 넘겨주고 Entity의 클래스와 DI 받은 EntityManager를 슈퍼클래스 생성자에 인자로 전달해주는 구조입니다.&lt;/p&gt;
+&lt;p&gt;위처럼 구조를 갖춘 이유는, 사실 아직 제가 잘 몰라서..ㅋㅋ 도 맞지만&lt;/p&gt;
+&lt;p&gt;BaseEntityService에서 받을 제네릭타입의 클래스를 런타임에선 얻을 수 없다는 걸 알았습니다.&lt;/p&gt;
+&lt;p&gt;Spring에서 제공하는 어떤 Util이 있다는 자료를 보긴 했지만, 일단은 포기하고 저렇게 인자로 전달해주는 방식을 선택했습니다.&lt;/p&gt;
+&lt;p&gt;어쨌든.. 저 형태를 갖추게 되면 MenuService에 직접적인 find, save, delete 등 JpaRepository에 정의되어진 spring data jpa의 기본 메소드들을 사용 할 수 있게 됩니다. 혹시 메소드의 재정의가 필요하다면 override하여 재정의 하면 됩니다.&lt;/p&gt;
+&lt;p&gt;그 다음은 controller 차례입니다.&lt;/p&gt;
+&lt;p&gt;&lt;br/&gt;&lt;br/&gt;&lt;/p&gt;
+&lt;h2&gt;Controller 공통 부분 중복 제거&lt;/h2&gt;
+&lt;p&gt;먼저 controller에서 항상 공통이되 중복되는 부분이 어떤걸까요?&lt;/p&gt;
+&lt;p&gt;주로 &lt;code class=&quot;language-text&quot;&gt;전체조회하기&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;id로 하나 조회하기,&lt;/code&gt; &lt;code class=&quot;language-text&quot;&gt;삭제하기&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;수정하기&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;등록하기&lt;/code&gt; 정도가 될 것 같습니다.&lt;/p&gt;
+&lt;p&gt;그래서 이것들을 제거하기 위해 다음과 같은 BaseAPIController를 작성했습니다.&lt;/p&gt;
+&lt;p&gt;저는 Restful 한 구조의 엔드포인트를 관리하는 controller를 생성할 것이기 때문에 &lt;code class=&quot;language-text&quot;&gt;@RestController&lt;/code&gt; 전용 슈퍼클래스를 생성 했습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;kotlin&quot;&gt;&lt;pre class=&quot;language-kotlin&quot;&gt;&lt;code class=&quot;language-kotlin&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;/**
+    * Rest API 공통 컨트롤러
+    * Generics description
+    * E: Entity, ID: Entity Primary Key (직렬화 할 수 있는 형태의 자료 형태), S: 해당 엔티티의 비즈니스 로직을 처리하기 위한 서비스 클래스 (BaseEntityService를 상속하는 객체 여야 함.)
+    */&lt;/span&gt;
+&lt;span class=&quot;token annotation builtin&quot;&gt;@RestController&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;abstract&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; BaseAPIController&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;E &lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; Any&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; ID &lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; Serializable&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; S &lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; BaseEntityService&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;E&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; ID&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token annotation builtin&quot;&gt;@Autowired&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;lateinit&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; service&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; S
+
+    &lt;span class=&quot;token annotation builtin&quot;&gt;@GetMapping&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;/{id}&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;getOneByID&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token annotation builtin&quot;&gt;@PathVariable&lt;/span&gt; id&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; ID&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; ResponseEntity&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;E&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; ResponseEntity&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;ok&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;service&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;findById&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;id&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;orElseThrow&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;EntityNotFoundException&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation builtin&quot;&gt;@GetMapping&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; ResponseEntity&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;MutableList&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;E&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; ResponseEntity&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;ok&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;service&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;findAll&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation builtin&quot;&gt;@PostMapping&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;entity&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; E&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; ResponseEntity&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;E&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; ResponseEntity&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;ok&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;service&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;entity&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation builtin&quot;&gt;@PutMapping&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;update&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;entity&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; E&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; ResponseEntity&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;E&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; ResponseEntity&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;ok&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;service&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;entity&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation builtin&quot;&gt;@DeleteMapping&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;/{id}&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;deleteById&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token annotation builtin&quot;&gt;@PathVariable&lt;/span&gt; id&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; ID&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        service&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;deleteById&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;id&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation builtin&quot;&gt;@DeleteMapping&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;delete&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;entity&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; E&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        service&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;delete&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;entity&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;상속받을 슈퍼클래스를 만들었으니 상속만 하면 슈퍼클래스에서 제공하는 엔드포인트는 모두 코드 작성 없이도 얻을 수 있을 것 같습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;kotlin&quot;&gt;&lt;pre class=&quot;language-kotlin&quot;&gt;&lt;code class=&quot;language-kotlin&quot;&gt;&lt;span class=&quot;token annotation builtin&quot;&gt;@RestController&lt;/span&gt;
+&lt;span class=&quot;token annotation builtin&quot;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token interpolation variable&quot;&gt;$API_VERSION_PREFIX&lt;/span&gt;/menus&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// ENDPOINT: localhost:8080/v1/menus&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;MenuController&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;val&lt;/span&gt; menuService&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; MenuService
+&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; BaseAPIController&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;Menu&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; Int&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; MenuService&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token comment&quot;&gt;// 여긴 분명.. 비어 있는데?&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;다음과 같이 슈퍼클래스에서 제공하는 엔드포인트에 정상적으로 요청하여 응답받아오는 것을 보실 수 있습니다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 926px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/6818db4932de6dc846a786978921974e/5aeae/Untitled2.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 54.319654427645794%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAAsSAAALEgHS3X78AAABdUlEQVQoz5WRS3LCMAyGfY+SN3k4cUicN6EMAbLoovtue4QeqMfpvf5KDjBlpgtYfPPHv2RJVsR0PGG3e8V+v8fpfMI8z5jPZ0zThGEY0Pe9Ybvd3p0ZPjNd22D9+Y2Xrx+I83Qwxi2JLnZDj67r0DSNoa7r5eLFq6rKoLU2VJVGvn9HdvyAOPQNurqCTFNIKRdNpfnOsgxFUSC9xFjZY2WKsrzFsyREFvsQUimoPEccx0iS5A5O5En+i7HXti0amn6JS4Pomxo5FeROObHZbAyKGxEcu3pX2Ct5OnpZQc81aNYS4m0+YRxHDGZ/w235zMh7o6TrU/+iWKlhpq66fItEXpILbTor2l8URQjDaNF1AM/zHkY4jgNrtYIsayjdIg0DxIEPj3zbsrCimEX6KMJ1XVM5zmiPXY84CuG5DnzyXS5q208hPLoY0POq3QG6UEijtSnme67paNvWcwV934cfBEg2GhH99rXngJvwlJywFH284C9leUhhO7AYLgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Untitled/Untitled%202.png&quot;
+        title=&quot;Untitled/Untitled%202.png&quot;
+        src=&quot;/static/6818db4932de6dc846a786978921974e/5aeae/Untitled2.png&quot;
+        srcset=&quot;/static/6818db4932de6dc846a786978921974e/bc34b/Untitled2.png 293w,
+/static/6818db4932de6dc846a786978921974e/da9f0/Untitled2.png 585w,
+/static/6818db4932de6dc846a786978921974e/5aeae/Untitled2.png 926w&quot;
+        sizes=&quot;(max-width: 926px) 100vw, 926px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;음.. 이걸론 뭔가 부족한 것 같아서 덧붙여 AOP로 request 정보를 logging하는 것도 추가해보겠습니다.&lt;/p&gt;
+&lt;h2&gt;AOP request logger 추가&lt;/h2&gt;
+&lt;p&gt;먼저 저는 Kotlin에서 사용하는 KotlinLogging을 통해 logging을 할거라서 의존성을 하나 추가해주었습니다. java나 기존 slf4j를 사용하실거라면 이 의존성은 필요 없습니다.&lt;/p&gt;
+&lt;p&gt;그러나 org.springframework.boot:spring-boot-starter-web 에서 제공하는 Aspect를 이용할 것이기 때문에 해당 의존성은 필수입니다. 아마 스프링부트 프로젝트라면 따로 추가하실 필요는 없습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;kotlin&quot;&gt;&lt;pre class=&quot;language-kotlin&quot;&gt;&lt;code class=&quot;language-kotlin&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;//logging&lt;/span&gt;
+&lt;span class=&quot;token function&quot;&gt;implementation&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;io.github.microutils:kotlin-logging:1.7.6&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;다음과 같이 Aspect logger를 작성해주고 pointcut과 around전략을 세웠습니다.&lt;/p&gt;
+&lt;p&gt;보시다시피 그냥 request를 받는 controller 메소드들에 한해서 request 정보를 로깅하는 용도입니다.&lt;/p&gt;
+&lt;p&gt;추후 APM(애플리케이션 성능 관리 툴)같은 것을 활용해서 로깅 추적 같은 것을 할 때 도움이 될 것 같습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;kotlin&quot;&gt;&lt;pre class=&quot;language-kotlin&quot;&gt;&lt;code class=&quot;language-kotlin&quot;&gt;&lt;span class=&quot;token annotation builtin&quot;&gt;@Component&lt;/span&gt;
+&lt;span class=&quot;token annotation builtin&quot;&gt;@Aspect&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; RequestLoggerAspect &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;val&lt;/span&gt; logger &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; KotlinLogging&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token comment&quot;&gt;// 해당 패키지 하위에 있는 컨트롤러의 모든 메소드에 적용&lt;/span&gt;
+    &lt;span class=&quot;token annotation builtin&quot;&gt;@Pointcut&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;execution(* com.example.demo..controller.*.*(..))&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;requestPointCut&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation builtin&quot;&gt;@Around&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;requestPointCut()&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token annotation builtin&quot;&gt;@Throws&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;Throwable&lt;span class=&quot;token operator&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;requestLogger&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;joinPoint&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; ProceedingJoinPoint&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; Any &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;val&lt;/span&gt; result &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; joinPoint&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;proceed&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;val&lt;/span&gt; request &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;RequestContextHolder&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;currentRequestAttributes&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;as&lt;/span&gt; ServletRequestAttributes&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;request
+
+        &lt;span class=&quot;token comment&quot;&gt;// TODO mapper를 빈으로 등록 해버리고 싱글톤 형태로 관리할까?&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;val&lt;/span&gt; mapper &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;ObjectMapper&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+        &lt;span class=&quot;token keyword&quot;&gt;val&lt;/span&gt; logMap&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; MutableMap&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;String&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; Any&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;HashMap&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+        logMap&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;sessionID&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; request&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;requestedSessionId&lt;span class=&quot;token operator&quot;&gt;?:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&quot;&lt;/span&gt;
+        logMap&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;requestURI&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; request&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;requestURI
+        logMap&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;requestMethod&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; request&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;method
+        logMap&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;sourceMethod&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; joinPoint&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;signature&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;declaringType&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;simpleName &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;.&quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; joinPoint&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;signature&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;name
+        logMap&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;params&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; request&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;parameterMap
+
+        logger&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;mapper&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;writerWithDefaultPrettyPrinter&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;writeValueAsString&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;logMap&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; joinPoint&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;proceed&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;자, 이제 AOP 적용 후 요청을 해보면?&lt;/p&gt;
+&lt;p&gt;다음과 같이 로깅됩니다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 731px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/eeed86cb0f82fee8b5d989908965342b/b7ee0/Untitled3.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 19.835841313269494%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsSAAALEgHS3X78AAAAq0lEQVQY022OWQ6CMBiEexktCAVK6SLSslTjEhPvf5qxJZAQ9OHLv2QyM8S6J/ztg2F6w7oH2v6OQnUwfAQrL1DGQ6oRddMj4xZMTii1B1N+3gtzRd4MSE4KGTuDVLWFG16zWck7qCAWQVAJF2YPqSfkRYsDFaBJM5OkEsflXicNvwiJyWNoF1tEQyGDWQiJiaso7lvo7t5C+NIkYwanPKKRZvrXZGf+LyjyBbLUfyXRqHAfAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Untitled/Untitled%203.png&quot;
+        title=&quot;Untitled/Untitled%203.png&quot;
+        src=&quot;/static/eeed86cb0f82fee8b5d989908965342b/b7ee0/Untitled3.png&quot;
+        srcset=&quot;/static/eeed86cb0f82fee8b5d989908965342b/bc34b/Untitled3.png 293w,
+/static/eeed86cb0f82fee8b5d989908965342b/da9f0/Untitled3.png 585w,
+/static/eeed86cb0f82fee8b5d989908965342b/b7ee0/Untitled3.png 731w&quot;
+        sizes=&quot;(max-width: 731px) 100vw, 731px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;br/&gt;&lt;br/&gt;&lt;/p&gt;
+&lt;h2&gt;Repository 공통 부분 중복 제거&lt;/h2&gt;
+&lt;p&gt;뭐 인덱스를 같은 형태로 가지는, 예를 들어 createdAt 컬럼에 인덱스가 있고 범위 조회를 해야 하는 조건과 같은 것이 될 수도 있겠습니다. (&lt;code class=&quot;language-text&quot;&gt;SELECT * FROM entity WHERE date BETWEEN &amp;#39;YYYY-MM-DD&amp;#39; AND &amp;#39;YYYY-MM-DD&amp;#39;&lt;/code&gt;) 혹은 2차캐시를 적용하거나 locking이 필요한 경우에도 공통되는 부분들을 이 &lt;code class=&quot;language-text&quot;&gt;BaseEntityRepository&lt;/code&gt;에 정의 후 각각의 엔티티 &lt;code class=&quot;language-text&quot;&gt;Repository&lt;/code&gt;에서 상속받게 하면 중복되는 부분들이 제거 되고 한결 깔끔해진 코드를 볼 수 있을 것 같습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;kotlin&quot;&gt;&lt;pre class=&quot;language-kotlin&quot;&gt;&lt;code class=&quot;language-kotlin&quot;&gt;&lt;span class=&quot;token annotation builtin&quot;&gt;@NoRepositoryBean&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;interface&lt;/span&gt; BaseEntityRepository&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;T&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; ID &lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; Serializable&lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; JpaRepository&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;T&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; ID&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;findByCreatedAtBetween&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;start&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; LocalDateTime&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; end&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; LocalDateTime&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; MutableList&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;T&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;글이 너무 길어져 쓰고보니 많이 장황하네요, 어쨌든 앞으로 이런 중복되는 코드를 제거해가며 확장성 있는 구조가 될 수 있게 하는 연구를 많이 해 봐야겠습니다!&lt;/p&gt;
+&lt;p&gt;&lt;br&gt;
+코드링크 -&gt; &lt;a href=&quot;https://github.com/thxwelchs/springboot-starter-with-kotlin&quot;&gt;https://github.com/thxwelchs/springboot-starter-with-kotlin&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[JPA N+1현상 삽질]]></title><description><![CDATA[JPA N+1현상 querydsl fetchJoin 삽질한 경험 공유 Kotlin SpringBoot(2.2.4) querydsl(4.2.1) 문제 JPA로 쿼리를 하다보면, N +…]]></description><link>https://thxwelchs.github.io/JPA-N+1/</link><guid isPermaLink="false">https://thxwelchs.github.io/JPA-N+1/</guid><pubDate>Mon, 24 Feb 2020 02:08:55 GMT</pubDate><content:encoded>&lt;h1&gt;JPA N+1현상 querydsl fetchJoin 삽질한 경험 공유&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;Kotlin&lt;/li&gt;
 &lt;li&gt;SpringBoot(2.2.4)&lt;/li&gt;
