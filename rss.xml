@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[GDD blog]]></title><description><![CDATA[오늘도 열심히 GDD(Google Driven Development)]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Tue, 25 Feb 2020 05:04:32 GMT</lastBuildDate><item><title><![CDATA[Spring 중복코드 줄여보기]]></title><description><![CDATA[Spring 다형성, 상속성을 이용한 중복코드 줄여보기 스프링부트를 활용하면 상당 부분 설정이 편리해진 부분이 있었지만, 흔한 MVC 패턴에서(물론 실제 개발은 MVVM…]]></description><link>https://thxwelchs.github.io/SPRING-DUPLICATION/</link><guid isPermaLink="false">https://thxwelchs.github.io/SPRING-DUPLICATION/</guid><pubDate>Tue, 25 Feb 2020 12:51:55 GMT</pubDate><content:encoded>&lt;h1&gt;Spring 다형성, 상속성을 이용한 중복코드 줄여보기&lt;/h1&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[GDD blog]]></title><description><![CDATA[오늘도 열심히 GDD(Google Driven Development)]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Tue, 25 Feb 2020 05:10:43 GMT</lastBuildDate><item><title><![CDATA[Spring 중복코드 줄여보기]]></title><description><![CDATA[Spring 다형성, 상속성을 이용한 중복코드 줄여보기 스프링부트를 활용하면 상당 부분 설정이 편리해진 부분이 있었지만, 흔한 MVC 패턴에서(물론 실제 개발은 MVVM…]]></description><link>https://thxwelchs.github.io/SPRING-DUPLICATION/</link><guid isPermaLink="false">https://thxwelchs.github.io/SPRING-DUPLICATION/</guid><pubDate>Tue, 25 Feb 2020 12:51:55 GMT</pubDate><content:encoded>&lt;h1&gt;Spring 다형성, 상속성을 이용한 중복코드 줄여보기&lt;/h1&gt;
 &lt;p&gt;스프링부트를 활용하면 상당 부분 설정이 편리해진 부분이 있었지만, 흔한 MVC 패턴에서(물론 실제 개발은 MVVM 패턴으로 개발중) 엔드포인트 혹은 엔티티가 늘어 날 때마다 반복되는 코드들이 생기는게 불만스러웠습니다. 그래서 고민을 하게 되었습니다.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;객체지향스럽게(?) 다형성과 상속성을 지키는 구조로 중복되는 코드들을 줄여보는게 어떨까?&lt;/p&gt;
@@ -313,6 +313,9 @@
 &lt;br/&gt;
 &lt;h1&gt;문제&lt;/h1&gt;
 &lt;p&gt;JPA로 쿼리를 하다보면, N + 1 문제를 마주하게 될 수도 있는데요.&lt;/p&gt;
+&lt;p&gt;사실 저의 문제는 정확하게 말하면 N+1 문제는 아닙니다. N+1이란
+@OneToMany의 관계에서 One에 해당하는 엔티티를 조회하면 Many의 해당하는 엔티티가 지연로딩 되어 그 갯수만큼 더 조회한다고 하여 One+N(Many) N+1현상이라고 하는데 저의 경우엔 @ManyToOne의 조회인데도 One에 해당하는
+엔티티가 영속성 컨텍스트에 존재하지 않으면 쿼리하게 되는 현상입니다.&lt;/p&gt;
 &lt;p&gt;저는 보통  &lt;code class=&quot;language-text&quot;&gt;@Query&lt;/code&gt; 어노테이션에 JPQL 쿼리를 작성해서 해결하곤 했었습니다.&lt;/p&gt;
 &lt;p&gt;근데 querydsl에도 fetchJoin이 있다는걸 최근(?)에서야 알고 사용해보려고 하는데 문제가 해결이 되지 않았습니다. 그 이유는.. 참 어처구니가 없었는데요 혹시나 이런 경우를 겪고 있는 분이 계실까 해서 공유차 포스팅합니다.&lt;/p&gt;
 &lt;p&gt;이유는 저처럼 join 함수를 잘못 이해하고 사용하면 매개변수 타입에 따라 fetchJoin 함수를 호출하여도 N + 1 문제가 해결이 안될수도 있다는 것인데요 ㅋㅋ&lt;/p&gt;
