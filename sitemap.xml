@@ -16,6 +16,7 @@
 <url> <loc>https://thxwelchs.github.io/react-debug/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/JPA-N+1/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/SPRING-DUPLICATION/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/ES2020/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/직렬화/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/스트림/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/마샬링/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -49,6 +50,10 @@
 <url> <loc>https://thxwelchs.github.io/tags/fetch-join/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/다형성/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/상속성/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/tags/javascript/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/tags/es-2020/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/tags/ecma-script/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/tags/ecma/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/author/ghost/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/author/another-author/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/author/thxwelchs/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>

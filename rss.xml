@@ -1,4 +1,126 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[GDD blog]]></title><description><![CDATA[오늘도 열심히 GDD(Google Driven Development)]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Tue, 25 Feb 2020 05:10:43 GMT</lastBuildDate><item><title><![CDATA[Spring 중복코드 줄여보기]]></title><description><![CDATA[Spring 다형성, 상속성을 이용한 중복코드 줄여보기 스프링부트를 활용하면 상당 부분 설정이 편리해진 부분이 있었지만, 흔한 MVC 패턴에서(물론 실제 개발은 MVVM…]]></description><link>https://thxwelchs.github.io/SPRING-DUPLICATION/</link><guid isPermaLink="false">https://thxwelchs.github.io/SPRING-DUPLICATION/</guid><pubDate>Tue, 25 Feb 2020 12:51:55 GMT</pubDate><content:encoded>&lt;h1&gt;Spring 다형성, 상속성을 이용한 중복코드 줄여보기&lt;/h1&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[GDD blog]]></title><description><![CDATA[오늘도 열심히 GDD(Google Driven Development)]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Sat, 29 Feb 2020 13:44:41 GMT</lastBuildDate><item><title><![CDATA[ES2020]]></title><description><![CDATA[2020년이 되면서 javascript 표준 규격인 ECMA script 에도 몇가지 추가된 사항들이 생겼습니다!
+ 어떤 것들이 있는지 한번 살펴보겠습니다. 널 병합 연산자 (Nullish coalescing operator…]]></description><link>https://thxwelchs.github.io/ES2020/</link><guid isPermaLink="false">https://thxwelchs.github.io/ES2020/</guid><pubDate>Sat, 29 Feb 2020 22:31:55 GMT</pubDate><content:encoded>&lt;p&gt;2020년이 되면서 javascript 표준 규격인 ECMA script 에도 몇가지 추가된 사항들이 생겼습니다!
+&lt;br&gt;
+어떤 것들이 있는지 한번 살펴보겠습니다.&lt;/p&gt;
+&lt;br/&gt;
+&lt;h1&gt;널 병합 연산자 (Nullish coalescing operator)&lt;/h1&gt;
+&lt;p&gt;널 병합 연산자란 왼쪽에 대입되어 있는 피연산자 값이 &lt;code class=&quot;language-text&quot;&gt;null&lt;/code&gt; 이거나 &lt;code class=&quot;language-text&quot;&gt;undefined&lt;/code&gt; 일 때 오른쪽에 대입되어있는 피연산자 값이 반환되게 하는 연산자입니다.&lt;/p&gt;
+&lt;p&gt;이 널 병합 연산자가 제공되기 전의 ES버전에서라면 아마도 논리연산자 OR &lt;code class=&quot;language-text&quot;&gt;||&lt;/code&gt; 를 통해 기본 값을 설정하거나, &lt;code class=&quot;language-text&quot;&gt;삼항연산자&lt;/code&gt; 혹은 &lt;code class=&quot;language-text&quot;&gt;if else&lt;/code&gt;문을 통한 null 처리를 하셨을 겁니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;javascript&quot;&gt;&lt;pre class=&quot;language-javascript&quot;&gt;&lt;code class=&quot;language-javascript&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; iamNull &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;null&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; iamUndefined &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;undefined&lt;/span&gt;
+
+
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; hello &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; iamNull &lt;span class=&quot;token operator&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;world&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// OR 연산자로 기본값 처리&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; hello2 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; iamNull &lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt; iamNull &lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;world&apos;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// 삼항연산자로 기본값 처리&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; hello3 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; iamNull &lt;span class=&quot;token comment&quot;&gt;// if문으로 null 일때 기본 값 처리&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;!&lt;/span&gt;hello3&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    hello3 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;world&apos;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;위 예시코드에서는 큰 문제가 하나 있는데요. 그것은 &lt;code class=&quot;language-text&quot;&gt;iamNull&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;iamUndefined&lt;/code&gt; 의 값이 &lt;code class=&quot;language-text&quot;&gt;0&lt;/code&gt; 이거나 &lt;code class=&quot;language-text&quot;&gt;&amp;#39;&amp;#39;&lt;/code&gt; 과 같은 값일 때도 &lt;code class=&quot;language-text&quot;&gt;false&lt;/code&gt; 로 강제 변환되기 때문에  반드시 nullable 한 값 일 때만 처리하고 싶은 경우는 주의 하여야 합니다.&lt;/p&gt;
+&lt;p&gt;그런데 ES2020에서부터 제공되어지는 &lt;strong&gt;널 병합 연산자&lt;/strong&gt;를 사용하면 반드시 &lt;code class=&quot;language-text&quot;&gt;null&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;undefined&lt;/code&gt;인 값 의 default 값 처리를 할 수 있습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;javascript&quot;&gt;&lt;pre class=&quot;language-javascript&quot;&gt;&lt;code class=&quot;language-javascript&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; hello &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;world&apos;&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;// hello: 0 &lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; hello2 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;&apos;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;world&apos;&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;// hello2: &apos;&apos;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; hello3 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;null&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;world&apos;&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;// hello3: &apos;world&apos;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; hello4 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;undefined&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;world&apos;&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;// hello4: &apos;world&apos;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;또한 이것을 활용하여 object의 체이닝도 할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;예를들면 이런 것 입니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;javascript&quot;&gt;&lt;pre class=&quot;language-javascript&quot;&gt;&lt;code class=&quot;language-javascript&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; a &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    b&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        c&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;	
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// Uncaught TypeError: Cannot read property &apos;c&apos; of undefined&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;// a밑에 d가 undefined이므로 c 속성을 읽으려고 하면 에러 발생&lt;/span&gt;
+console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;a&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;d&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;c&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// 그래서 보통 이러한 처리를 &amp;amp;&amp;amp; 연산자로 처리하기도 했음&lt;/span&gt;
+console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;a&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;d &lt;span class=&quot;token operator&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; a&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;d&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;c&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;// 그러나 널 병합 연산자로 더욱 깔끔하게 처리&lt;/span&gt;
+console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;a&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;d&lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;c&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;// 결과: undefined&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;h1&gt;Promise.allSettled ( 안정적으로 모든 promise 작업 처리하기 )&lt;/h1&gt;
+&lt;p&gt;순차적이지 않은 비동기적인 작업을 수행 할 때 &lt;code class=&quot;language-text&quot;&gt;Promise&lt;/code&gt; 패턴을 통해 콜백 지옥을 해소시키고, 여러개의 &lt;code class=&quot;language-text&quot;&gt;Promise&lt;/code&gt;를 처리 할 땐 &lt;code class=&quot;language-text&quot;&gt;Promise.all&lt;/code&gt; 함수를 통해&lt;/p&gt;
+&lt;p&gt;처리하셨을겁니다.&lt;/p&gt;
+&lt;p&gt;그런데 &lt;code class=&quot;language-text&quot;&gt;Promise.all&lt;/code&gt; 의 큰 단점은 처리 할 여러개의 &lt;code class=&quot;language-text&quot;&gt;Promise&lt;/code&gt; 중 하나라도 &lt;code class=&quot;language-text&quot;&gt;reject&lt;/code&gt; 되는 작업이 있다면, 나머지 성공되는 작업들의 결과 값을 처리 할 수 없다는 것인데요, 이것 또한 예시로 보겠습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;javascript&quot;&gt;&lt;pre class=&quot;language-javascript&quot;&gt;&lt;code class=&quot;language-javascript&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; promise1 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Promise&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;resolve&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; reject&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;setTimeout&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;resolve&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;성공 1&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; promise2 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Promise&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;resolve&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; reject&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;setTimeout&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;reject&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;실패!!!&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; promise3 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Promise&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;resolve&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; reject&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;setTimeout&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;resolve&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;성공 3&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; promise4 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Promise&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;resolve&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; reject&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;setTimeout&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;resolve&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;성공 4&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; promises &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;promise1&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; promise2&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; promise3&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; promise4&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;/* Promise.all */&lt;/span&gt;
+Promise&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;all&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;promises&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;token parameter&quot;&gt;results&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; 
+    console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;results&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;catch&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;token parameter&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;// 2번째 프로미스가 reject 되므로 catch 함수로 들어오게 됌&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;// 그럼 나머지 1,3,4는..?&lt;/span&gt;
+    console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;err&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;// 결과: 실패!!!&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;/* Promise.allSettled*/&lt;/span&gt;
+Promise&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;allSettled&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;promises&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;token parameter&quot;&gt;results&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; 
+    console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;results&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;catch&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;token parameter&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;err&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Promise.allSettled로 처리한 결과&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 252px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/8e4e316cb8fd15e01f576bad45c0a6dc/c7625/Untitled.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 83.33333333333334%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAARCAYAAADdRIy+AAAACXBIWXMAAAsSAAALEgHS3X78AAACmElEQVQ4y41T15LbMAz0N2RSxk0SVajeuyxbLneXnqfM5CH//x0bgLo4zZe5BwxFUFwCu4uF9ENEWY7xMKHbjcjrFn6cQrccDPsJdTegHw8wbIm0rLA7HOm/PeKsULnD6YKq7VE2Haqux2KtC4RxgnI8Iyx7dP2AcToiSjO0dNGmB70ogWY6EI4HGcS0T+F4ATaGCZ/OuAAZRLApt1gRoG5aMMMcaxnDzyrU4wlJ2UL6AQxLQBMCpk3/2KYKQbmVZoCLWW71a3Buwa/wwZo2ekht1HfYJAP0qIZhmmiqALs2RJq4aOl72kUoMo8uC1Xh33EFZHQ9bqAXE8UBa+HA8yy8P6e47GNYjg3Xc6gSMRegz4A/1ysgA7EwflJgIyPk7YDd+QEhcZgUJWxpQ1C7K9WeuALeAlOAa8WhDUN62BKgl7cohgnRI4dcmXQdBez5DvxAEq/WTbA/WlbAYQm9PM0c0rcmTHR1oFpmHk9jjMMQkeLmMwGjCqJ7C41AWZQN5fZ9iE93mVqT2L22/2TLM4cBwnrExo2VQafLA5m4RpyX2FKV3OJWAZhYkrpL7RfgP6Jwgi/pMoDmZ5B5j7g9EJcNLOKVlWUOeXVdC74nEEXuM1qmSrWAfXjBNt0pDtnMzN1EvEWhhY/vJnz/9pnsNFd7E/D3l/SkhaiOFCesDEup+vaYkJljSCkwTSM+fPmKl8s1dWUp0Cd8SBw2xKGXoqwqnO7ukROHWTkLs1JcmXi91vDizeqxOvGUD+fDrSWJwxx2McKr95BZQ4o6CMh3YSjJfw5iUplHkdV+lm00nuXqDC0jDolPW1rKLuw9nuWm9NUcM/h/Z1kF+5BmWZQTzJrMbfDs2rifEuy6EAFVyUq/WhlXsFu2+QGD1u+GGstkuQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;ES2020/Untitled.png&quot;
+        title=&quot;ES2020/Untitled.png&quot;
+        src=&quot;/static/8e4e316cb8fd15e01f576bad45c0a6dc/c7625/Untitled.png&quot;
+        srcset=&quot;/static/8e4e316cb8fd15e01f576bad45c0a6dc/c7625/Untitled.png 252w&quot;
+        sizes=&quot;(max-width: 252px) 100vw, 252px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;위와 같이 처리된 결과의 상태와, 값 그리고 실패하였을 경우에는 그에 대한 값이 reason 프로퍼티로 들어오게 되어, 비동기의 성공한 결과뿐 아니라 실패한 결과와 같이 처리 할 수 있게 됩니다.&lt;/p&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;h1&gt;globalThis&lt;/h1&gt;
+&lt;p&gt;globalThis는 Javascript의 최상위 객체인 global 객체에 access 하기 위해 ES2020에서 추가된 방식입니다.&lt;/p&gt;
+&lt;p&gt;최상위 객체라면 브라우저에서는 window 객체를 의미하고, &lt;/p&gt;
+&lt;p&gt;Node.js 에서는 global 객체를 의미합니다. &lt;/p&gt;
+&lt;p&gt;이러하듯, 자바스크립트가 실행되는 런타임 환경이 달라지면 global 객체에 접근하는 방식이 달라져 불편하기 때문에 이제는 globalThis 라는 객체를 사용하여  어떤 런타임에서든 동일하게 접근 할 수 있습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;javascript&quot;&gt;&lt;pre class=&quot;language-javascript&quot;&gt;&lt;code class=&quot;language-javascript&quot;&gt;globalThis&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// window.Array() 와 같음&lt;/span&gt;
+globalThis&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;alert&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;Hi!&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// window.alert(&apos;Hi!&apos;) 와 같음&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;h1&gt;참고&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator&quot;&gt;https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Nullish&lt;em&gt;coalescing&lt;/em&gt;operator&lt;/a&gt;
+&lt;a href=&quot;https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled&quot;&gt;https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled&lt;/a&gt;
+&lt;a href=&quot;https://dev.to/carlillo/es2020-features-in-simple-examples-1513&quot;&gt;https://dev.to/carlillo/es2020-features-in-simple-examples-1513&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</content:encoded></item><item><title><![CDATA[Spring 중복코드 줄여보기]]></title><description><![CDATA[Spring 다형성, 상속성을 이용한 중복코드 줄여보기 스프링부트를 활용하면 상당 부분 설정이 편리해진 부분이 있었지만, 흔한 MVC 패턴에서(물론 실제 개발은 MVVM…]]></description><link>https://thxwelchs.github.io/SPRING-DUPLICATION/</link><guid isPermaLink="false">https://thxwelchs.github.io/SPRING-DUPLICATION/</guid><pubDate>Tue, 25 Feb 2020 12:51:55 GMT</pubDate><content:encoded>&lt;h1&gt;Spring 다형성, 상속성을 이용한 중복코드 줄여보기&lt;/h1&gt;
 &lt;p&gt;스프링부트를 활용하면 상당 부분 설정이 편리해진 부분이 있었지만, 흔한 MVC 패턴에서(물론 실제 개발은 MVVM 패턴으로 개발중) 엔드포인트 혹은 엔티티가 늘어 날 때마다 반복되는 코드들이 생기는게 불만스러웠습니다. 그래서 고민을 하게 되었습니다.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;객체지향스럽게(?) 다형성과 상속성을 지키는 구조로 중복되는 코드들을 줄여보는게 어떨까?&lt;/p&gt;
