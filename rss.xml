@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[GDD blog]]></title><description><![CDATA[오늘도 열심히 GDD(Google Driven Development)]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Fri, 06 Mar 2020 14:09:35 GMT</lastBuildDate><item><title><![CDATA[JPA 양방향 Entity 무한재귀 문제해결]]></title><description><![CDATA[JPA ORM으로 개발하다보면 꽤나 많은 양방향 참조가 필요한 모델들이 있습니다. 그런데 문제는 이런 양방향관계를 가진 객체를 직렬화 하려고 할 때 무한참조가 되어 StackOverFlow를 발생시키는데요. 그렇다고 해서 ORM…]]></description><link>https://thxwelchs.github.io/JPA 양방향 Entity 무한 재귀 문제 해결/</link><guid isPermaLink="false">https://thxwelchs.github.io/JPA 양방향 Entity 무한 재귀 문제 해결/</guid><pubDate>Fri, 06 Mar 2020 22:47:00 GMT</pubDate><content:encoded>&lt;p&gt;JPA ORM으로 개발하다보면 꽤나 많은 양방향 참조가 필요한 모델들이 있습니다. 그런데 문제는 이런 양방향관계를 가진 객체를 직렬화 하려고 할 때 무한참조가 되어 StackOverFlow를 발생시키는데요. 그렇다고 해서 ORM이 가진 장점을 포기하고 단방향으로만 구성 할 수는 없을겁니다. &lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[GDD blog]]></title><description><![CDATA[오늘도 열심히 GDD(Google Driven Development)]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Thu, 07 May 2020 01:58:38 GMT</lastBuildDate><item><title><![CDATA[JPA 양방향 Entity 무한재귀 문제해결]]></title><description><![CDATA[JPA ORM으로 개발하다보면 꽤나 많은 양방향 참조가 필요한 모델들이 있습니다. 그런데 문제는 이런 양방향관계를 가진 객체를 직렬화 하려고 할 때 무한참조가 되어 StackOverFlow를 발생시키는데요. 그렇다고 해서 ORM…]]></description><link>https://thxwelchs.github.io/JPA 양방향 Entity 무한 재귀 문제 해결/</link><guid isPermaLink="false">https://thxwelchs.github.io/JPA 양방향 Entity 무한 재귀 문제 해결/</guid><pubDate>Fri, 06 Mar 2020 22:47:00 GMT</pubDate><content:encoded>&lt;p&gt;JPA ORM으로 개발하다보면 꽤나 많은 양방향 참조가 필요한 모델들이 있습니다. 그런데 문제는 이런 양방향관계를 가진 객체를 직렬화 하려고 할 때 무한참조가 되어 StackOverFlow를 발생시키는데요. 그렇다고 해서 ORM이 가진 장점을 포기하고 단방향으로만 구성 할 수는 없을겁니다. &lt;/p&gt;
 &lt;p&gt;이번엔 양방향 참조를 가짐에도 불구하고 직렬화를 해결하는 해결 법을 살펴보겠습니다.&lt;/p&gt;
 &lt;p&gt;먼저 이 문제에 대한 해결방법은 다음과 같다고 볼 수 있습니다.&lt;/p&gt;
 &lt;ol&gt;
@@ -707,7 +707,7 @@ if(!hello3) {
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
       
-&lt;p&gt;위 예시코드에서는 큰 문제가 하나 있는데요. 그것은 &lt;code class=&quot;language-text&quot;&gt;iamNull&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;iamUndefined&lt;/code&gt; 의 값이 &lt;code class=&quot;language-text&quot;&gt;0&lt;/code&gt; 이거나 &lt;code class=&quot;language-text&quot;&gt;&amp;#39;&amp;#39;&lt;/code&gt; 과 같은 값일 때도 &lt;code class=&quot;language-text&quot;&gt;false&lt;/code&gt; 로 강제 변환되기 때문에  반드시 nullable 한 값 일 때만 처리하고 싶은 경우는 주의 하여야 합니다.&lt;/p&gt;
+&lt;p&gt;위 예시코드에서는 큰 문제가 하나 있는데요. 그것은 &lt;code class=&quot;language-text&quot;&gt;iamNull&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;iamUndefined&lt;/code&gt; 의 값이 &lt;code class=&quot;language-text&quot;&gt;0&lt;/code&gt; 이거나 &lt;code class=&quot;language-text&quot;&gt;&amp;#39;&amp;#39;&lt;/code&gt; 과 같은 값일 때도 &lt;code class=&quot;language-text&quot;&gt;false&lt;/code&gt; 로 강제 변환되기 때문에  반드시 nullish 한 값 일 때만 처리하고 싶은 경우는 주의 하여야 합니다.&lt;/p&gt;
 &lt;p&gt;그런데 ES2020에서부터 제공되어지는 &lt;strong&gt;널 병합 연산자&lt;/strong&gt;를 사용하면 반드시 &lt;code class=&quot;language-text&quot;&gt;null&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;undefined&lt;/code&gt;인 값 의 default 값 처리를 할 수 있습니다.&lt;/p&gt;
 
         &lt;deckgo-highlight-code language=&quot;javascript&quot; &gt;
@@ -721,7 +721,8 @@ const hello4 = undefined ?? &amp;#39;world&amp;#39;
 // hello4: &amp;#39;world&amp;#39;&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
       
-&lt;p&gt;또한 이것을 활용하여 object의 체이닝도 할 수 있습니다.&lt;/p&gt;
+&lt;h1&gt;선택적 체이닝 (Optional chaining)&lt;/h1&gt;
+&lt;p&gt;또한 이제는 알려지지 않은 속성 값에 대해 null safe한 object의 체이닝도 할 수 있습니다.&lt;/p&gt;
 &lt;p&gt;예를들면 이런 것 입니다.&lt;/p&gt;
 
         &lt;deckgo-highlight-code language=&quot;javascript&quot; &gt;
