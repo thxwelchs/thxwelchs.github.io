@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Tech blog]]></title><description><![CDATA[끄적끄적]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Sat, 28 Aug 2021 09:33:06 GMT</lastBuildDate><item><title><![CDATA[Embedded Tomcat과 Tomcat의 차이]]></title><description><![CDATA[…]]></description><link>https://thxwelchs.github.io/EmbeddedTomcat과Tomcat의차이/</link><guid isPermaLink="false">https://thxwelchs.github.io/EmbeddedTomcat과Tomcat의차이/</guid><pubDate>Sat, 28 Aug 2021 08:42:30 GMT</pubDate><content:encoded>&lt;p&gt;이번 포스팅에서는 내장톰캣과 설치형으로 사용하는 외장톰캣이 무엇이 다른지..? 그리고 내장톰캣으로는 해결 할 수 없는것이 있는지 간단하게 알아보았습니다.&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Tech blog]]></title><description><![CDATA[끄적끄적]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Sat, 28 Aug 2021 09:47:09 GMT</lastBuildDate><item><title><![CDATA[Embedded Tomcat과 Tomcat의 차이]]></title><description><![CDATA[…]]></description><link>https://thxwelchs.github.io/EmbeddedTomcat과Tomcat의차이/</link><guid isPermaLink="false">https://thxwelchs.github.io/EmbeddedTomcat과Tomcat의차이/</guid><pubDate>Sat, 28 Aug 2021 08:42:30 GMT</pubDate><content:encoded>&lt;p&gt;이번 포스팅에서는 내장톰캣과 설치형으로 사용하는 외장톰캣이 무엇이 다른지..? 그리고 내장톰캣으로는 해결 할 수 없는것이 있는지 간단하게 알아보았습니다.&lt;/p&gt;
 &lt;p&gt;포스팅 내용을 작성하기 전 이 내용을 조사해본 것은 전 직장 동료분과 오랜만에 만나 개발 담소를 나누다 내장톰캣, 외장톰캣과 관련된 이야기가 오갔고, 좀 더 확실하게 알아보기로 했습니다.&lt;/p&gt;
 &lt;p&gt;거의 대부분의 Spring 개발자라면 알고 있을 사실이지만, Spring Boot에는 &lt;code class=&quot;language-text&quot;&gt;tomcat&lt;/code&gt;이 내장되어 있어, 애플리케이션을 빌드하고 실행하는 것만으로 웹애플리케이션을 서비스 할 수 있습니다. 즉 스프링부트는 실행될 환경에 톰캣을 설치할 필요없이 애플리케이션을 바로 실행 할 수 있다는 것을 의미합니다. &lt;/p&gt;
 &lt;p&gt;그렇다면 과거 스프링 레거시에서는 어떻게 웹 애플리케이션을 실행 할 수 있었을까요? &lt;/p&gt;
@@ -63,14 +63,10 @@
 &lt;p&gt;이 기능을 사용하기 위해서는 위에서 잠깐 언급한 스프링 외장톰캣 구성요소 파일인 &lt;code class=&quot;language-text&quot;&gt;server.xml&lt;/code&gt; 을 손보면 됩니다.&lt;/p&gt;
 &lt;deckgo-highlight-code language=&quot;xml&quot;  &gt;
           &lt;code slot=&quot;code&quot;&gt;&amp;lt;!--...--&amp;gt;
-&amp;lt;Host name=”a.thxwelchs.com”  appBase=”/webapps/weba″
-unpackWARs=”true” autoDeploy=”true”
-xmlValidation=”false” xmlNamespaceAware=”false”&amp;gt;
+&amp;lt;Host name=&amp;quot;a.thxwelchs.com&amp;quot;  appBase=&amp;quot;/webapps/weba&amp;quot; unpackWARs=&amp;quot;true&amp;quot; autoDeploy=&amp;quot;true&amp;quot; xmlValidation=&amp;quot;false&amp;quot; xmlNamespaceAware=&amp;quot;false&amp;quot;&amp;gt;
 &amp;lt;/Host&amp;gt;
 
-&amp;lt;Host name=”b.thxwelchs.com”  appBase=”/webapps/webb″
-unpackWARs=”true” autoDeploy=”true”
-xmlValidation=”false” xmlNamespaceAware=”false”&amp;gt;
+&amp;lt;Host name=&amp;quot;b.thxwelchs.com&amp;quot;  appBase=&amp;quot;/webapps/webb&amp;quot; unpackWARs=&amp;quot;true&amp;quot; autoDeploy=&amp;quot;true&amp;quot; xmlValidation=&amp;quot;false&amp;quot; xmlNamespaceAware=&amp;quot;false&amp;quot;&amp;gt;
 &amp;lt;/Host&amp;gt;
 &amp;lt;!--...--&amp;gt;&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
