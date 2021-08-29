@@ -1,8 +1,405 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Tech blog]]></title><description><![CDATA[끄적끄적]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Sat, 28 Aug 2021 10:05:32 GMT</lastBuildDate><item><title><![CDATA[Embedded Tomcat과 Tomcat의 차이]]></title><description><![CDATA[…]]></description><link>https://thxwelchs.github.io/EmbeddedTomcat과Tomcat의차이/</link><guid isPermaLink="false">https://thxwelchs.github.io/EmbeddedTomcat과Tomcat의차이/</guid><pubDate>Sat, 28 Aug 2021 08:42:30 GMT</pubDate><content:encoded>&lt;p&gt;이번 포스팅에서는 내장톰캣과 설치형으로 사용하는 외장톰캣이 무엇이 다른지..? 그리고 내장톰캣으로는 해결 할 수 없는것이 있는지 간단하게 알아보았습니다.&lt;/p&gt;
-&lt;p&gt;포스팅 내용을 작성하기 전 이 내용을 조사해본 것은 전 직장 동료분과 오랜만에 만나 개발 담소를 나누다 내장톰캣, 외장톰캣과 관련된 이야기가 오갔고, 좀 더 확실하게 알아보기로 했습니다.&lt;/p&gt;
-&lt;p&gt;거의 대부분의 Spring 개발자라면 알고 있을 사실이지만, Spring Boot에는 &lt;code class=&quot;language-text&quot;&gt;tomcat&lt;/code&gt;이 내장되어 있어, 애플리케이션을 빌드하고 실행하는 것만으로 웹애플리케이션을 서비스 할 수 있습니다. 즉 스프링부트는 실행될 환경에 톰캣을 설치할 필요없이 애플리케이션을 바로 실행 할 수 있다는 것을 의미합니다. &lt;/p&gt;
-&lt;p&gt;그렇다면 과거 스프링 레거시에서는 어떻게 웹 애플리케이션을 실행 할 수 있었을까요? &lt;/p&gt;
-&lt;p&gt;먼저 내장톰캣이 없던 시절의 스프링은 서블릿 컨테이너가 없기 때문에, 실제로 자바로 작성된 코드와 상호작용할 다리역할이 필요했습니다. 그렇기 때문에 서블릿 컨테이너가 필요했고 우리는 일반적으로 그 중 대표격인 톰캣을 선택하여 설치하고, 자바로 작성되어있는 자바 웹애플리케이션을 톰캣에 포함시켜주어야 했습니다. &lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Tech blog]]></title><description><![CDATA[끄적끄적]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Sun, 29 Aug 2021 08:07:45 GMT</lastBuildDate><item><title><![CDATA[내 redis가 해킹당했다고? 심지어 local인데?]]></title><description><![CDATA[사건의 발단 어느날.. redis와 관련된 기능을 개발해야 할 일이 있어 redis를 local에서 docker 컨테이너로 실행 후 테스트를 해보고 있었습니다. 기능은 아주 간단해서 어떤 특정한 상황 때 hash 자료구조로 redis에 key…]]></description><link>https://thxwelchs.github.io/내redis가해킹당했다고심지어local인데/</link><guid isPermaLink="false">https://thxwelchs.github.io/내redis가해킹당했다고심지어local인데/</guid><pubDate>Sun, 29 Aug 2021 07:31:54 GMT</pubDate><content:encoded>&lt;h1&gt;사건의 발단&lt;/h1&gt;
+&lt;p&gt;어느날.. redis와 관련된 기능을 개발해야 할 일이 있어 redis를 local에서 docker 컨테이너로 실행 후 테스트를 해보고 있었습니다.&lt;/p&gt;
+&lt;p&gt;기능은 아주 간단해서 어떤 특정한 상황 때 hash 자료구조로 redis에 key value를 넣으면 되는 것이었는데, 특정한 시간이 지나면 자동으로 해당 key들이 지워질 수 있게 key에 TTL을 지정해주기로 했습니다.&lt;/p&gt;
+&lt;p&gt;그래서 TTL을 5분정도로 주고 5분이 지나고 제대로 삭제가 되었는지 확인 해보기로 했습니다.&lt;/p&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;h1&gt;redis 설치, 실행&lt;/h1&gt;
+&lt;p&gt;먼저 redis를 로컬에 설치하기 위해 직접 redis-server를 설치해서 실행해도 되지만, 저는 환경의 이식성이나 편리함을 위해 docker를 사용하기로 했습니다.&lt;/p&gt;
+&lt;p&gt;개발환경에서 컨테이너를 지속적으로 띄웠다 내렸다 할 것이기 때문에 다음과 같이 &lt;code class=&quot;language-text&quot;&gt;bitnami/redis&lt;/code&gt; 이미지를 사용하는 &lt;code class=&quot;language-text&quot;&gt;docker-compose.yml&lt;/code&gt;를 작성했습니다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;여러 redis docker image가 있겠지만 저는 bitnami에서 배포하는 이미지를 선호합니다. bitnami는 최신 버그 수정 및 기능에 대해 빠른 피드백과 반영이 이루어지기 때문에 그렇습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;deckgo-highlight-code language=&quot;yaml&quot;  &gt;
+          &lt;code slot=&quot;code&quot;&gt;redis:
+    image: &amp;#39;bitnami/redis:latest&amp;#39;
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes # 비밀번호를 생략하고 redis에 접근가능하게 하는 옵션
+    ports:
+      - &amp;#39;6379:6379&amp;#39;&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+&lt;p&gt;docker-compose 를 실행해주고 redis-cli로 접속해보면?&lt;/p&gt;
+&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+          &lt;code slot=&quot;code&quot;&gt;docker-compose up -d&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+          &lt;code slot=&quot;code&quot;&gt;redis-cli&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 432px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/bdf92f978d83c3e3d0886e044533423c/7c246/Untitled.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 13.310580204778159%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAxElEQVQI12WMuW7CUBQF+QuggBAblGCbxQt+scBLghfZkdgLaNMnkdJE4j9QaOj5y+HZlClGc49GurUw32CICPe1IHrfSufYQYqQ2wkyLD9hmiyYpiVLNNvD2/+yOF5JP09k32eyrz+KnwtatKMmipQn4TEKQ3rWCw+6jTJ06RhORVuzKj8OJlVrPY/pmD5dkaFOYhTnDdWZV3dLd+XDeY7px1hBQpivMWcxq8MHdVWn0TX+0ewNaMhWV/rSJdrdcjdlvwFj32N3t7uS1gAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Untitled&quot;
+        title=&quot;Untitled&quot;
+        src=&quot;/static/bdf92f978d83c3e3d0886e044533423c/7c246/Untitled.png&quot;
+        srcset=&quot;/static/bdf92f978d83c3e3d0886e044533423c/8890b/Untitled.png 293w,
+/static/bdf92f978d83c3e3d0886e044533423c/7c246/Untitled.png 432w&quot;
+        sizes=&quot;(max-width: 432px) 100vw, 432px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;짜잔 이렇게 간단하게 로컬환경에 레디스를 설치해보고 접속까지 너무 짧은순간에 완성되었습니다.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;(redis에 직접 접근하기 위해서는 redis-cli 혹은 redis client tool 을 사용해야 하는데, 이 부분은 별도의 설치가 필요하니 각자 OS환경에 맞는 설치가 사전에 필요합니다.)&lt;/em&gt;&lt;/p&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;h1&gt;테스트&lt;/h1&gt;
+&lt;h3&gt;hash 키 저장&lt;/h3&gt;
+&lt;p&gt;다음과 같이 입력하면 hello라는 key에 있는 world라는 필드에 hellowrold라는 문자열을 value로 가지게하는 해쉬 자료구조를 저장하게됩니다.&lt;/p&gt;
+&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+          &lt;code slot=&quot;code&quot;&gt;hset hello world helloworld&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+&lt;h3&gt;hash 잘 저장되었는지 확인 순서대로&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;hash key 확인&lt;/li&gt;
+&lt;li&gt;hash key 어떤 필드들이 있는지 확인&lt;/li&gt;
+&lt;li&gt;hash field에 어떤 value가 저장되었는지 확인&lt;/li&gt;
+&lt;/ol&gt;
+&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+          &lt;code slot=&quot;code&quot;&gt;keys *
+hkeys hello
+hget hello world&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 287px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/fa145fc973b3b2b7f5e6c03a379b0039/4af4d/Untitled%201.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 40.41811846689895%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAABWElEQVQoz1VRSXLCQAz0HxJCtiogYbcNBoxXDHjDAQwkBw75/0M606rYBQfVSKNRT3dLC7ISq90FEz9R5xnzKMc0SOClR0TFN0xvK/Vy+4XhIkR36uG1P6njpWfe1Zob72XIClPYm0KCOYdHywi9mS/5bJWha3lo6zaeu4ZEBXYLqoX5CYa7ge6s4acl3OQA04+l2TGXeBtM8T606kHmHcNGS19I7xaMueYpgCA7KcmxkrUXJmRIuenpisV6Bzc+oPj5lQ/ZT8orHPWWRMiUwHeAlEJAsnOUBfTxoTXAY3uIp48xGp2R5Bzgybq+Z/6pC7BIDvJSDKePgZJPMEomy1VxUSy28pmXHNFXfpIx34/sSHqV5yRFUFlKmJ/rTTI4xC0TiCCDeSCAHxNH7nRng766o+9WmMny6LcAGv/LqCSTJcENxbippFDaWA0wZzRUzbuqR9nNG8l/kPP9cp52r80AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Untitled&quot;
+        title=&quot;Untitled&quot;
+        src=&quot;/static/fa145fc973b3b2b7f5e6c03a379b0039/4af4d/Untitled%201.png&quot;
+        srcset=&quot;/static/fa145fc973b3b2b7f5e6c03a379b0039/4af4d/Untitled%201.png 287w&quot;
+        sizes=&quot;(max-width: 287px) 100vw, 287px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h3&gt;hash 키에 expire time 지정&lt;/h3&gt;
+&lt;p&gt;TTL 동작여부를 테스트 하기 위해 hash key에 expire 명령을 통해 TTL을 지정해줍니다.&lt;/p&gt;
+&lt;p&gt;다음과 같이 명령하면 hello라는 키에는 300초의 ttl을 지정해 줄 수 있습니다.&lt;/p&gt;
+&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+          &lt;code slot=&quot;code&quot;&gt;expire hello 300&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+&lt;p&gt;ttl을 지정해주고 다음과 같이 남아있는 ttl이 있다면? ttl을 반환하게 됩니다.&lt;/p&gt;
+&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+          &lt;code slot=&quot;code&quot;&gt;ttl hello&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+&lt;ul&gt;
+&lt;li&gt;ttl이 남아있으면 해당 값을 반환&lt;/li&gt;
+&lt;li&gt;expire time이 설정되어있지 않았으면 &lt;code class=&quot;language-text&quot;&gt;-1&lt;/code&gt; 반환&lt;/li&gt;
+&lt;li&gt;key가 삭제되었으면 &lt;code class=&quot;language-text&quot;&gt;-2&lt;/code&gt; 반환&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;저는 5분(300초) 로 지정했고 4초가 지나서 다음과 같이 반환되었습니다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 209px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/c3a15bb4d0a72a2e02d041d1d7b26a10/fa79b/Untitled%202.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 19.138755980861244%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA2ElEQVQY002P1w6CQBBF+Qvbi7EgYkFBECkqXUHAHk2MiYn//wvX3Uk0PpzszmT3zB1BdSOMTA8DYwnVjaEtY3QnJvozBxJDX28I08/Q6CmQ6V2E1thAT7MxtUPIusscazSHMwhedmayFRMlMLwtrDCnWrECukflDfpqg/T0QIcNUuwAbrKHpDkkOT7eNCDIr+yPD2HupZj7KawopyROUtLJE4qqheL2gh0XqHaGRK07IurimOpKe/DrcYTvOotwh+RwR3Z5YsJSSGwdTlhcKSkXfPmX/tecDx+Ng0EMEsuPAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Untitled&quot;
+        title=&quot;Untitled&quot;
+        src=&quot;/static/c3a15bb4d0a72a2e02d041d1d7b26a10/fa79b/Untitled%202.png&quot;
+        srcset=&quot;/static/c3a15bb4d0a72a2e02d041d1d7b26a10/fa79b/Untitled%202.png 209w&quot;
+        sizes=&quot;(max-width: 209px) 100vw, 209px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;h1&gt;사라져 버린 key&lt;/h1&gt;
+&lt;p&gt;그리곤 약 1분정도 지났을까요? expire time이 얼마나 남았나 확인을 해보니..&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 217px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/0f062830ad7b56920b2bc371dc468e89/d6985/Untitled%203.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 17.050691244239633%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAvklEQVQI1y1O2wqCQBTsF3roRiS0ZV7KwrRM3TKVVpTS7gT1EPT/3zDtbj0M5zBnZs7Upn6MZH+DTXegrELIStCswsSL4GwYissLUX5G+XhDmwdSl+yvUG0fwe4AdnzASwqssyO62gw1IRJGIbBWMXSXwlxsONaSc6OMh2/lA2ItQKZLeVPMOXQnxCxI/97tL3DMhaJVerhLnJ4f5LzVMs7RM2xpEA/qyggd1UJ7OEGTmHJvDsZo9A20xCSG5L4gM2KuBVK8qAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Untitled&quot;
+        title=&quot;Untitled&quot;
+        src=&quot;/static/0f062830ad7b56920b2bc371dc468e89/d6985/Untitled%203.png&quot;
+        srcset=&quot;/static/0f062830ad7b56920b2bc371dc468e89/d6985/Untitled%203.png 217w&quot;
+        sizes=&quot;(max-width: 217px) 100vw, 217px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;br/&gt;
+&lt;p&gt;…? &lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;-2&lt;/code&gt;가 반환되었습니다..&lt;/p&gt;
+&lt;p&gt;위에서 말씀드렸다시피 &lt;code class=&quot;language-text&quot;&gt;-2&lt;/code&gt;는 key가 삭제되었음을 의미하는데요 어찌된 일일까요?&lt;/p&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;h1&gt;알 수 없는 key&lt;/h1&gt;
+&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+          &lt;code slot=&quot;code&quot;&gt;keys *&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+&lt;p&gt;key가 정말 삭제되었는지 의심이 되어 key 전체목록을 봐보기로 했습니다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 185px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/ad2ea2ac3c9b45089480ae643666992c/b63e1/Untitled%204.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 51.891891891891895%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAABiklEQVQoz4WS6VLCQBCE8w54a8kN4b4SICEHgQTCfYglluX7P0abHgtKQMsfW7uT7PR+PTOK5ozhzXbQ+yEaVgAzWMAarVDvDWXVzCGC1R796Qtmu0/5lyhrsMdrudv2Jsg1DJTaDjL1LpSqMUAvWMoH3Q3RtAMRr3T7KOoOytFOEWM4R8ebRuelCLqTLfzlG8LtB8odF6pmIV3rQCFFw/Jxn61IEpNJzQQK9yIBOkhWdMTieVwnC7jLlOV8lVAlvkkVcZsuyXeFlvgyg4Jmwwk3IkwrzmSDwfxVqB/zNTzkqhf7+VKYbPhzuWCHa7jTrcSk4k5iiqotSygOiXT02zmy7IvFb0JLqLqDmVCTls1gWZ7U+kniX0uhNXu8EkLWiwLd4Syi2ol1UrOjuaYpj/4rWDMHQsjX2SnSMeYIHZrEppHwZ+KhhufUCmtl+gsJ2NnRei+2R+t3iVk/Ws9Gs3aoIUViifxR7KSGVcOT+WOQqrTFPsvQckZilYScURLFi60jHe88F5oXhF+wCUKPcsAUfwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Untitled&quot;
+        title=&quot;Untitled&quot;
+        src=&quot;/static/ad2ea2ac3c9b45089480ae643666992c/b63e1/Untitled%204.png&quot;
+        srcset=&quot;/static/ad2ea2ac3c9b45089480ae643666992c/b63e1/Untitled%204.png 185w&quot;
+        sizes=&quot;(max-width: 185px) 100vw, 185px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;정작 있어야 할 &lt;code class=&quot;language-text&quot;&gt;hello&lt;/code&gt; key는 없고 아까는 존재하지 않았던 backup1 ~ 4 key가 생겼네요? &lt;/p&gt;
+&lt;p&gt;혹시 뭔가.. 잠깐 컨테이너가 내렸다 올라온건가? 내가 받은 &lt;code class=&quot;language-text&quot;&gt;bitnami/redis&lt;/code&gt; 도커이미지가 잘못되었나? 원래 redis에서는 일정 주기마다 백업을 하는 기본전략이 있나? 라는 생각에 redis 공식문서와 bitnami/redis github issues를 뒤져봤지만 해당 내용에 대해서는 찾을 수 없었습니다.&lt;/p&gt;
+&lt;p&gt;이후로 반복적으로 더 테스트해보았고 다음과 같은 결과를 도출해냈습니다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;짧은 시간(1분 이내)이든 긴시간이든 랜덤하게 key가 갑자기 모두 삭제됌 (ttl 적용 여부와 관계없이)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;h1&gt;redis 모니터링 해보기&lt;/h1&gt;
+&lt;p&gt;그래서 key를 입력한 뒤 갑자기 삭제되기까지 대체 무슨 일들이 일어나는지 더 상세하게 살펴보기 위해 redis를 모니터링 해보기로 했습니다.&lt;/p&gt;
+&lt;p&gt;모니터링은 다음과 같이 할 수 있습니다. &lt;/p&gt;
+&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+          &lt;code slot=&quot;code&quot;&gt;redis-cli monitor&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+&lt;p&gt;위 명령을 통해 redis에 어떤 명령들이 내려졌는지 로그를 확인 할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;약 5~7분 정도의 모니터링을 진행하고 있었을 때 였을까요? 갑자기 이상한.. 로그가 올라왔습니다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 1170px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/fc1ee50bdf9d6e4cc17b50e5fd1874c2/15372/Untitled%205.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 16.38225255972696%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAn0lEQVQI112NWQ6CQBBEuYX6YYwim8yArCM7aEbRRKP3P0zZM0Rj/Ki8Tld1tVHJB0p5R9qNyHoSMR+uWPMMM9PHfMuwsLjmvz7+b85oLk+04wtiuOkicZwYN2fsskbLDAXcpIaft2CiAz/0CIqBMhKMZrVb+QmWXgRDmR4dOUml5aY1rH0BJy6ppIJN3AQ57KjQs/KnR60uVoVhefrm3sbtXyUDwbquAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Untitled&quot;
+        title=&quot;Untitled&quot;
+        src=&quot;/static/fc1ee50bdf9d6e4cc17b50e5fd1874c2/463a7/Untitled%205.png&quot;
+        srcset=&quot;/static/fc1ee50bdf9d6e4cc17b50e5fd1874c2/8890b/Untitled%205.png 293w,
+/static/fc1ee50bdf9d6e4cc17b50e5fd1874c2/1f316/Untitled%205.png 585w,
+/static/fc1ee50bdf9d6e4cc17b50e5fd1874c2/463a7/Untitled%205.png 1170w,
+/static/fc1ee50bdf9d6e4cc17b50e5fd1874c2/15372/Untitled%205.png 1222w&quot;
+        sizes=&quot;(max-width: 1170px) 100vw, 1170px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;해당 로그를 분석해보자면 &lt;code class=&quot;language-text&quot;&gt;flushall&lt;/code&gt; 명령으로 모든 key를 지워버리고 &lt;code class=&quot;language-text&quot;&gt;backup1~4&lt;/code&gt; key에 알 수 없는 스크립트 실행문을 저장합니다.&lt;/p&gt;
+&lt;p&gt;위 명령이 랜덤하게 제 로컬 redis에서 계속해서 실행되고 있어, 제가 저장했던 key가 모두 삭제되고 알 수 없는 &lt;code class=&quot;language-text&quot;&gt;backup1~4&lt;/code&gt; key들만 남아있게 된 것이었습니다. oh my god&lt;/p&gt;
+&lt;p&gt;해당 keyword로 구글링 해본 결과 redis 기본포트 &lt;code class=&quot;language-text&quot;&gt;6379&lt;/code&gt; 가 열려있고 인증정보 없이 접근할 수 있는 환경 일 때&lt;/p&gt;
+&lt;p&gt;크롤러봇이 해당되는 redis에 접근하여 모든 키를 지우고 스크립트를 심는거였습니다. 심지어 만약 제 redis docker image가 저의 루트 권한을 획득 할 수 있었다면 아마도 제 로컬은 더 심각한 해킹을 당하게 되었을 것입니다.&lt;/p&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;h1&gt;해결 방법&lt;/h1&gt;
+&lt;p&gt;위 문제를 어떻게 해결 할 수 있을까요?&lt;/p&gt;
+&lt;p&gt;문제가 발생하는 원인을 다시 파악해보자면 &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;redis 서버가 기본포트 &lt;code class=&quot;language-text&quot;&gt;6379&lt;/code&gt;로 열려있음&lt;/li&gt;
+&lt;li&gt;인증없이 접근이 가능함&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;위 두가지를 만족 할 때 이러한 현상이 일어난다고 볼 수 있습니다.&lt;/p&gt;
+&lt;p&gt;그렇다면 우리는 다음과같이 위의 두가지 조건을 만족하지 않게하면 될텐데요&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;redis 서버가 기본포트 &lt;code class=&quot;language-text&quot;&gt;6379&lt;/code&gt;가 아닌 다른 포트를 사용함&lt;/li&gt;
+&lt;li&gt;인증을 필수로 redis 서버에 접근할 수 있게함&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;1번째 방법은 실은 그렇게 좋은 방법은 아닌 것 같습니다. 시스템에서 대체적으로 많이 알려져있는 포트는 가급적이면 변경하지 않고 사용하는 것이 좋습니다.&lt;/p&gt;
+&lt;p&gt;저는 2번 방법이 조금 더 합리적인 해결방법이라고 생각되어 redis 서버에 접근하려면 필수로 인증을 하게끔 설정했습니다.&lt;/p&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;h1&gt;redis 패스워드 설정&lt;/h1&gt;
+&lt;p&gt;redis에는 패스워드를 설정하는 방법이 있습니다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;requirepass&lt;/code&gt; option을 통한 패스워드 설정&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;Redis ACL system&lt;/code&gt;을 이용한 username, password 설정(Redis 6.0 버전 이상을 사용하는 경우에만 해당)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;자세한 사항은 &lt;a href=&quot;https://redis.io/commands/auth&quot;&gt;공식문서 Auth&lt;/a&gt;에서 확인&lt;/p&gt;
+&lt;p&gt;저는 &lt;code class=&quot;language-text&quot;&gt;bitnami/redis:lates&lt;/code&gt; 이미지가 6.0 이상을 사용하고 있기에 ACL system을 사용하기로 했습니다.&lt;/p&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;h2&gt;requirepass 설정&lt;/h2&gt;
+&lt;p&gt;ACL system을 사용한다고 하더라도 requirepass 옵션을 설정해주어야 레디스의 인증절차가 활성화되는데요,&lt;/p&gt;
+&lt;p&gt;일반적으로 docker가 아닌 local에 직접 redis를 설치하셨다면 &lt;code class=&quot;language-text&quot;&gt;/etc/redis/6379.conf&lt;/code&gt; 파일에서 requirepass라고 쓰여져있는 라인을 주석을 풀고 설정하실 패스워드를 입력하시면 됩니다.&lt;/p&gt;
+&lt;p&gt;저는 docker image로 실행하고 있기에 간단하게 도커이미지에 환경변수를 넘기는것만으로 requirepass가 설정 할 수 있습니다. (이런것 또한 도커를 사용하는 장점이라고 생각합니다.)&lt;/p&gt;
+&lt;p&gt;기존의 &lt;code class=&quot;language-text&quot;&gt;ALLOW_EMPTY_PASSWORD&lt;/code&gt; 옵션을 비활성화 하고, &lt;code class=&quot;language-text&quot;&gt;REDIS_PASSWORD&lt;/code&gt; 값을 입력해줍니다.&lt;/p&gt;
+&lt;p&gt;(참고로 REDIS&lt;em&gt;PASSWORD 값이 없고 ALLOW&lt;/em&gt;EMPTY_PASSWORD도 없다면 에러가 나면서 redis container는 실행되지 못하게 됩니다.)&lt;/p&gt;
+&lt;deckgo-highlight-code language=&quot;yaml&quot;  &gt;
+          &lt;code slot=&quot;code&quot;&gt;redis:
+    image: &amp;#39;bitnami/redis:latest&amp;#39;
+    environment:
+      - REDIS_PASSWORD=설정할패스워드
+#      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - &amp;#39;6379:6379&amp;#39;&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+&lt;p&gt;기존의 컨테이너를 내렸다가 새로운 옵션으로 다시 실행합니다.&lt;/p&gt;
+&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+          &lt;code slot=&quot;code&quot;&gt;docker-compose down &amp;amp;&amp;amp; docker-compose up -d&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+&lt;p&gt;이제는 redis-cli에 접속해 명령을 내리려고 하면 &lt;code class=&quot;language-text&quot;&gt;NOAUTH Authentication required&lt;/code&gt; 라는 에러메세지와 함께 명령이 수행되지 않는것을 확인 할 수 있습니다.&lt;/p&gt;
+&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+          &lt;code slot=&quot;code&quot;&gt;redis-cli
+keys *&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 411px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/fb79e4ab15033e3ffd4f09d9de077a80/03a18/Untitled%206.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 18.77133105802048%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA60lEQVQY00WQW1LCQBBFswxQg1oFSh4oZBJCEkLME4OK+KPlBsRf/1wElgtwsYeZKcWPW327qrvPnTFE1pC2G6wgJSxXLNonpjctYtEwzVv8bMlkXhPXDyTNmqi6xxIR0esn7ccPxduOYruj3H5Rvn9juGlOcFtiRwlOkjAQM3qWh2lNMIdjji6u6A5GWv/e5XjocWIHmE4gq6+rKXtjVtz9pqgI8xXV+ll7kcrkyw22TH7qCM5HgQYpr3QmpYCdvkO37x5kqGU3zLj0Yv0cddzy59SPLwfQdVzoL1Bz46TU3pNABevIIyr5n/Y+CYPM4/K4gwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Untitled&quot;
+        title=&quot;Untitled&quot;
+        src=&quot;/static/fb79e4ab15033e3ffd4f09d9de077a80/03a18/Untitled%206.png&quot;
+        srcset=&quot;/static/fb79e4ab15033e3ffd4f09d9de077a80/8890b/Untitled%206.png 293w,
+/static/fb79e4ab15033e3ffd4f09d9de077a80/03a18/Untitled%206.png 411w&quot;
+        sizes=&quot;(max-width: 411px) 100vw, 411px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;br/&gt;
+&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+          &lt;code slot=&quot;code&quot;&gt;auth 설정한패스워드&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 249px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/70a04fb49f751f05291fe637d17902fb/8b576/Untitled%207.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 14.056224899598394%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAsUlEQVQI102OWQ6CQBBEOQSKy4fKosCAoMgSQcAJSiIqGjXq/Q9SDhNI/Kik+nX1IiTHGqvkgF15Q+PtKEdIT6DnJ8r7F4f6A2UZYFtckFcPRLSCGxeMvzmLj1eeoZcXxgsHAglSyLYPY5NA92IoToj5esu95kacT4jHDu1BggwqY6af8iesMEMzr7OM4e8wmi/ZQgbFqQ5JIegzSa0635dNDFQLvZnBfdcT2/pfQ83GD1rsXyVjPLgyAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Untitled&quot;
+        title=&quot;Untitled&quot;
+        src=&quot;/static/70a04fb49f751f05291fe637d17902fb/8b576/Untitled%207.png&quot;
+        srcset=&quot;/static/70a04fb49f751f05291fe637d17902fb/8b576/Untitled%207.png 249w&quot;
+        sizes=&quot;(max-width: 249px) 100vw, 249px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;설정했던 패스워드로 auth 인증을 해주면 이제 더이상 명령을 할 때 에러메세지가 나오지 않고 명령이 정상적으로 수행됩니다.&lt;/p&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;h2&gt;ACL 설정&lt;/h2&gt;
+&lt;p&gt;위 requirepass만으로도 실은 필수 인증정보입력이 활성화되었지만 저는 이왕 하는거 acl system까지 사용해보기로 했습니다.&lt;/p&gt;
+&lt;p&gt;acl은 특정 키, 특정 커맨드에 대한 권한제어까지 가능하기 때문에 더 디테일한 인증과 인가를 부여 할 수 있습니다.&lt;/p&gt;
+&lt;h3&gt;User 만들기&lt;/h3&gt;
+&lt;p&gt;다음과 같이 user를 생성하게 되면 &lt;/p&gt;
+&lt;p&gt;모든 키, 모든 명령에 대해 권한을 가지고 비밀번호가 pass12345인 user2 username을 가진 user를 생성하게됩니다.&lt;/p&gt;
+&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+          &lt;code slot=&quot;code&quot;&gt;ACL SETUSER user2 on &amp;gt;pass12345 allkeys allcommands&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+          &lt;code slot=&quot;code&quot;&gt;ACL list&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+&lt;h3&gt;생성한 User로 인증하고 명령&lt;/h3&gt;
+&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+          &lt;code slot=&quot;code&quot;&gt;auth user2 pass12345
+keys *&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+&lt;h3&gt;redis 모니터링&lt;/h3&gt;
+&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+          &lt;code slot=&quot;code&quot;&gt;redis-cli --user user2 --pass pass12345 monitor&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;h1&gt;결론&lt;/h1&gt;
+&lt;p&gt;위 해결방법에 따라 redis에 인증시스템을 활성해주고 나니 더이상 key가 이유없이 삭제되거나 이상한 스크립트가 삽입된 key가 생성되거나 하는 현상은 사라졌습니다.&lt;/p&gt;
+&lt;p&gt;실은 상용, 베타, stage 환경의 레디스 서버 인스턴스라면 당연히 기본적으로 인증시스템을 활성화해주어서 이러한 현상은 일어나지 않았겠지만, 일반적으로 로컬에서 실행하는 레디스 서버를 굳이 인증을 신경써야하나? 라는 생각에서 비롯된 상황인 것 같았습니다.&lt;/p&gt;
+&lt;p&gt;앞으로는 비록 로컬에서 실행하는 환경일지라도 더욱 보안에 신경써야 할 것 같습니다.&lt;/p&gt;
+&lt;h1&gt;참고&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://redis.io/commands/auth&quot;&gt;https://redis.io/commands/auth&lt;/a&gt;
+&lt;a href=&quot;http://redisgate.kr/redis/server/acl.php&quot;&gt;http://redisgate.kr/redis/server/acl.php&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</content:encoded></item><item><title><![CDATA[Embedded Tomcat과 Tomcat의 차이]]></title><description><![CDATA[…]]></description><link>https://thxwelchs.github.io/EmbeddedTomcat과Tomcat의차이/</link><guid isPermaLink="false">https://thxwelchs.github.io/EmbeddedTomcat과Tomcat의차이/</guid><pubDate>Sat, 28 Aug 2021 08:42:30 GMT</pubDate><content:encoded>&lt;p&gt;이번 포스팅에서는 내장톰캣과 설치형으로 사용하는 외장톰캣이 무엇이 다른지, 그리고 내장톰캣으로는 해결 할 수 없는것이 있는지
+간단하게 알아보았습니다.
+포스팅 내용을 작성하기 전 이 내용을 조사해본 것은 전 직장 동료분과 오랜만에 만나 개발 담소를 나누다 내장톰캣, 외장톰캣과 관련된 이야기가 오갔고, 좀 더 확실하게 알아보기로 했습니다.&lt;/p&gt;
+&lt;p&gt;거의 대부분의 Spring 개발자라면 알고 있을 사실이지만, Spring Boot에는 &lt;code class=&quot;language-text&quot;&gt;tomcat&lt;/code&gt;이 내장되어 있어, 애플리케이션을 빌드하고 실행하는 것만으로 웹애플리케이션을 서비스 할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;즉 스프링부트는 실행될 환경에 톰캣을 설치할 필요없이 애플리케이션을 바로 실행 할 수 있다는 것을 의미합니다.
+그렇다면 과거 스프링 레거시에서는 어떻게 웹 애플리케이션을 실행 할 수 있었을까요? &lt;/p&gt;
+&lt;p&gt;먼저 내장톰캣이 없던 시절의 스프링은 서블릿 컨테이너가 없기 때문에, 실제로 자바로 작성된 코드와 상호작용할 다리역할의 시스템이 필요했습니다. 그렇기 때문에 서블릿 컨테이너가 필요했고 우리는 일반적으로 그 중 대표격인 톰캣을 선택하여 설치하고, 자바로 작성되어있는 자바 웹애플리케이션을 톰캣에 포함시켜주어야 했습니다. &lt;/p&gt;
 &lt;h1&gt;애플리케이션 실행방법 차이&lt;/h1&gt;
 &lt;p&gt;간단하게 다시 정리해보자면 다음과 같습니다.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;내장톰캣을 사용하는 스프링부트 애플리케이션 실행&lt;/strong&gt;&lt;/p&gt;
