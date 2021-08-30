@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Sitemap: https://thxwelchs.github.io/sitemap.xml
+Host: https://thxwelchs.github.io

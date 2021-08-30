@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Tech blog]]></title><description><![CDATA[끄적끄적]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Sun, 29 Aug 2021 08:07:45 GMT</lastBuildDate><item><title><![CDATA[내 redis가 해킹당했다고? 심지어 local인데?]]></title><description><![CDATA[사건의 발단 어느날.. redis와 관련된 기능을 개발해야 할 일이 있어 redis를 local에서 docker 컨테이너로 실행 후 테스트를 해보고 있었습니다. 기능은 아주 간단해서 어떤 특정한 상황 때 hash 자료구조로 redis에 key…]]></description><link>https://thxwelchs.github.io/내redis가해킹당했다고심지어local인데/</link><guid isPermaLink="false">https://thxwelchs.github.io/내redis가해킹당했다고심지어local인데/</guid><pubDate>Sun, 29 Aug 2021 07:31:54 GMT</pubDate><content:encoded>&lt;h1&gt;사건의 발단&lt;/h1&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Tech blog]]></title><description><![CDATA[끄적끄적]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Mon, 30 Aug 2021 05:02:04 GMT</lastBuildDate><item><title><![CDATA[내 redis가 해킹당했다고? 심지어 local인데?]]></title><description><![CDATA[사건의 발단 어느날.. redis와 관련된 기능을 개발해야 할 일이 있어 redis를 local에서 docker 컨테이너로 실행 후 테스트를 해보고 있었습니다. 기능은 아주 간단해서 어떤 특정한 상황 때 hash 자료구조로 redis에 key…]]></description><link>https://thxwelchs.github.io/내redis가해킹당했다고심지어local인데/</link><guid isPermaLink="false">https://thxwelchs.github.io/내redis가해킹당했다고심지어local인데/</guid><pubDate>Sun, 29 Aug 2021 07:31:54 GMT</pubDate><content:encoded>&lt;h1&gt;사건의 발단&lt;/h1&gt;
 &lt;p&gt;어느날.. redis와 관련된 기능을 개발해야 할 일이 있어 redis를 local에서 docker 컨테이너로 실행 후 테스트를 해보고 있었습니다.&lt;/p&gt;
 &lt;p&gt;기능은 아주 간단해서 어떤 특정한 상황 때 hash 자료구조로 redis에 key value를 넣으면 되는 것이었는데, 특정한 시간이 지나면 자동으로 해당 key들이 지워질 수 있게 key에 TTL을 지정해주기로 했습니다.&lt;/p&gt;
 &lt;p&gt;그래서 TTL을 5분정도로 주고 5분이 지나고 제대로 삭제가 되었는지 확인 해보기로 했습니다.&lt;/p&gt;
@@ -10,7 +10,8 @@
 &lt;blockquote&gt;
 &lt;p&gt;여러 redis docker image가 있겠지만 저는 bitnami에서 배포하는 이미지를 선호합니다. bitnami는 최신 버그 수정 및 기능에 대해 빠른 피드백과 반영이 이루어지기 때문에 그렇습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;deckgo-highlight-code language=&quot;yaml&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;yaml&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;redis:
     image: &amp;#39;bitnami/redis:latest&amp;#39;
     environment:
@@ -18,13 +19,18 @@
     ports:
       - &amp;#39;6379:6379&amp;#39;&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;docker-compose 를 실행해주고 redis-cli로 접속해보면?&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;bash&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;docker-compose up -d&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
-&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+      
+
+        &lt;deckgo-highlight-code language=&quot;bash&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;redis-cli&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;&lt;span
       class=&quot;gatsby-resp-image-wrapper&quot;
       style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 432px;&quot;
@@ -58,20 +64,24 @@
 &lt;h1&gt;테스트&lt;/h1&gt;
 &lt;h3&gt;hash 키 저장&lt;/h3&gt;
 &lt;p&gt;다음과 같이 입력하면 hello라는 key에 있는 world라는 필드에 hellowrold라는 문자열을 value로 가지게하는 해쉬 자료구조를 저장하게됩니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;bash&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;hset hello world helloworld&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;h3&gt;hash 잘 저장되었는지 확인 순서대로&lt;/h3&gt;
 &lt;ol&gt;
 &lt;li&gt;hash key 확인&lt;/li&gt;
 &lt;li&gt;hash key 어떤 필드들이 있는지 확인&lt;/li&gt;
 &lt;li&gt;hash field에 어떤 value가 저장되었는지 확인&lt;/li&gt;
 &lt;/ol&gt;
-&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;bash&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;keys *
 hkeys hello
 hget hello world&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;&lt;span
       class=&quot;gatsby-resp-image-wrapper&quot;
       style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 287px;&quot;
@@ -100,13 +110,17 @@ hget hello world&lt;/code&gt;
 &lt;h3&gt;hash 키에 expire time 지정&lt;/h3&gt;
 &lt;p&gt;TTL 동작여부를 테스트 하기 위해 hash key에 expire 명령을 통해 TTL을 지정해줍니다.&lt;/p&gt;
 &lt;p&gt;다음과 같이 명령하면 hello라는 키에는 300초의 ttl을 지정해 줄 수 있습니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;bash&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;expire hello 300&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;ttl을 지정해주고 다음과 같이 남아있는 ttl이 있다면? ttl을 반환하게 됩니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;bash&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;ttl hello&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;ul&gt;
 &lt;li&gt;ttl이 남아있으면 해당 값을 반환&lt;/li&gt;
 &lt;li&gt;expire time이 설정되어있지 않았으면 &lt;code class=&quot;language-text&quot;&gt;-1&lt;/code&gt; 반환&lt;/li&gt;
@@ -174,9 +188,11 @@ hget hello world&lt;/code&gt;
 &lt;br/&gt;
 &lt;br/&gt;
 &lt;h1&gt;알 수 없는 key&lt;/h1&gt;
-&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;bash&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;keys *&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;key가 정말 삭제되었는지 의심이 되어 key 전체목록을 봐보기로 했습니다.&lt;/p&gt;
 &lt;p&gt;&lt;span
       class=&quot;gatsby-resp-image-wrapper&quot;
@@ -214,9 +230,11 @@ hget hello world&lt;/code&gt;
 &lt;h1&gt;redis 모니터링 해보기&lt;/h1&gt;
 &lt;p&gt;그래서 key를 입력한 뒤 갑자기 삭제되기까지 대체 무슨 일들이 일어나는지 더 상세하게 살펴보기 위해 redis를 모니터링 해보기로 했습니다.&lt;/p&gt;
 &lt;p&gt;모니터링은 다음과 같이 할 수 있습니다. &lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;bash&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;redis-cli monitor&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;위 명령을 통해 redis에 어떤 명령들이 내려졌는지 로그를 확인 할 수 있습니다.&lt;/p&gt;
 &lt;p&gt;약 5~7분 정도의 모니터링을 진행하고 있었을 때 였을까요? 갑자기 이상한.. 로그가 올라왔습니다.&lt;/p&gt;
 &lt;p&gt;&lt;span
@@ -286,7 +304,8 @@ hget hello world&lt;/code&gt;
 &lt;p&gt;저는 docker image로 실행하고 있기에 간단하게 도커이미지에 환경변수를 넘기는것만으로 requirepass가 설정 할 수 있습니다. (이런것 또한 도커를 사용하는 장점이라고 생각합니다.)&lt;/p&gt;
 &lt;p&gt;기존의 &lt;code class=&quot;language-text&quot;&gt;ALLOW_EMPTY_PASSWORD&lt;/code&gt; 옵션을 비활성화 하고, &lt;code class=&quot;language-text&quot;&gt;REDIS_PASSWORD&lt;/code&gt; 값을 입력해줍니다.&lt;/p&gt;
 &lt;p&gt;(참고로 REDIS&lt;em&gt;PASSWORD 값이 없고 ALLOW&lt;/em&gt;EMPTY_PASSWORD도 없다면 에러가 나면서 redis container는 실행되지 못하게 됩니다.)&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;yaml&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;yaml&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;redis:
     image: &amp;#39;bitnami/redis:latest&amp;#39;
     environment:
@@ -295,15 +314,20 @@ hget hello world&lt;/code&gt;
     ports:
       - &amp;#39;6379:6379&amp;#39;&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;기존의 컨테이너를 내렸다가 새로운 옵션으로 다시 실행합니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;bash&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;docker-compose down &amp;amp;&amp;amp; docker-compose up -d&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;이제는 redis-cli에 접속해 명령을 내리려고 하면 &lt;code class=&quot;language-text&quot;&gt;NOAUTH Authentication required&lt;/code&gt; 라는 에러메세지와 함께 명령이 수행되지 않는것을 확인 할 수 있습니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;bash&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;redis-cli
 keys *&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;&lt;span
       class=&quot;gatsby-resp-image-wrapper&quot;
       style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 411px;&quot;
@@ -331,9 +355,11 @@ keys *&lt;/code&gt;
   &lt;/a&gt;
     &lt;/span&gt;&lt;/p&gt;
 &lt;br/&gt;
-&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;bash&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;auth 설정한패스워드&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;&lt;span
       class=&quot;gatsby-resp-image-wrapper&quot;
       style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 249px;&quot;
@@ -368,21 +394,29 @@ keys *&lt;/code&gt;
 &lt;h3&gt;User 만들기&lt;/h3&gt;
 &lt;p&gt;다음과 같이 user를 생성하게 되면 &lt;/p&gt;
 &lt;p&gt;모든 키, 모든 명령에 대해 권한을 가지고 비밀번호가 pass12345인 user2 username을 가진 user를 생성하게됩니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;bash&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;ACL SETUSER user2 on &amp;gt;pass12345 allkeys allcommands&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
-&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+      
+
+        &lt;deckgo-highlight-code language=&quot;bash&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;ACL list&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;h3&gt;생성한 User로 인증하고 명령&lt;/h3&gt;
-&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;bash&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;auth user2 pass12345
 keys *&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;h3&gt;redis 모니터링&lt;/h3&gt;
-&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;bash&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;redis-cli --user user2 --pass pass12345 monitor&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;br/&gt;
 &lt;br/&gt;
 &lt;h1&gt;결론&lt;/h1&gt;
@@ -458,7 +492,8 @@ keys *&lt;/code&gt;
     &lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;위 그림처럼 도메인 host에 따라 각각의 다른 루트 컨텍스트를 갖게하여 하나의 웹애플리케이션 배포만으로 마치 여러 애플리케이션을 운영하는 것처럼 할 수 있는 것입니다.&lt;/p&gt;
 &lt;p&gt;이 기능을 사용하기 위해서는 위에서 잠깐 언급한 스프링 외장톰캣 구성요소 파일인 &lt;code class=&quot;language-text&quot;&gt;server.xml&lt;/code&gt; 을 손보면 됩니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;xml&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;xml&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;&amp;lt;!--...--&amp;gt;
 &amp;lt;Host name=&amp;quot;a.thxwelchs.com&amp;quot;  appBase=&amp;quot;/webapps/weba&amp;quot; unpackWARs=&amp;quot;true&amp;quot; autoDeploy=&amp;quot;true&amp;quot; xmlValidation=&amp;quot;false&amp;quot; xmlNamespaceAware=&amp;quot;false&amp;quot;&amp;gt;
 &amp;lt;/Host&amp;gt;
@@ -467,12 +502,14 @@ keys *&lt;/code&gt;
 &amp;lt;/Host&amp;gt;
 &amp;lt;!--...--&amp;gt;&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;위 처럼 구성하게 되면 &lt;a href=&quot;http://a.thxwelchs.com&quot;&gt;a.thxwelchs.com&lt;/a&gt; 으로 접속시 weba 루트컨텍스트를 기준으로 작성된 뷰 메인페이지가 보일 것이고 &lt;a href=&quot;http://b.thxwelchs.com&quot;&gt;b.thxwelchs.com&lt;/a&gt; 으로 접속시 webb 루트컨텍스트를 기준으로 작성된 뷰 메인페이지가 보이게 될 것입니다.&lt;/p&gt;
 &lt;p&gt;이처럼 multiple host 웹애플리케이션을 단일애플리케이션으로 구성하는 이유는 관리포인트를 줄이기 위함입니다. (하나의 애플리케이션에서, 여러 사이트의 역할의 코드를 모아서 작성하고 관리 할 수 있거나 버전관리 측면을 보자면?)&lt;/p&gt;
 &lt;h2&gt;Embedded Tomcat Mutlple context&lt;/h2&gt;
 &lt;p&gt;이 기능은 확실하지 않지만 내장톰캣으로 구성하기에는 상당히 까다로운 것 같은데요, 가능은 한 것 같습니다.&lt;/p&gt;
 &lt;p&gt;예를 들면 다음과 같이 서블릿컨테이너팩토리 빈을 다시 재구성하여 multiple context를 등록하는 방법도 있습니다 (직접 해보지는 않았습니다.)&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;java&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;@Bean
 public ServletWebServerFactory servletContainer() {
     return new TomcatServletWebServerFactory() {
@@ -492,6 +529,7 @@ public ServletWebServerFactory servletContainer() {
     };
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;/br&gt;
 &lt;/br&gt;
 &lt;h2&gt;웹서버를 활용한 reverse proxy&lt;/h2&gt;
@@ -596,7 +634,8 @@ public ServletWebServerFactory servletContainer() {
     &lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;계속해서 서로를 참조하며 깊이 파고들어가고 있습니다. 빨리 해결 해야겠습니다.&lt;/p&gt;
 &lt;p&gt;먼저 양방향 관계의 엔티티에 어노테이션을 달아줍니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;@Entity
 @JsonIdentityInfo(generator = IntSequenceGenerator::class, property = &amp;quot;id&amp;quot;) // 추가
 class Menu(
@@ -607,8 +646,10 @@ class Menu(
         var restaurant: Restaurant
 ): MutableEntity()&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;&lt;br/&gt;&lt;br/&gt;&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;@Entity
 @JsonIdentityInfo(generator = IntSequenceGenerator::class, property = &amp;quot;id&amp;quot;) // 추가
 class Restaurant(
@@ -624,6 +665,7 @@ class Restaurant(
         }
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;br/&gt;
 &lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;@JsonIdentityInfo&lt;/code&gt; generator 속성에 들어갈 수 있는 객체의 타입은 &lt;code class=&quot;language-text&quot;&gt;ObjectIdGenerator&lt;/code&gt;를 상속받고 있는 서브클래스입니다.&lt;/p&gt;
 &lt;p&gt;&lt;span
@@ -794,7 +836,8 @@ class Restaurant(
   &lt;/a&gt;
     &lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;br/&gt;&lt;br/&gt;&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;@Entity
 data class Restaurant(
         var name: String = &amp;quot;&amp;quot;,
@@ -818,6 +861,7 @@ data class Menu(
         var restaurant: Restaurant
 ): MutableEntity()&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;보시는 것과 같이 두 엔티티는 &lt;code class=&quot;language-text&quot;&gt;@OneToMany&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;@ManyToOne&lt;/code&gt; 으로 양방향을 가지고 있고, &lt;code class=&quot;language-text&quot;&gt;LAZY fetch&lt;/code&gt; 되게 되어있습니다. (&lt;code class=&quot;language-text&quot;&gt;@OneToMany&lt;/code&gt;에서 fetch 는 default가 LAZY 방식이므로 생략 하였습니다.)&lt;/p&gt;
 &lt;p&gt;앞서 말씀드렸다시피 data class는 &lt;code class=&quot;language-text&quot;&gt;open&lt;/code&gt;이나 &lt;code class=&quot;language-text&quot;&gt;abstract&lt;/code&gt;가 될 수 없고 기본적으로 &lt;code class=&quot;language-text&quot;&gt;final&lt;/code&gt;로 선언되어집니다. 위 두 클래스를 자바 코드로 변형해보면 다음과 같습니다.&lt;/p&gt;
 &lt;p&gt;&lt;span
@@ -1058,7 +1102,8 @@ data class Menu(
 &lt;/ul&gt;
 &lt;h3&gt;Data class → class 로 변경 후 open 키워드 달기&lt;/h3&gt;
 &lt;p&gt;먼저 data class를 일반 class로 바꾸기&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;@Entity
 class Menu(
         var name: String = &amp;quot;&amp;quot;,
@@ -1082,12 +1127,14 @@ class Restaurant(
         }
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;아까 위에서 소개해드렸던 JPA 표준 POJO Model 객체가 되기 위해 &lt;/p&gt;
 &lt;p&gt;일일이 entity 마다 open 키워드와 빈 생성자를 작성하긴 귀찮으니,  kotlin jpa plugin 을 사용하여 자동적으로 모든 entity에 적용 시켜주겠습니다.&lt;/p&gt;
 &lt;p&gt;적용하는 방법은 &lt;code class=&quot;language-text&quot;&gt;build.gradle&lt;/code&gt;(groovy dsl) 혹은 &lt;code class=&quot;language-text&quot;&gt;build.gradle.kts&lt;/code&gt; (kotlin dsl) 에서 설정 할 수 있습니다. &lt;/p&gt;
 &lt;p&gt;저는 kotlin dsl을 사용하고 있으므로 다음과 같이 작성했습니다.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;build.grade.kts&lt;/em&gt;&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;plugins {
         ...
     kotlin(&amp;quot;plugin.jpa&amp;quot;) version &amp;quot;1.3.61&amp;quot;
@@ -1104,6 +1151,7 @@ allOpen {
     annotation(&amp;quot;javax.persistence.Embeddable&amp;quot;)
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;위와 같이 작성하고 나면 &lt;code class=&quot;language-text&quot;&gt;Entity&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;MappedSuperclass&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;Embeddable&lt;/code&gt; 의 어노테이션이 붙은 클래스에 빈 생성자와 open 키워드가 자동으로 정의됩니다.&lt;/p&gt;
 &lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;open&lt;/code&gt; 키워드를 코드에서 정의하지 않았는데도, 자바로 변환한 코드에서는 원래의 &lt;code class=&quot;language-text&quot;&gt;final class&lt;/code&gt; 에서 &lt;code class=&quot;language-text&quot;&gt;일반 class&lt;/code&gt; 로 변경되었습니다.&lt;/p&gt;
 &lt;p&gt;&lt;span
@@ -1137,15 +1185,18 @@ allOpen {
 &lt;p&gt;아직 lazy 로드 되기 전의 proxy 객체 또한 직렬화 하려고 하면 에러가 나기 때문에 다음과 같은 솔루션으로 직렬화 시 문제를 해결합니다. ( lazy 로드 되기 전의 proxy 객체는 null 처리 해줌 )&lt;/p&gt;
 &lt;p&gt;저는 hibernate5 버전을 사용하고 있으므로 다음과 같이 작성 했습니다.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;build.gradle.kts&lt;/em&gt;&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;dependencies {
     ...
     // Hibernate5Module이 지연로딩 되는 객체의 프로퍼티 직렬화를 가능하게 해준다. (jackson ObjectMapper support)
     implementation(&amp;quot;com.fasterxml.jackson.datatype:jackson-datatype-hibernate5:2.9.8&amp;quot;)
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;&lt;em&gt;JacksonConfig.kt&lt;/em&gt;&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;@Configuration
 class JacksonConfig {
 
@@ -1157,6 +1208,7 @@ class JacksonConfig {
     }
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;위 처럼 변경해준 뒤 다시 테스트를 돌려보면&lt;/p&gt;
 &lt;p&gt;정상적으로 테스트 통과 후 한번만 쿼리하는 것을 볼 수 있습니다&lt;/p&gt;
 &lt;p&gt;&lt;span
@@ -1236,7 +1288,8 @@ kotlin compiler-plugins(no-arg, all-open) &lt;a href=&quot;https://kotlinlang.or
 &lt;h1&gt;널 병합 연산자 (Nullish coalescing operator)&lt;/h1&gt;
 &lt;p&gt;널 병합 연산자란 왼쪽에 대입되어 있는 피연산자 값이 &lt;code class=&quot;language-text&quot;&gt;null&lt;/code&gt; 이거나 &lt;code class=&quot;language-text&quot;&gt;undefined&lt;/code&gt; 일 때 오른쪽에 대입되어있는 피연산자 값이 반환되게 하는 연산자입니다.&lt;/p&gt;
 &lt;p&gt;이 널 병합 연산자가 제공되기 전의 ES버전에서라면 아마도 논리연산자 OR &lt;code class=&quot;language-text&quot;&gt;||&lt;/code&gt; 를 통해 기본 값을 설정하거나, &lt;code class=&quot;language-text&quot;&gt;삼항연산자&lt;/code&gt; 혹은 &lt;code class=&quot;language-text&quot;&gt;if else&lt;/code&gt;문을 통한 null 처리를 하셨을 겁니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;javascript&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;javascript&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;const iamNull = null
 const iamUndefined = undefined
 
@@ -1249,9 +1302,11 @@ if(!hello3) {
     hello3 = &amp;#39;world&amp;#39;
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;위 예시코드에서는 큰 문제가 하나 있는데요. 그것은 &lt;code class=&quot;language-text&quot;&gt;iamNull&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;iamUndefined&lt;/code&gt; 의 값이 &lt;code class=&quot;language-text&quot;&gt;0&lt;/code&gt; 이거나 &lt;code class=&quot;language-text&quot;&gt;&amp;#39;&amp;#39;&lt;/code&gt; 과 같은 값일 때도 &lt;code class=&quot;language-text&quot;&gt;false&lt;/code&gt; 로 강제 변환되기 때문에  반드시 nullish 한 값 일 때만 처리하고 싶은 경우는 주의 하여야 합니다.&lt;/p&gt;
 &lt;p&gt;그런데 ES2020에서부터 제공되어지는 &lt;strong&gt;널 병합 연산자&lt;/strong&gt;를 사용하면 반드시 &lt;code class=&quot;language-text&quot;&gt;null&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;undefined&lt;/code&gt;인 값 의 default 값 처리를 할 수 있습니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;javascript&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;javascript&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;const hello = 0 ?? &amp;#39;world&amp;#39;
 // hello: 0 
 const hello2 = &amp;#39;&amp;#39; ?? &amp;#39;world&amp;#39;
@@ -1261,10 +1316,12 @@ const hello3 = null ?? &amp;#39;world&amp;#39;
 const hello4 = undefined ?? &amp;#39;world&amp;#39;
 // hello4: &amp;#39;world&amp;#39;&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;h1&gt;선택적 체이닝 (Optional chaining)&lt;/h1&gt;
 &lt;p&gt;또한 이제는 알려지지 않은 속성 값에 대해 null safe한 object의 체이닝도 할 수 있습니다.&lt;/p&gt;
 &lt;p&gt;예를들면 이런 것 입니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;javascript&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;javascript&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;const a = {
     b: {
         c: 0	
@@ -1282,13 +1339,15 @@ console.log(a.d &amp;amp;&amp;amp; a.d.c)
 console.log(a.d?.c)
 // 결과: undefined&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;br/&gt;
 &lt;br/&gt;
 &lt;h1&gt;Promise.allSettled ( 안정적으로 모든 promise 작업 처리하기 )&lt;/h1&gt;
 &lt;p&gt;순차적이지 않은 비동기적인 작업을 수행 할 때 &lt;code class=&quot;language-text&quot;&gt;Promise&lt;/code&gt; 패턴을 통해 콜백 지옥을 해소시키고, 여러개의 &lt;code class=&quot;language-text&quot;&gt;Promise&lt;/code&gt;를 처리 할 땐 &lt;code class=&quot;language-text&quot;&gt;Promise.all&lt;/code&gt; 함수를 통해&lt;/p&gt;
 &lt;p&gt;처리하셨을겁니다.&lt;/p&gt;
 &lt;p&gt;그런데 &lt;code class=&quot;language-text&quot;&gt;Promise.all&lt;/code&gt; 의 큰 단점은 처리 할 여러개의 &lt;code class=&quot;language-text&quot;&gt;Promise&lt;/code&gt; 중 하나라도 &lt;code class=&quot;language-text&quot;&gt;reject&lt;/code&gt; 되는 작업이 있다면, 나머지 성공되는 작업들의 결과 값을 처리 할 수 없다는 것인데요, 이것 또한 예시로 보겠습니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;javascript&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;javascript&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;const promise1 = new Promise((resolve, reject) =&amp;gt; setTimeout(resolve, 100, &amp;#39;성공 1&amp;#39;))
 const promise2 = new Promise((resolve, reject) =&amp;gt; setTimeout(reject, 100, &amp;#39;실패!!!&amp;#39;))
 const promise3 = new Promise((resolve, reject) =&amp;gt; setTimeout(resolve, 100, &amp;#39;성공 3&amp;#39;))
@@ -1316,6 +1375,7 @@ Promise.allSettled(promises)
     console.error(err)
 })&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;Promise.allSettled로 처리한 결과&lt;/p&gt;
 &lt;p&gt;&lt;span
       class=&quot;gatsby-resp-image-wrapper&quot;
@@ -1350,10 +1410,12 @@ Promise.allSettled(promises)
 &lt;p&gt;최상위 객체라면 브라우저에서는 window 객체를 의미하고, &lt;/p&gt;
 &lt;p&gt;Node.js 에서는 global 객체를 의미합니다. &lt;/p&gt;
 &lt;p&gt;이러하듯, 자바스크립트가 실행되는 런타임 환경이 달라지면 global 객체에 접근하는 방식이 달라져 불편하기 때문에 이제는 globalThis 라는 객체를 사용하여  어떤 런타임에서든 동일하게 접근 할 수 있습니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;javascript&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;javascript&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;globalThis.Array() // window.Array() 와 같음
 globalThis.alert(&amp;#39;Hi!&amp;#39;) // window.alert(&amp;#39;Hi!&amp;#39;) 와 같음&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;br/&gt;
 &lt;br/&gt;
 &lt;h1&gt;참고&lt;/h1&gt;
@@ -1401,7 +1463,8 @@ globalThis.alert(&amp;#39;Hi!&amp;#39;) // window.alert(&amp;#39;Hi!&amp;#39;) �
 &lt;p&gt;&lt;br/&gt;&lt;br/&gt;&lt;/p&gt;
 &lt;h2&gt;Service 공통 부분 중복 제거&lt;/h2&gt;
 &lt;p&gt;중복되는 부분은 예를 들어 &lt;code class=&quot;language-text&quot;&gt;service&lt;/code&gt;에서 단순히 &lt;code class=&quot;language-text&quot;&gt;repository&lt;/code&gt;를 통해 처리 한 뒤  &lt;code class=&quot;language-text&quot;&gt;controller&lt;/code&gt;에게 전달해주는 그런 로직들이 대상이 될 것 입니다.  예시 코드입니다. &lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;@Service
 class MenuService(private val menuRepository: MenuRepository) {
         // 이런거.. 일일이 굳이 코드로 작성 할 필요는 없지 않을까?
@@ -1416,11 +1479,13 @@ class MenuService(private val menuRepository: MenuRepository) {
         ...
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;물론 controller에서 바로 repository를 DI하여 작업을 수행 할 수도 있겠지만
 가능하면 &lt;code class=&quot;language-text&quot;&gt;controller&lt;/code&gt; -&gt; &lt;code class=&quot;language-text&quot;&gt;service&lt;/code&gt; -&gt; &lt;code class=&quot;language-text&quot;&gt;repository&lt;/code&gt; | &lt;code class=&quot;language-text&quot;&gt;other service&lt;/code&gt; 의 레이어 형태를 지키는
 것이 바람직하지 않을까? 라는 생각 하고 있습니다.
 그래서 위 예시코드에 기본적으로 제공되는 메소드들을 굳이 직접 service에 작성하지 않고 호출하는 구조로 만들고 싶어서 다음과 같이 entity를 다루는 service라면 반드시 상속받게 할 BaseEntityService를 생성했습니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;/**
     * Entity 공통 Service
     * Generics description
@@ -1436,6 +1501,7 @@ abstract class BaseEntityService&amp;lt;E : Any, ID : Serializable?&amp;gt;(
         entityManager: EntityManager) : SimpleJpaRepository&amp;lt;E, ID&amp;gt;(clazz.java, entityManager) {
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;저는 JpaRepository가 어떤 구현체로 이루어져있는지 관심도 없었는데 이번에 처음 관심 갖게 되었고, 살펴보게 되었습니다. &lt;/p&gt;
 &lt;p&gt;다음과 같이 두가지 생성자가 있는데 저는 두번째 타입의 생성자를 통해 상속하고 있습니다.&lt;/p&gt;
 &lt;p&gt;&lt;span
@@ -1467,7 +1533,8 @@ abstract class BaseEntityService&amp;lt;E : Any, ID : Serializable?&amp;gt;(
     &lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;그럼 &lt;code class=&quot;language-text&quot;&gt;BaseEntityService&lt;/code&gt;가 완성되었으니 사용하게 될 Service에서 상속만 하면 되겠죠? &lt;/p&gt;
 &lt;p&gt;그 구조는 다음과 같습니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;@Service
 class MenuService(
         private val menuRepository: MenuRepository,
@@ -1494,6 +1561,7 @@ class MenuService(
     }
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;이 서비스는 &lt;code class=&quot;language-text&quot;&gt;Menu&lt;/code&gt; 엔티티의 비즈니스로직을 처리하는 &lt;code class=&quot;language-text&quot;&gt;Service&lt;/code&gt;이고, Entity 타입과, Entity의 기본키가 될 자료타입을 제네릭으로 넘겨주고 Entity의 클래스와 DI 받은 EntityManager를 슈퍼클래스 생성자에 인자로 전달해주는 구조입니다.&lt;/p&gt;
 &lt;p&gt;위처럼 구조를 갖춘 이유는, 사실 아직 제가 잘 몰라서..ㅋㅋ 도 맞지만&lt;/p&gt;
 &lt;p&gt;BaseEntityService에서 받을 제네릭타입의 클래스를 런타임에선 얻을 수 없다는 걸 알았습니다.&lt;/p&gt;
@@ -1506,7 +1574,8 @@ class MenuService(
 &lt;p&gt;주로 &lt;code class=&quot;language-text&quot;&gt;전체조회하기&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;id로 하나 조회하기,&lt;/code&gt; &lt;code class=&quot;language-text&quot;&gt;삭제하기&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;수정하기&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;등록하기&lt;/code&gt; 정도가 될 것 같습니다.&lt;/p&gt;
 &lt;p&gt;그래서 이것들을 제거하기 위해 다음과 같은 BaseAPIController를 작성했습니다.&lt;/p&gt;
 &lt;p&gt;저는 Restful 한 구조의 엔드포인트를 관리하는 controller를 생성할 것이기 때문에 &lt;code class=&quot;language-text&quot;&gt;@RestController&lt;/code&gt; 전용 슈퍼클래스를 생성 했습니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;/**
     * Rest API 공통 컨트롤러
     * Generics description
@@ -1548,8 +1617,10 @@ abstract class BaseAPIController&amp;lt;E : Any, ID : Serializable, S : BaseEnti
     }
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;상속받을 슈퍼클래스를 만들었으니 상속만 하면 슈퍼클래스에서 제공하는 엔드포인트는 모두 코드 작성 없이도 얻을 수 있을 것 같습니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;@RestController
 @RequestMapping(&amp;quot;$API_VERSION_PREFIX/menus&amp;quot;) // ENDPOINT: localhost:8080/v1/menus
 class MenuController(
@@ -1558,6 +1629,7 @@ class MenuController(
         // 여긴 분명.. 비어 있는데?
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;다음과 같이 슈퍼클래스에서 제공하는 엔드포인트에 정상적으로 요청하여 응답받아오는 것을 보실 수 있습니다.&lt;/p&gt;
 &lt;p&gt;&lt;span
       class=&quot;gatsby-resp-image-wrapper&quot;
@@ -1590,14 +1662,17 @@ class MenuController(
 &lt;h2&gt;AOP request logger 추가&lt;/h2&gt;
 &lt;p&gt;먼저 저는 Kotlin에서 사용하는 KotlinLogging을 통해 logging을 할거라서 의존성을 하나 추가해주었습니다. java나 기존 slf4j를 사용하실거라면 이 의존성은 필요 없습니다.&lt;/p&gt;
 &lt;p&gt;그러나 org.springframework.boot:spring-boot-starter-web 에서 제공하는 Aspect를 이용할 것이기 때문에 해당 의존성은 필수입니다. 아마 스프링부트 프로젝트라면 따로 추가하실 필요는 없습니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;//logging
 implementation(&amp;quot;io.github.microutils:kotlin-logging:1.7.6&amp;quot;)&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;다음과 같이 Aspect logger를 작성해주고 pointcut과 around전략을 세웠습니다.&lt;/p&gt;
 &lt;p&gt;보시다시피 그냥 request를 받는 controller 메소드들에 한해서 request 정보를 로깅하는 용도입니다.&lt;/p&gt;
 &lt;p&gt;추후 APM(애플리케이션 성능 관리 툴)같은 것을 활용해서 로깅 추적 같은 것을 할 때 도움이 될 것 같습니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;@Component
 @Aspect
 class RequestLoggerAspect {
@@ -1630,6 +1705,7 @@ class RequestLoggerAspect {
     }
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;자, 이제 AOP 적용 후 요청을 해보면?&lt;/p&gt;
 &lt;p&gt;다음과 같이 로깅됩니다.&lt;/p&gt;
 &lt;p&gt;&lt;span
@@ -1664,7 +1740,8 @@ class RequestLoggerAspect {
 &lt;p&gt;예를 들어 createdAt 컬럼에 인덱스가 있고 범위 조회를 해야 하는 조건과 같은 것이 될 수도 있겠습니다. (&lt;code class=&quot;language-text&quot;&gt;SELECT * FROM entity WHERE createdAt BETWEEN &amp;#39;YYYY-MM-DD&amp;#39; AND &amp;#39;YYYY-MM-DD&amp;#39;&lt;/code&gt;) 혹은 2차캐시를 적용하거나 locking이 필요한 경우에도 공통되는 부분들을 이 &lt;code class=&quot;language-text&quot;&gt;BaseEntityRepository&lt;/code&gt;에 정의 후 각각의 엔티티 &lt;code class=&quot;language-text&quot;&gt;Repository&lt;/code&gt;에서 상속받게 하면 중복되는 부분들이 제거 되고 한결 깔끔해진 코드를 볼 수 있을 것 같습니다.&lt;/p&gt;
 &lt;p&gt;아 이 공통 repository는 상속용 interface이므로 스프링부트 애플리케이션이
 처음 로드 되면서 컴포넌트 클래스(Controller, Repository, Component)들을 빈에 등록 할 때 이 인터페이스도 포함하면 안되므로 반드시 &lt;code class=&quot;language-text&quot;&gt;@NoRepositoryBean&lt;/code&gt; 어노테이션을 달아주어야 합니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;@NoRepositoryBean
 interface BaseEntityRepository&amp;lt;T, ID : Serializable?&amp;gt;: JpaRepository&amp;lt;T, ID&amp;gt; {
     fun findByCreatedAtBetween(start: LocalDateTime, end: LocalDateTime): MutableList&amp;lt;T&amp;gt;
@@ -1681,6 +1758,7 @@ interface BaseEntityRepository&amp;lt;T, ID : Serializable?&amp;gt;: JpaReposito
     fun findByIdWithSharedLock(id: ID): T
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;글이 너무 길어져 쓰고보니 많이 장황하네요, 어쨌든 앞으로 이런 중복되는 코드를 제거해가며 확장성 있는 구조가 될 수 있게 하는 연구를 많이 해 봐야겠습니다!&lt;/p&gt;
 &lt;p&gt;&lt;br&gt;
 코드링크 -&gt; &lt;a href=&quot;https://github.com/thxwelchs/springboot-starter-with-kotlin&quot;&gt;https://github.com/thxwelchs/springboot-starter-with-kotlin&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[JPA N+1현상 삽질]]></title><description><![CDATA[JPA N+1현상 querydsl fetchJoin 삽질한 경험 공유 Kotlin SpringBoot(2.2.4) querydsl(4.2.1) 문제 JPA로 쿼리를 하다보면, N +…]]></description><link>https://thxwelchs.github.io/JPA-N+1/</link><guid isPermaLink="false">https://thxwelchs.github.io/JPA-N+1/</guid><pubDate>Mon, 24 Feb 2020 02:08:55 GMT</pubDate><content:encoded>&lt;h1&gt;JPA N+1현상 querydsl fetchJoin 삽질한 경험 공유&lt;/h1&gt;
@@ -1780,14 +1858,17 @@ interface BaseEntityRepository&amp;lt;T, ID : Serializable?&amp;gt;: JpaReposito
   &lt;/a&gt;
     &lt;/span&gt;&lt;/p&gt;
 &lt;h2&gt;Restaurant 엔티티 코드&lt;/h2&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;@Entity
 data class Restaurant(
         var name: String = &amp;quot;&amp;quot;
 ): MutableEntity()&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;h2&gt;Menu 엔티티 코드&lt;/h2&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;@Entity
 data class Menu(
         @ManyToOne
@@ -1796,6 +1877,7 @@ data class Menu(
         var name: String = &amp;quot;&amp;quot;
 ): MutableEntity()&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;h2&gt;데이터&lt;/h2&gt;
 &lt;p&gt;&lt;span
       class=&quot;gatsby-resp-image-wrapper&quot;
@@ -1851,7 +1933,8 @@ data class Menu(
     &lt;/span&gt;&lt;/p&gt;
 &lt;h2&gt;문제의 코드&lt;/h2&gt;
 &lt;p&gt;문제의 코드 입니다. (어떤게 문제인지 바로 아시겠나요?)&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;class MenuRepositoryCustomImpl: MenuRepositoryCustom, QuerydslRepositorySupport(Menu::class.java) {
     override fun findAllJoinRestaurant(): MutableList&amp;lt;Menu&amp;gt; {
         val m = QMenu.menu
@@ -1864,9 +1947,11 @@ data class Menu(
     }
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;함수 호출을 위해 테스트코드를 작성하고 실행했습니다.
 ( 테스트의 결과값 보다는 N+1 쿼리가 수행되는 것을 보기 위함이므로 일단 테스트는 통과하게끔 했습니다. )&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;@Test
 fun `Menu 만 조회했는데, Restaurant 가 조회되는 N+1 현상 테스트` () {
     val menus = menuRepository.findAllJoinRestaurant()
@@ -1874,6 +1959,7 @@ fun `Menu 만 조회했는데, Restaurant 가 조회되는 N+1 현상 테스트`
     assertTrue(true)
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;&lt;span
       class=&quot;gatsby-resp-image-wrapper&quot;
       style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 681px;&quot;
@@ -2026,7 +2112,8 @@ fun `Menu 만 조회했는데, Restaurant 가 조회되는 N+1 현상 테스트`
 &lt;p&gt;&lt;br&gt;
 그래서 코드를 다음과 같이 수정하고 해결하였습니다!&lt;/p&gt;
 &lt;h2&gt;수정된 코드&lt;/h2&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;class MenuRepositoryCustomImpl: MenuRepositoryCustom, QuerydslRepositorySupport(Menu::class.java) {
     override fun findAllJoinRestaurant(): MutableList&amp;lt;Menu&amp;gt; {
         val m = QMenu.menu
@@ -2040,6 +2127,7 @@ fun `Menu 만 조회했는데, Restaurant 가 조회되는 N+1 현상 테스트`
     }
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;h2&gt;수정 후 쿼리&lt;/h2&gt;
 &lt;p&gt;&lt;span
       class=&quot;gatsby-resp-image-wrapper&quot;
@@ -2187,7 +2275,8 @@ fun `Menu 만 조회했는데, Restaurant 가 조회되는 N+1 현상 테스트`
   &lt;/a&gt;
     &lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;.vscode/launch.json&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;json&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;json&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;{
     &amp;quot;version&amp;quot;: &amp;quot;0.2.0&amp;quot;,
     &amp;quot;configurations&amp;quot;: [
@@ -2201,6 +2290,7 @@ fun `Menu 만 조회했는데, Restaurant 가 조회되는 N+1 현상 테스트`
     ]
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;url에 있는 port는 본인의 프론트엔드 개발 모드로 실행되는 port를 입력해주시면 됩니다. 저는 React 기본 포트인 &lt;strong&gt;3000&lt;/strong&gt;으로 설정해주었습니다.&lt;/p&gt;
 &lt;p&gt;이제 모든 설정은 끝났고 breakpoint 를 걸어 디버깅을 하는 테스트를 해보겠습니다.&lt;/p&gt;
 &lt;p&gt;먼저 React app 을 &lt;code class=&quot;language-text&quot;&gt;npm&lt;/code&gt; 혹은 &lt;code class=&quot;language-text&quot;&gt;yarn&lt;/code&gt;으로 실행하여 줍니다.&lt;/p&gt;
@@ -2406,11 +2496,14 @@ debugger 종료&lt;/li&gt;
 &lt;p&gt;그런데 코틀린에서의 클래스는 무조건 &lt;code class=&quot;language-text&quot;&gt;property&lt;/code&gt;(속성)만 가질 수 있고 이 속성이란 것은 filed + 접근자를 의미합니다.&lt;/p&gt;
 &lt;p&gt;코틀린이 속성만 가질 수 밖에 없는 이유는  코틀린에 클래스에서 지역 변수를 선언하면 &lt;code class=&quot;language-text&quot;&gt;get&lt;/code&gt; 과 &lt;code class=&quot;language-text&quot;&gt;set&lt;/code&gt; 함수도 함께 정의되기 때문입니다.  ( 물론 backing field를 통해서 임의로 정의할 수도 있습니다. )&lt;/p&gt;
 &lt;p&gt;다음과 같이 코틀린에서는 속성 선언을 할 때 var(mutable) 혹은 val(immutable)로 선언할 수 있습니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;class Person(var name: String, var age: Int)&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;위 코틀린 코드가 자바 코드로 디컴파일 되면 다음과 같습니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;java&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;public class Person {
     private String name;
     private Integer age;
@@ -2432,17 +2525,20 @@ debugger 종료&lt;/li&gt;
     }
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;h1&gt;추가 내용&lt;/h1&gt;
 &lt;h2&gt;backing field?&lt;/h2&gt;
 &lt;p&gt;getter / setter 에 기본적으로 생성되는 속성&lt;/p&gt;
 &lt;p&gt;그래서 Custom getter setter(Custom accessors) 를 구현할 때는 field라는 변수명으로 접근하여 getter, setter에 해당하는 필드를 접근할 수 있다. 이것을 &lt;strong&gt;backing field&lt;/strong&gt;라고 한다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;class Person {
     var name: String
         get() = name
         set(value) { field = value } 
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;h1&gt;참고&lt;/h1&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;a href=&quot;https://wooooooak.github.io/kotlin/2019/05/24/property/&quot;&gt;https://wooooooak.github.io/kotlin/2019/05/24/property/&lt;/a&gt;&lt;/p&gt;
@@ -2451,9 +2547,11 @@ debugger 종료&lt;/li&gt;
 &lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;—no-ff&lt;/code&gt;: fast-forward 되어질 병합 형태라도 반드시 머지 커밋을 만들어서 병합합니다.&lt;/p&gt;
 &lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;—squash&lt;/code&gt;: 현재 브랜치 위에 단일 커밋을 만들어서 브랜치 병합합니다. ( 커밋 합치기 )&lt;/p&gt;
 &lt;h2&gt;git merge —no-commit —noff를 활용해서 수정된 코드 살펴보기&lt;/h2&gt;
-&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;bash&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;git merge ${commit-hash} --no-commit --no-ff&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;위 명령으로 fast-forward(빨리감기) 하지않고, 일단 커밋하지 않은 상태에서 수정된 코드를 살펴볼 수 있습니다.&lt;/p&gt;
 &lt;h2&gt;git merge —squash를 활용해서 커밋내역 합쳐보기&lt;/h2&gt;
 &lt;p&gt;설정된 커밋내역에는 다음과 같이 master, squash 두 브랜치가 있습니다.&lt;/p&gt;
@@ -2485,10 +2583,12 @@ debugger 종료&lt;/li&gt;
     &lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;squash 브랜치를 master에 병합시키고자 하는데, squash 브랜치의 커밋내역들을 합쳐서 병합하고 싶습니다.&lt;/p&gt;
 &lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;—squash&lt;/code&gt; 옵션으로 병합할 때 스쿼시(커밋내역 합치기)를 할 수 있습니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;bash&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;bash&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;git checkout master
 git merge --squash&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;그러면 다음과 같이 충돌이 발생합니다.&lt;/p&gt;
 &lt;p&gt;&lt;span
       class=&quot;gatsby-resp-image-wrapper&quot;
@@ -2546,13 +2646,15 @@ git merge --squash&lt;/code&gt;
     &lt;/span&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[제네릭 1편 와일드카드 (Generic Wildcard)]]></title><description><![CDATA[Java 와일드카드 제네릭  제네릭은 Unbound wildcard라고 불리며, 어떤 타입이 될지 모른다 라는 의미입니다. wildcard…]]></description><link>https://thxwelchs.github.io/GENERIC-1/</link><guid isPermaLink="false">https://thxwelchs.github.io/GENERIC-1/</guid><pubDate>Thu, 30 Jan 2020 23:11:55 GMT</pubDate><content:encoded>&lt;h1&gt;Java 와일드카드 제네릭&lt;/h1&gt;
 &lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;&amp;lt;?&amp;gt;&lt;/code&gt; 제네릭은 Unbound wildcard라고 불리며, 어떤 타입이 될지 모른다 라는 의미입니다. wildcard가 사용된 제네릭은 타입으로 들어온 타입에 대하여 관심이 없다 라는 의미도 되며 기능적인 메소드 외에 원소 값과 관련된 메소드에는 null 값만 허용됩니다.&lt;/p&gt;
 &lt;p&gt;코드로 예를 들어보자면 다음과 같습니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;java&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;List&amp;lt;?&amp;gt; wildcards = new ArrayList&amp;lt;&amp;gt;();
 
 wildcards.size() // 문제없음 (원소와는 상관없는 기능적인 메소드)
 wildcards.add(1) // 컴파일 에러 남
 wildcards.add(null) // 문제없음 null은 어떤 타입의 원소든 가능&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;h2&gt;Upper, Lower Bound Generic&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;extends&lt;/code&gt;: 공변 제네릭이라고도 하며, 구체적인 방향성을 가진 타입을 명시 ( &lt;code class=&quot;language-text&quot;&gt;자기자신과 서브 클래스만 허용&lt;/code&gt;) &lt;strong&gt;&lt;code class=&quot;language-text&quot;&gt;read&lt;/code&gt;&lt;/strong&gt;만 가능, &amp;#x3C;{1} extends {2}&gt; &lt;strong&gt;1은 2의 서브클래스 이거나 자기 자신이어야 한다. 라고 명시하는 것과 같습니다.&lt;/strong&gt;&lt;/li&gt;
@@ -2560,7 +2662,8 @@ wildcards.add(null) // 문제없음 null은 어떤 타입의 원소든 가능&lt
 &lt;/ul&gt;
 &lt;p&gt;또한 자바에서는 클래스 상속은 하나만 할 수 있지만, 인터페이스는 여러개를 구현할 수 있으므로 인터페이스를 구현한 구현체도 서브클래스 이기 때문에 &lt;/p&gt;
 &lt;p&gt;다음과 같이 표현이 가능하다고 합니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;java&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;class Zergling extends Unit implements GroundAttack, Burrow {
 }
 
@@ -2572,8 +2675,10 @@ class D&amp;lt;T extends Unit &amp;amp; GroundAttack &amp;amp; Burrow&amp;gt; { 
 
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;Upper, Lower Bound wildcard 예시 코드&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;java&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;import java.util.ArrayList;
 import java.util.List;
 
@@ -2608,6 +2713,7 @@ class RedCat extends Cat {}
 
 class Dog extends Animal {}&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;&lt;br&gt;
 이처럼 특정 클래스 나 메소드 안에서 특정 타입 혹은 T와 같은 제네릭 타입을 이용해서 어떤 작업을 수행하는 것이 아니라면 와일드카드를 이용하면&lt;/p&gt;
 &lt;p&gt;내부 구현이 노출되지 않을 수 있고, 내부 메소드 의 의도를 조금 더 올바르게 드러낼 수 있습니다.&lt;/p&gt;
@@ -2622,7 +2728,8 @@ class Dog extends Animal {}&lt;/code&gt;
 &lt;/ul&gt;
 &lt;p&gt;kotlin에서는 out T 서브타입 한정에서 null로 값을 대입하는 것이 불가능함&lt;/p&gt;
 &lt;p&gt;위 자바에서 예시를 들었던 코드를 코틀린 으로 작성했습니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;kotlin&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;kotlin&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;class WildcardGenerics {
     fun addCat(catList: ArrayList&amp;lt;in Cat&amp;gt;) {
         println(&amp;quot;Cat Added&amp;quot;)
@@ -2653,6 +2760,7 @@ class RedCat: Cat()
 
 class Dog: Animal()&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;&lt;br&gt;
 &lt;u&gt;&lt;span style=&quot;color:#e96900;&quot;&gt;
 혹시나 잘못된 점이 있거나 정보가 틀렸다면 반드시 코멘트 혹은 &lt;a href=&quot;mailto:thxwelchs@gmail.com&quot;&gt;이메일&lt;/a&gt;로 알려주시면 감사하겠습니다!
@@ -2700,7 +2808,8 @@ class Dog: Animal()&lt;/code&gt;
     &lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;ExifIFD0 은 Exif Data 헤더 중 하나의 영역입니다.&lt;/p&gt;
 &lt;p&gt;자바 군에서는 metadata-extractor 라이브러리가 범용적이며, 다음과 같은 클래스를 제공합니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;java&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;    /*
      * Copyright 2002-2019 Drew Noakes and contributors
      *
@@ -2770,8 +2879,10 @@ class Dog: Animal()&lt;/code&gt;
         }
     }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;h2&gt;Spock 테스트 코드&lt;/h2&gt;
-&lt;deckgo-highlight-code language=&quot;groovy&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;groovy&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;def &amp;quot;이미지 메타데이터 읽어서 회전시켜 저장하기 테스트&amp;quot;() {
         given:
                 // 이미지 부터 mocking ( 애플리케이션 내부 경로에 모나리자 이미지를 넣어놓은 상태입니다.
@@ -2835,6 +2946,7 @@ class Dog: Animal()&lt;/code&gt;
         ImageIO.write(destinationImage, &amp;quot;jpg&amp;quot;, resizedFile)
         orientatation == 5&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;h2&gt;테스트 디버깅&lt;/h2&gt;
 &lt;p&gt;테스트 결과 orientatation 값도 정상적으로 찍히고, 변환된 이미지도 잘 생성되었습니다.
 &lt;span
@@ -2942,18 +3054,21 @@ class Dog: Animal()&lt;/code&gt;
 &lt;h1&gt;SRP(Single responsibility principle) 단일 책임 원칙&lt;/h1&gt;
 &lt;p&gt;객체(Class) 는 단 &lt;em&gt;하나의 책임을 가진다.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;이는 클래스의 역할과 책임에 너무 많은 것을 부여하려고 하면 안된다 라고 해석해도 될 것 같습니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;java&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;class 계산 {
     public int 사칙연산(int args...) {
     
     }
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;위 와 같이 계산 클래스가 있다고 가정해봅시다. 이 상태의 계산 클래스는 오직 사칙연산 기능만을 책임지고 있는 것을 볼 수 있습니다.&lt;/p&gt;
 &lt;p&gt;그런데 이 때 만약 이 프로그램이 대대적인 수정이 필요하게 되었다면? 계산 클래스가 수정 될 만한 사유는 사칙연산 메소드에 관련 된 문제 뿐이라고 개발자는 쉽게 판단할 수 있습니다. 이처럼 &lt;strong&gt;단일 책임 원칙&lt;/strong&gt;은 객체(Class)의 목적을 명확히 함으로써 구조가 난잡해지거나 수정사항이 불필요하게 넓게 퍼지는 것을 예방하고 기능을 명확히 분리할 수 있게 합니다.&lt;/p&gt;
 &lt;h1&gt;OCP(Open-Closed Principle) 개방-폐쇄 원칙&lt;/h1&gt;
 &lt;p&gt;&lt;em&gt;객체(Class)는 확장에 대해서는 개방적이고 수정에 대해서는 폐쇄적이어야 한다&lt;/em&gt;&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;java&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;class 유닛 {
     // 공통필드...
     private String 이름;
@@ -2968,9 +3083,11 @@ class Dog: Animal()&lt;/code&gt;
     
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;위 와 같이 스타크래프트의 유닛을 객체로 디자인하고 있습니다.  이런저런 공통사항을 생각하며 메소드와 필드를 정의하고, 이 중에는 이동 메소드도 있습니다. 이동 메소드는 단순히 이동 위치를 매개변수로 받아, 유닛 속도에 따라서 대상 위치까지 이동시키는 메소드 입니다. 그런데 브루들링 같은 유닛은 이동시 그냥 이동되지 않고 기묘하게 움직이며 이동 해야 합니다. &lt;/p&gt;
 &lt;p&gt;이럴 때 유닛 클래스의 이동 메소드를 수정하는 것이 아니라, 서브클래스로서 브루들링 이라는 유닛을 상속받는 클래스를 생성한 후  브루들링만의 이동메소드를 재 정의 해주어야 합니다. &lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;java&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;class 브루들링 extends 유닛 {
     @Override
     public void 이동(int x, int y) {
@@ -2978,6 +3095,7 @@ class Dog: Animal()&lt;/code&gt;
     }
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;이렇게 하면 기존의 유닛 클래스의 이동 메소드는 수정할 필요 없고(수정 폐쇄), 브루들링 클래스의 이동 메소드를 재정의(확장성 개방) 하여 개방-폐쇄 원칙을 지킬 수 있습니다. &lt;/p&gt;
 &lt;h1&gt;LSP (Liskov Substitution Principle) 리스코프 치환 원칙&lt;/h1&gt;
 &lt;p&gt;&lt;em&gt;서브 클래스는 언제나 슈퍼클래스를 대체할 수 있다&lt;/em&gt;&lt;/p&gt;
@@ -2985,14 +3103,17 @@ class Dog: Animal()&lt;/code&gt;
 &lt;p&gt;is-a 관계란? 해석 되는대로 “~는 ~이다.” 가 성립이 되는 관계를 뜻 합니다. &lt;/p&gt;
 &lt;p&gt;예를 들어 위 OCP에서 브루들링은 유닛이다. 가 성립하고 있습니다. 이처럼 상속관계를 is-a 로 표현했을 때 어색하지 않을 것을 is-a 관계가 성립된다고 볼 수 있습니다.&lt;/p&gt;
 &lt;p&gt;또한 업캐스팅이 가능한 상속 관계여야 합니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;java&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;브루들링 b = new 브루들링();
 유닛 u = (유닛) b;&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;h1&gt;ISP (Interface Segregation Principle) 인터페이스 분리 원칙&lt;/h1&gt;
 &lt;p&gt;&lt;em&gt;클라이언트가 자신이 이용하지 않는 메서드에 의존하지 않아야 한다&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;얼핏 보면 OCP와 비슷하면서도 다른 원칙인데, 또 스타크래프트 도메인을 가지고 예를 들어보겠습니다.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;java&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;interface 공격 {
     공중공격();
     지상공격();
@@ -3012,6 +3133,7 @@ class 발키리 extends 유닛 implements 공격 {
     지상공격() {} // 쓸모없음
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;위와 같은 유닛이 공격할 수 있는 메소드를 가지고 있는 공격 인터페이스가 설계 되어 있다면 공격이 가능한 유닛은 위 인터페이스를 구현할 것입니다. 그런데 만약 저글링과 같은 지상 공격만 할 수 있거나, 발키리와 같이 공중공격만 하는 한가지의 공격만 할 수 있는 유닛 타입에서는 강제적으로 다른 타입의 공격메소드도 구현받아야 할 것입니다. 그렇다면 이 구조는 ISP가 지켜지지 않은 구조 이므로 인터페이스 설계를 다시 해야 합니다.  일반적인 방법으론 인터페이스 역할에 맞게 분리하는 방법이 있습니다.&lt;br&gt;
 그렇다고 너무 잘게 쪼개는 것은 비권장되는 방법이라고 합니다. (역할의 기준을 명확하게 나눌 수 있을때만 분리하는 것이 좋을 것 같습니다.)&lt;/p&gt;
 &lt;h1&gt;DIP (Dependency Inversion Principle) 의존성 역전 원칙&lt;/h1&gt;
@@ -3051,7 +3173,8 @@ class 발키리 extends 유닛 implements 공격 {
 &lt;p&gt;&lt;em&gt;충돌이 발생할 것이라고 우선적으로 가정하고 락을 거는 방법&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;데이터베이스 레벨에서의 락 기능을 사용하는데, 대표적인 레코드락을 사용&lt;/p&gt;
 &lt;p&gt;FOR UPDATE(exclusive), LOCK IN SHARE MODE(shared mode) 을 거는 방법&lt;/p&gt;
-&lt;deckgo-highlight-code   &gt;
+
+        &lt;deckgo-highlight-code  &gt;
           &lt;code slot=&quot;code&quot;&gt;-- innoDB 테이블에 대해 걸 수 있는 레코드 락은 반드시 auto-commit이 비활성화 상태 이거나, 
 -- 트랜잭션을 직접 제어하는 상태에서만 Lock을 컨트롤 할 수 있습니다.
 -- 현재 AutoCommit 값 확인 ( 1 = O, 0 = X )
@@ -3077,6 +3200,7 @@ WHERE t.id = 10
 */
 COMMIT;&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;shared mode = 내가 락을 건 이상 다른 세션에서 UPDATE나 DELETE는 못하게 하는 것&lt;/p&gt;
 &lt;p&gt;exclusive mode = 내가 락을 걸면 다른 트랜잭션에서는 읽기 쓰기도 못하게 하는 것 ( 읽기를 못한다는 것은, 단순 SELECT 문은 허용되나, exclusive mode를 하려고 하는 읽기에 대한 부분만 해당됩니다, 인덱스가 exclusive lock이 걸려 있다면, 대기상태로 돌려짐)&lt;/p&gt;
 &lt;h1&gt;추가 보너스!&lt;/h1&gt;
@@ -3124,13 +3248,17 @@ COMMIT;&lt;/code&gt;
 GitHub - &lt;a href=&quot;https://github.com/scttcper/gatsby-casper&quot;&gt;https://github.com/scttcper/gatsby-casper&lt;/a&gt;&lt;/p&gt;
 &lt;h3&gt;Getting Started&lt;/h3&gt;
 &lt;p&gt;Clone this repo.&lt;/p&gt;
-&lt;deckgo-highlight-code   &gt;
+
+        &lt;deckgo-highlight-code  &gt;
           &lt;code slot=&quot;code&quot;&gt;git clone https://github.com/scttcper/gatsby-casper.git --depth=1&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;Remove .git folder and setup a new one&lt;/p&gt;
-&lt;deckgo-highlight-code   &gt;
+
+        &lt;deckgo-highlight-code  &gt;
           &lt;code slot=&quot;code&quot;&gt;rm -rf .git &amp;amp;&amp;amp; git init&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;Now push to whatever repo you want!&lt;/p&gt;</content:encoded></item><item><title><![CDATA[A Full and Comprehensive Style Test]]></title><description><![CDATA[Below is just about everything you’ll need to style in the theme. Check the source code to see the many embedded elements within paragraphs…]]></description><link>https://thxwelchs.github.io/a-full-style-test/</link><guid isPermaLink="false">https://thxwelchs.github.io/a-full-style-test/</guid><pubDate>Sun, 30 Sep 2018 07:03:47 GMT</pubDate><content:encoded>&lt;p&gt;Below is just about everything you’ll need to style in the theme. Check the source code to see the many embedded elements within paragraphs.&lt;/p&gt;
 &lt;hr&gt;
 &lt;h1&gt;Heading 1&lt;/h1&gt;
@@ -3253,13 +3381,15 @@ GitHub - &lt;a href=&quot;https://github.com/scttcper/gatsby-casper&quot;&gt;htt
 &lt;p&gt;Code can be presented inline, like &lt;code class=&quot;language-text&quot;&gt;&amp;lt;?php bloginfo(&amp;#39;stylesheet_url&amp;#39;); ?&amp;gt;&lt;/code&gt;, or using &lt;a href=&quot;http://jekyllrb.com/docs/templates/#code-snippet-highlighting&quot;&gt;jekyll’s highlight
 filter&lt;/a&gt; to
 highlight a block of code. Because we have more specific typographic needs for code, we’ll specify Consolas and Monaco ahead of the browser-defined monospace font.&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;css&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;css&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;#container {
     float: left;
     margin: 0 -240px 0 0;
     width: 100%;
 }&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;hr&gt;
 &lt;h2&gt;Blockquotes&lt;/h2&gt;
 &lt;p&gt;Let’s keep it simple. Italics are good to help set it off from the body text. Be sure to style the citation.&lt;/p&gt;
@@ -3303,7 +3433,7 @@ The &lt;u&gt;u element&lt;/u&gt; example&lt;/p&gt;
             class=&quot;gatsby-resp-iframe-wrapper&quot;
             style=&quot;padding-bottom: 56.166666666666664%; position: relative; height: 0; overflow: hidden;margin-bottom: 1rem&quot;
           &gt;
-            &lt;iframe src=&quot;//player.vimeo.com/video/103224792&quot; frameborder=&quot;0&quot; webkitallowfullscreen=&quot;&quot; mozallowfullscreen=&quot;&quot; allowfullscreen=&quot;&quot; style=&quot;
+            &lt;iframe src=&quot;//player.vimeo.com/video/103224792&quot; frameborder=&quot;0&quot; webkitallowfullscreen mozallowfullscreen allowfullscreen style=&quot;
             position: absolute;
             top: 0;
             left: 0;
@@ -3377,13 +3507,17 @@ Parallel GC와 같이 멀티쓰레드로 처리되는 GC이며 대신 Minor GC�
 &lt;li&gt;JDK 11 - G1 GC&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;현재 내 jdk default gc 살펴보기&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;shell&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;shell&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;$ java -XX:+PrintCommandLineFlags -version&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;p&gt;현재 내 jdk default gc 변경하기&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;shell&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;shell&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;$ java -XX:+UseG1GC -XX:+PrintCommandLineFlags -version&lt;/code&gt;
-        &lt;/deckgo-highlight-code&gt;</content:encoded></item><item><title><![CDATA[Welcome to Ghost]]></title><description><![CDATA[👋 Welcome, it’s great to have you here. We know that first impressions are important, so we’ve populated your new site with some initial…]]></description><link>https://thxwelchs.github.io/welcome/</link><guid isPermaLink="false">https://thxwelchs.github.io/welcome/</guid><pubDate>Sun, 06 May 2018 23:46:37 GMT</pubDate><content:encoded>&lt;p&gt;👋 Welcome, it’s great to have you here.&lt;/p&gt;
+        &lt;/deckgo-highlight-code&gt;
+      </content:encoded></item><item><title><![CDATA[Welcome to Ghost]]></title><description><![CDATA[👋 Welcome, it’s great to have you here. We know that first impressions are important, so we’ve populated your new site with some initial…]]></description><link>https://thxwelchs.github.io/welcome/</link><guid isPermaLink="false">https://thxwelchs.github.io/welcome/</guid><pubDate>Sun, 06 May 2018 23:46:37 GMT</pubDate><content:encoded>&lt;p&gt;👋 Welcome, it’s great to have you here.&lt;/p&gt;
 &lt;p&gt;We know that first impressions are important, so we’ve populated your new site with some initial &lt;strong&gt;getting started&lt;/strong&gt; posts that will help you get familiar with everything in no time. This is the first one!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;A few things you should know upfront&lt;/strong&gt;:&lt;/p&gt;
 &lt;ol&gt;
@@ -3410,9 +3544,11 @@ Parallel GC와 같이 멀티쓰레드로 처리되는 GC이며 대신 Minor GC�
 &lt;p&gt;이럴 때 사용되는 개념이 &lt;strong&gt;Reflection&lt;/strong&gt;입니다.
 \&lt;/p&gt;
 &lt;p&gt;이제 이론적인 설명보다는 코드로서 예를 들어보겠습니다.\&lt;/p&gt;
-&lt;deckgo-highlight-code language=&quot;java&quot;  &gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
           &lt;code slot=&quot;code&quot;&gt;&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
+      
 &lt;h1&gt;결론&lt;/h1&gt;
 &lt;p&gt;아직 작성중…&lt;/p&gt;</content:encoded></item><item><title><![CDATA[직렬화(Serialization)!?]]></title><description><![CDATA[직렬화 객체의 상태를 저장하기 위해서 객체를 byte stream 으로 변환하는 것을 의미한다. 그 반대는 deserialization(역직렬화) 라고 한다. 흠.. 직렬화를 알고 싶었는데 stream?이 또 뭐란 말인가? 컴퓨터의 stream…]]></description><link>https://thxwelchs.github.io/serialization-marshalling/</link><guid isPermaLink="false">https://thxwelchs.github.io/serialization-marshalling/</guid><pubDate>Sat, 20 Aug 2016 15:11:55 GMT</pubDate><content:encoded>&lt;h1&gt;직렬화&lt;/h1&gt;
 &lt;p&gt;&lt;strong&gt;객체의 상태를 저장하기 위해서 객체를 byte stream 으로 변환하는 것&lt;/strong&gt;을 의미한다. 그 반대는 &lt;strong&gt;deserialization(역직렬화)&lt;/strong&gt; 라고 한다.&lt;br&gt;
