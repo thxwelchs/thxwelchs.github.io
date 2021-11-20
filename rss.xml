@@ -1,4 +1,365 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Tech blog]]></title><description><![CDATA[끄적끄적]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Mon, 30 Aug 2021 05:02:04 GMT</lastBuildDate><item><title><![CDATA[내 redis가 해킹당했다고? 심지어 local인데?]]></title><description><![CDATA[사건의 발단 어느날.. redis와 관련된 기능을 개발해야 할 일이 있어 redis를 local에서 docker 컨테이너로 실행 후 테스트를 해보고 있었습니다. 기능은 아주 간단해서 어떤 특정한 상황 때 hash 자료구조로 redis에 key…]]></description><link>https://thxwelchs.github.io/내redis가해킹당했다고심지어local인데/</link><guid isPermaLink="false">https://thxwelchs.github.io/내redis가해킹당했다고심지어local인데/</guid><pubDate>Sun, 29 Aug 2021 07:31:54 GMT</pubDate><content:encoded>&lt;h1&gt;사건의 발단&lt;/h1&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Tech blog]]></title><description><![CDATA[끄적끄적]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Sat, 20 Nov 2021 10:18:08 GMT</lastBuildDate><item><title><![CDATA[UML과 코드로 이해하는 의존성]]></title><description><![CDATA[의존성 의존성이란 무엇일까? 우리는 객체지향 프로그래밍을 하면서 의존성이란 의미를 정말 가슴 깊이 받아들이고 있을까? 적어도 난 그렇지 않았던 것 같다.. 그래서 맨날 보면서도 까먹는 의존관계 UML…]]></description><link>https://thxwelchs.github.io/UML과코드로이해하는의존성/</link><guid isPermaLink="false">https://thxwelchs.github.io/UML과코드로이해하는의존성/</guid><pubDate>Sat, 20 Nov 2021 11:31:54 GMT</pubDate><content:encoded>&lt;h1&gt;의존성&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;의존성이란 무엇일까?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;우리는 객체지향 프로그래밍을 하면서 의존성이란 의미를 정말 가슴 깊이 받아들이고 있을까?&lt;/p&gt;
+&lt;p&gt;적어도 난 그렇지 않았던 것 같다.. 그래서 맨날 보면서도 까먹는 의존관계 UML 화살표 방향과 코드로써 의존관계를 명확하게 표현해보면 그래도 좀 덜 잊혀지지 않을까?해서 준비해보았다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;의존성&lt;/strong&gt;,
+추상적으로 다가오는 이 단어를 구체적인 한 문장의 설명으로 이렇게 표현할 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;A&lt;/code&gt;가 &lt;code class=&quot;language-text&quot;&gt;B&lt;/code&gt;에 의존할 경우, &lt;code class=&quot;language-text&quot;&gt;B&lt;/code&gt;가 변경될 때  의존하고 있는 &lt;code class=&quot;language-text&quot;&gt;A&lt;/code&gt; 또한 변경될 가능성이 있음을 의미한다.&lt;/p&gt;
+&lt;p&gt;변경될 가능성이란 여러가지의 형태가 될 수 있는데 구체적인 예를 들자면 다음과 같다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;클래스의 이름이 변경된다.&lt;/li&gt;
+&lt;li&gt;메소드의 이름이 변경된다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;클래스의 메소드 구현부가 변경된다. (파라미터, 리턴타입 내부 로직 등)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;당연하게도 잘 생각해보면 내부로직 변경의 경우 반드시 A가 영향을 받는 것은 아닐 수도 있다. (설계가 잘 되어있다면)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;이 외 무엇이건 변경에 포함되는 것들&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;이러한 의존성에도 여러 종류가 있고 일반적으로 객체지향에서는 네가지 종류로 분류하고 있다.&lt;/p&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;h2&gt;&lt;strong&gt;Association, 연관관계&lt;/strong&gt;&lt;/h2&gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
+          &lt;code slot=&quot;code&quot;&gt;// puml
+@startuml
+class &amp;quot;A&amp;quot; as a1
+class &amp;quot;B&amp;quot; as b1
+
+a1 --r b1 : Association
+@enduml&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+      
+&lt;p&gt;UML에서는 아래와 같이 실선으로 나타냄&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 210px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/3f32225a06371ef41b0f1836d945e7da/9c4c6/Untitled.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 32.38095238095238%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAABWElEQVQY03WQW0sCURSF/eU99xL0EEVhCZblraBGRLsgRZTkFa0ZnTQdQy0ix+aMo0XO1xmth6AWfHBYsNbZe/tsXSOb8JNJBDBbKSrJGCNnwtPzE0bHoNfv0+31aBttavU6hmHwPp3yOTDRjndJ7q/T1RJoJyG6zTa+kV5jZXOR5YM1KsUIF/EAwxcTXdUo5wrSK6NVb8ldZ2fclsoIYcPLK8ruKgs7S1xlw1wqG7Q0HZ+oq+hnISqne0y6GYrRIP16GyyHqSnmDATucAQS7/0xsLDUBp1MjEJqG+vhhMZpmOZdDd+gVEKUDpg00oxUhXxoC9MSeHL/wZPTe+b1MsbHQ1pmU9Tifu6rmpyw80jxKEJeiVJU5MrRKMK254XyVq7r/kZ6nj4tGzWtcHMYppyMcx4K0mnJG3o/CrmeNbR5kzjjybzsu+Av/fhj511mxCxr2/JE0v8CDRawoT3V2OcAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Untitled&quot;
+        title=&quot;Untitled&quot;
+        src=&quot;/static/3f32225a06371ef41b0f1836d945e7da/9c4c6/Untitled.png&quot;
+        srcset=&quot;/static/3f32225a06371ef41b0f1836d945e7da/9c4c6/Untitled.png 210w&quot;
+        sizes=&quot;(max-width: 210px) 100vw, 210px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;어떤 객체 A에서 어떤 객체 B로 갈 수 있는 객체간의 그래프 경로가 있음을 의미 &lt;/p&gt;
+&lt;p&gt;여기서의 그래프 경로는 런타임에서의 영구적인 경로를 의미한다. (컴파일이 되고 런라팀에서는 항상 A는 B로 갈 수 있는 경로가 있다.)&lt;/p&gt;
+&lt;p&gt;마치 코드로 나타내면 다음과 같다.&lt;/p&gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
+          &lt;code slot=&quot;code&quot;&gt;class A {
+	private B b;
+}&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+      
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;p&gt;Association이 객체간의 그래프가 형성되어있는지 유무를 따지는지의 일반적인 관계를 나타내는 것이라고 한다면 더 구체적으로 다음과 같이 관계를 전체와 부분의 집합으로 명확하게 명시하고자 할 때 &lt;code class=&quot;language-text&quot;&gt;Aggregation&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;Composition&lt;/code&gt; 으로 나누어서 볼 수도 있다. &lt;/p&gt;
+&lt;p&gt;(개인적으로 가장 헷갈렸던 부분이다. 블로그나 글을 찾아봐도 차이가 되게 모호하다고 생각했는데, Aggregation, Composition은 Association의 관계표현 종류 중 하나인 것이다.)&lt;/p&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;h3&gt;Association - Aggregation, 집약관계&lt;/h3&gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
+          &lt;code slot=&quot;code&quot;&gt;// puml
+@startuml
+class &amp;quot;A&amp;quot; as a2
+class &amp;quot;B&amp;quot; as b2
+
+a2 --ro b2 : Aggregation
+@enduml&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+      
+&lt;p&gt;UML로 나타내면 아래와 같이 실선과 칠해지지 않은 다이아몬드(?)로 표현된다.
+&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 215px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/7c5af314760df17a79a8fbc115b8a0cc/61c66/Untitled%201.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 31.627906976744185%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAABY0lEQVQY022RSU/CABCF+eHeTTyaeNCoB5EgajECihKEGFBcCoiKIIsLhaQulK2ldP0sigcTJ5lMZjLvzZsZn1qrcBlb5/zIj9KIc5+IYtgOsizz2mohtSXktzfanQ6NZtOrvTI2DZgYPKUEEuEV2vcxaqktOo0XfOpjhcW1eZb2l7nNB8mGA4z6Ix5KtxxGouQyWUr5AifHCa5zFxTFPN33T+yWTHpnjbmNBTK5IGexFZ7KVXyjaplqcpNyOoTeSiKGAiheM30N46OH3R1idQfYyhAGGm5fxfjso4gVpBOB/LGfXj1BMxWicVfBpxQLDAsCev2I4U2Yq6CfsWXzn7kzn5o5UPk4FZh4Z9LrcarCKrVS2VMotSlEdxEPBMTINufemoZl/RA4Dq7r/nXH/SE2TOrpJJeREMX4HpmtANKzd8MpcDw20LQJmjrBnKn7JfijcJb/RtNyPIz+jdO9J01HfQHPn7DxcfU4zQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Untitled&quot;
+        title=&quot;Untitled&quot;
+        src=&quot;/static/7c5af314760df17a79a8fbc115b8a0cc/61c66/Untitled%201.png&quot;
+        srcset=&quot;/static/7c5af314760df17a79a8fbc115b8a0cc/61c66/Untitled%201.png 215w&quot;
+        sizes=&quot;(max-width: 215px) 100vw, 215px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;어떤 객체 A에 어떤 객체 B로 갈 수 있는 객체간의 그래프 경로가 있음을 의미&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A객체가 소멸되더라도 B객체가 메모리에서 사라지지는 않음&lt;/li&gt;
+&lt;li&gt;의존관계의 생명주기는 독립적임&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;마치 코드로 나타내면 다음과 같다.&lt;/p&gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
+          &lt;code slot=&quot;code&quot;&gt;class A {
+	private B b;
+	
+	public A(B b) {
+		this.b = b;
+	}
+}&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+      
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;h3&gt;Association - Composition, 합성관계&lt;/h3&gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
+          &lt;code slot=&quot;code&quot;&gt;//puml
+@startuml
+class &amp;quot;A&amp;quot; as a3
+class &amp;quot;B&amp;quot; as b3
+
+a3 --r* b3 : Composition
+@enduml&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+      
+&lt;p&gt;UML로 나타내면 아래와 같이 실선과 칠해진 다이아몬드로 표현된다.
+&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 217px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/e4b96b9cd3f64979c08315674498a499/d6985/Untitled%202.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 31.336405529953915%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAABVElEQVQY03WR/UvCUBSG/fODKAiKQKgf0llIhUUfVISlqdXc1Kw1lbnQkWUzS1Yz9/F0NSgoOvBw33PgvgfeE3E7D/SKWbpyFrep8nR9hR+EEAp+VeAH39p3Rwy0Mg+FNE6tSL9SYGA/E3GbBquJWZa2FqlXk+RTcZz3IYZpULg4R1YVZKU44SST4Syfo2N3hTvUMltMx6ZIZ2OoB1H0coXI8K7J9to8qxtRrPoOl+txeuY9zn0Xu9kWus1jwxSvNemfjBbOo01jZg1tUyKamEPOJ4W5hF4ShgNdZ6CkcLR9POOQUlLipfcKnk848mCM0Ix+CEX/WhPLcru8abt45jHWkcRNURWG9QbGQQzzLImZlsisLOO4w0lOf1P8mYVeiHW6h3Ei0cqto8YXqMoKEf9jhHGloSuVCWatQRB8hR+Kw/zHuGyrw61cpl6qciv+9vt9PgH/l7BV6HXj4gAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Untitled&quot;
+        title=&quot;Untitled&quot;
+        src=&quot;/static/e4b96b9cd3f64979c08315674498a499/d6985/Untitled%202.png&quot;
+        srcset=&quot;/static/e4b96b9cd3f64979c08315674498a499/d6985/Untitled%202.png 217w&quot;
+        sizes=&quot;(max-width: 217px) 100vw, 217px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;어떤 객체 A에 어떤 객체 B로 갈 수 있는 객체간의 그래프 경로가 있음을 의미&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;부분 객체가 전체 객체에 속해지는 관계&lt;/li&gt;
+&lt;li&gt;의존관계의 생명주기 또한 의존적 ( B는 A에 의해서 생명주기가 결정됌)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;마치 코드로 나타내면 다음과 같다.&lt;/p&gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
+          &lt;code slot=&quot;code&quot;&gt;class A {
+	private B b;
+	
+	public A() {
+		this.b = new B();
+	}
+}&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+      
+&lt;hr&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;h2&gt;Dependency, 의존관계&lt;/h2&gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
+          &lt;code slot=&quot;code&quot;&gt;//puml
+@startuml
+class &amp;quot;A&amp;quot; as a4
+class &amp;quot;B&amp;quot; as b4
+
+a4 ..r&amp;gt; b4 : Dependency
+@enduml&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+      
+&lt;p&gt;UML로 나타내면 다음과 같이 점선과 열려있는 화살표로 표현된다.
+&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 218px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/561c849781deba477a7327d32df754ab/1a647/Untitled%203.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 31.19266055045871%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAABRklEQVQY042Q21MBARSH/ft68VbTE4MuM5EwUVPNYMIWuyjkVrRGxCKxayu7X6vtoV6azpkz55yH73cuDrXTRsmlGBezaC2RcbPFf2ylvzGVBIZXKVSLm1REtNkCx6SUY9vnJHjmpibukDuJMl/qZDIZslcCWUFAsHIimaRQLCJKEsp0CoaBEPWw4XVyUwqQjmwj393jeLmV8PtdHJ94kcsh8uEj9MWS16HCsNtj1Oszs+pJ/5m5MvnqX4djRvEM+UMPm14XzXKEwpkfuWYJTqVrFqUwWv0UtRxFDIX4MKybDNO+zfyuf2bTZCEPUBIB1GqMVeeCZnyXTrWFQxFztM59tC8PqMfcpINBDGzIdn6HaQ8y9HfasX3uk3vIFpv1bdFZb6jPVZqFWxrFsvXDEk9y115sLfhHrG3w8PjFNNb8TQVN0/gEKoWxtpVnPisAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Untitled&quot;
+        title=&quot;Untitled&quot;
+        src=&quot;/static/561c849781deba477a7327d32df754ab/1a647/Untitled%203.png&quot;
+        srcset=&quot;/static/561c849781deba477a7327d32df754ab/1a647/Untitled%203.png 218w&quot;
+        sizes=&quot;(max-width: 218px) 100vw, 218px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;의존관계의 의존성이라는 것은 다음과 같은 특징중 하나에 속한다.&lt;/p&gt;
+&lt;p&gt;예) A라는 객체에 B라는 객체의 의존관계가 있을 때의 특징&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A객체의 어떠한 함수(메소드)에서 B타입의 객체가 &lt;strong&gt;파라미터에 명시&lt;/strong&gt;됌&lt;/li&gt;
+&lt;li&gt;A객체의 어떠한 함수(메소드)에서 B타입의 객체가 &lt;strong&gt;리턴타입에 명시&lt;/strong&gt;됌&lt;/li&gt;
+&lt;li&gt;A객체의 어떠한 함수(메소드)에서 B타입의 &lt;strong&gt;인스턴스가 생성&lt;/strong&gt;됌&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;마치 코드로 나타내면 다음과 같다.&lt;/p&gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
+          &lt;code slot=&quot;code&quot;&gt;class A {
+	public void method(B b) {
+	}
+
+	public B method2() {
+		return new B();
+	}
+
+	public void method3() {
+		B b = new B();
+	}
+}&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+      
+&lt;p&gt;Association(연관관계)과 차이가 있다면 Association은 영구적인 협력이 되는 것이고, Dependency(의존관계)는 일시적으로 협력을 필요로 하는 어떠한 시점에 관계를 맺고 끊는 관계이다.&lt;/p&gt;
+&lt;hr&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;h2&gt;Inheritance, 상속관계&lt;/h2&gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
+          &lt;code slot=&quot;code&quot;&gt;//puml
+@startuml
+class &amp;quot;A&amp;quot; as a5
+class &amp;quot;B&amp;quot; as b5
+
+a5 --r|&amp;gt; b5 : Inheritance
+@enduml&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+      
+&lt;p&gt;UML로 나타내면 아래와 같이 실선과 칠해지지 않은 닫힌 화살표로 표현된다.
+&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 208px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/f157e4b8ca8e458f5c94d4d1923ee2ac/7854c/Untitled%204.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 32.69230769230769%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAABfklEQVQoz42Pa2vTYBiG87f9AYLoFxndh00RWtaxEx7AuLqx7mDXFntwbdPaJc2paTdXZIYlJs00uXyTWgTxgzdc3M/74b6f95FCXSOyDPyRiqebxHHC/2h+6xKITJoNTB1f1fgxj5DOSs94/3odf1ZGKW0wu/nKrfuNTq+HbppcairqSMOwTGxnzPT6KisMDIPOcYFX2zm+mPtcilm76CE9ev6Qx3urtGubHG+tMhkaTMVPG2fntM7rND9UhdeolU/pNlo0S2XCmcv3Tp9C8SkP8k+oVDY52Vth0PqENDgp0j4oEt2corzJM2opYn0EXrjAn/9xQahNuBPMjiqY1V3qcgHPKeNUdujWG0h++yVBTyZU3nJRWGM8WZwUC5K/SPUzus/cHQxxazsiJxN8foe+u74o7Mt5+vtF1ENx8lqOse0sCuOYJEn+Sao7zWAob6Ck2aMtqi9ydD82kWzDxtStDNsaE0VRFlgGl1q+M0+LxTx1rjBGJtbvvOd7/ALqEvhJsYgqwwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Untitled&quot;
+        title=&quot;Untitled&quot;
+        src=&quot;/static/f157e4b8ca8e458f5c94d4d1923ee2ac/7854c/Untitled%204.png&quot;
+        srcset=&quot;/static/f157e4b8ca8e458f5c94d4d1923ee2ac/7854c/Untitled%204.png 208w&quot;
+        sizes=&quot;(max-width: 208px) 100vw, 208px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;상속관계에서도 의존성의 의미가 있는데, 그 이유인즉슨 Super &lt;code class=&quot;language-text&quot;&gt;B&lt;/code&gt;가 변경될 때 Sub &lt;code class=&quot;language-text&quot;&gt;A&lt;/code&gt;도 변경될 가능성이 있다라는 것을 의미한다&lt;/p&gt;
+&lt;p&gt;마치 코드로 나타내면 다음과 같다.&lt;/p&gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
+          &lt;code slot=&quot;code&quot;&gt;class A extends B {
+
+}&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+      
+&lt;hr&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;h2&gt;Realization, 실체화관계&lt;/h2&gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
+          &lt;code slot=&quot;code&quot;&gt;//puml
+@startuml
+class &amp;quot;A&amp;quot; as a6
+class &amp;quot;B&amp;quot; as b6
+
+a6 ..r|&amp;gt; b6 : Realization
+@enduml&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+      
+&lt;p&gt;UML로 나타내면 아래와 같이 점선과 칠해지지 않은 닫힌 화살표로 표현된다.
+&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 207px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/ac04dfecc94db344a5373305eff0e96f/8b2ce/Untitled%205.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 32.850241545893724%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAABg0lEQVQoz42R3U/TUBjG+497aWKiFyaIATEBpmMGiSGRLxkIm4HocGWz7dbB6frBFrcxNc6lXTNOf5527kZvfE+e8/Ge/J7kzaNFzjWx12YsrvjluCRJwv9UNBgSKiZlQ1co3uFuOkUrH6zwbvsZ48F7zIOX3PaHfO33sFstPN/jslbDDwK+GAZCCDrdbmY4ti0qxVXevn7KsHOo2DU8W6A9eH6fh1uL6B83OCks0nUCvvUH1Ks65+UPmaqfLjg7LVNTPaN0zmQ4YvS5ylLuEfeULiqbFAuPEZaN1jjNox/mifsljO11vKaAdOo7tUlmd/lHqiZ+j5/NgMHRCddnm1T2XjDplRBHBey6iTbW3xAau0TmDvXcMkHQyUCZSOWRZEqXTJLMexpNsv/v+iWjyhZRyjb3aGwsKUMLzdpdx9rPc1VUIy8/4WZuKGUW0D9iFtoPs0FjJ4eZssevKK8s0FI9zW/7uI6XyfcC4jjOgL/Tnr/np5QJN36HtnBnvOsRhiG/AYQZ+N5GI5OkAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Untitled&quot;
+        title=&quot;Untitled&quot;
+        src=&quot;/static/ac04dfecc94db344a5373305eff0e96f/8b2ce/Untitled%205.png&quot;
+        srcset=&quot;/static/ac04dfecc94db344a5373305eff0e96f/8b2ce/Untitled%205.png 207w&quot;
+        sizes=&quot;(max-width: 207px) 100vw, 207px&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;말그대로 추상화가 실체화되는 관계이다, 인터페이스와 구현체간의 관계라고 생각하면 이해가 쉽다.&lt;/p&gt;
+&lt;p&gt;마치 코드로 나타내면 다음과 같다.&lt;/p&gt;
+
+        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
+          &lt;code slot=&quot;code&quot;&gt;class A implements B {}&lt;/code&gt;
+        &lt;/deckgo-highlight-code&gt;
+      
+&lt;hr&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;p&gt;앞으로도 UML과 코드로 객체간의 의존관계를 명확히 이해해보고 더
+좋은 설계에 힘써봐야겠다. &lt;/p&gt;
+&lt;br/&gt;
+&lt;p&gt;&lt;em&gt;puml 이라고 주석쳐있는 부분의 코드는 plantuml에서 그린 uml 코드이다.
+관심이 있다면 plantuml을 찾아보기를 권장한다.
+IntelliJ에서도 plugin을 지원하는 등 많은 기능을 제공한다.&lt;/em&gt;
+&lt;a href=&quot;https://plantuml.com/ko/&quot;&gt;https://plantuml.com/ko/&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[내 redis가 해킹당했다고? 심지어 local인데?]]></title><description><![CDATA[사건의 발단 어느날.. redis와 관련된 기능을 개발해야 할 일이 있어 redis를 local에서 docker 컨테이너로 실행 후 테스트를 해보고 있었습니다. 기능은 아주 간단해서 어떤 특정한 상황 때 hash 자료구조로 redis에 key…]]></description><link>https://thxwelchs.github.io/내redis가해킹당했다고심지어local인데/</link><guid isPermaLink="false">https://thxwelchs.github.io/내redis가해킹당했다고심지어local인데/</guid><pubDate>Sun, 29 Aug 2021 07:31:54 GMT</pubDate><content:encoded>&lt;h1&gt;사건의 발단&lt;/h1&gt;
 &lt;p&gt;어느날.. redis와 관련된 기능을 개발해야 할 일이 있어 redis를 local에서 docker 컨테이너로 실행 후 테스트를 해보고 있었습니다.&lt;/p&gt;
 &lt;p&gt;기능은 아주 간단해서 어떤 특정한 상황 때 hash 자료구조로 redis에 key value를 넣으면 되는 것이었는데, 특정한 시간이 지나면 자동으로 해당 key들이 지워질 수 있게 key에 TTL을 지정해주기로 했습니다.&lt;/p&gt;
 &lt;p&gt;그래서 TTL을 5분정도로 주고 5분이 지나고 제대로 삭제가 되었는지 확인 해보기로 했습니다.&lt;/p&gt;
