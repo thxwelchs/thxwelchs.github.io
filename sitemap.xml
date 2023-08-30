@@ -22,7 +22,8 @@
 <url> <loc>https://thxwelchs.github.io/JPA 양방향 Entity 무한 재귀 문제 해결/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/EmbeddedTomcat과Tomcat의차이/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/내redis가해킹당했다고심지어local인데/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://thxwelchs.github.io/UML과코드로이해하는의존성/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/IntelliJ-command-line-launcher/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/category/ETC/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/category/Git/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/category/Java/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/category/Javascript/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -70,8 +71,7 @@
 <url> <loc>https://thxwelchs.github.io/tags/entity/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/tomcat/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/tags/redis/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://thxwelchs.github.io/tags/object/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://thxwelchs.github.io/tags/의존성/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://thxwelchs.github.io/tags/intelli-j/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/author/ghost/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/author/another-author/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://thxwelchs.github.io/author/thxwelchs/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>

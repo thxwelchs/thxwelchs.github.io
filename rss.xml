@@ -1,365 +1,95 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Tech blog]]></title><description><![CDATA[끄적끄적]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Sat, 20 Nov 2021 10:18:08 GMT</lastBuildDate><item><title><![CDATA[UML과 코드로 이해하는 의존성]]></title><description><![CDATA[의존성 의존성이란 무엇일까? 우리는 객체지향 프로그래밍을 하면서 의존성이란 의미를 정말 가슴 깊이 받아들이고 있을까? 적어도 난 그렇지 않았던 것 같다.. 그래서 맨날 보면서도 까먹는 의존관계 UML…]]></description><link>https://thxwelchs.github.io/UML과코드로이해하는의존성/</link><guid isPermaLink="false">https://thxwelchs.github.io/UML과코드로이해하는의존성/</guid><pubDate>Sat, 20 Nov 2021 11:31:54 GMT</pubDate><content:encoded>&lt;h1&gt;의존성&lt;/h1&gt;
-&lt;p&gt;&lt;strong&gt;의존성이란 무엇일까?&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;우리는 객체지향 프로그래밍을 하면서 의존성이란 의미를 정말 가슴 깊이 받아들이고 있을까?&lt;/p&gt;
-&lt;p&gt;적어도 난 그렇지 않았던 것 같다.. 그래서 맨날 보면서도 까먹는 의존관계 UML 화살표 방향과 코드로써 의존관계를 명확하게 표현해보면 그래도 좀 덜 잊혀지지 않을까?해서 준비해보았다.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;의존성&lt;/strong&gt;,
-추상적으로 다가오는 이 단어를 구체적인 한 문장의 설명으로 이렇게 표현할 수 있다.&lt;/p&gt;
-&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;A&lt;/code&gt;가 &lt;code class=&quot;language-text&quot;&gt;B&lt;/code&gt;에 의존할 경우, &lt;code class=&quot;language-text&quot;&gt;B&lt;/code&gt;가 변경될 때  의존하고 있는 &lt;code class=&quot;language-text&quot;&gt;A&lt;/code&gt; 또한 변경될 가능성이 있음을 의미한다.&lt;/p&gt;
-&lt;p&gt;변경될 가능성이란 여러가지의 형태가 될 수 있는데 구체적인 예를 들자면 다음과 같다.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;클래스의 이름이 변경된다.&lt;/li&gt;
-&lt;li&gt;메소드의 이름이 변경된다.&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;클래스의 메소드 구현부가 변경된다. (파라미터, 리턴타입 내부 로직 등)&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;당연하게도 잘 생각해보면 내부로직 변경의 경우 반드시 A가 영향을 받는 것은 아닐 수도 있다. (설계가 잘 되어있다면)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;이 외 무엇이건 변경에 포함되는 것들&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;이러한 의존성에도 여러 종류가 있고 일반적으로 객체지향에서는 네가지 종류로 분류하고 있다.&lt;/p&gt;
-&lt;br/&gt;
-&lt;br/&gt;
-&lt;h2&gt;&lt;strong&gt;Association, 연관관계&lt;/strong&gt;&lt;/h2&gt;
-
-        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
-          &lt;code slot=&quot;code&quot;&gt;// puml
-@startuml
-class &amp;quot;A&amp;quot; as a1
-class &amp;quot;B&amp;quot; as b1
-
-a1 --r b1 : Association
-@enduml&lt;/code&gt;
-        &lt;/deckgo-highlight-code&gt;
-      
-&lt;p&gt;UML에서는 아래와 같이 실선으로 나타냄&lt;/p&gt;
-&lt;p&gt;&lt;span
-      class=&quot;gatsby-resp-image-wrapper&quot;
-      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 210px;&quot;
-    &gt;
-      &lt;a
-    class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/3f32225a06371ef41b0f1836d945e7da/9c4c6/Untitled.png&quot;
-    style=&quot;display: block&quot;
-    target=&quot;_blank&quot;
-    rel=&quot;noopener&quot;
-  &gt;
-    &lt;span
-    class=&quot;gatsby-resp-image-background-image&quot;
-    style=&quot;padding-bottom: 32.38095238095238%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAABWElEQVQY03WQW0sCURSF/eU99xL0EEVhCZblraBGRLsgRZTkFa0ZnTQdQy0ix+aMo0XO1xmth6AWfHBYsNbZe/tsXSOb8JNJBDBbKSrJGCNnwtPzE0bHoNfv0+31aBttavU6hmHwPp3yOTDRjndJ7q/T1RJoJyG6zTa+kV5jZXOR5YM1KsUIF/EAwxcTXdUo5wrSK6NVb8ldZ2fclsoIYcPLK8ruKgs7S1xlw1wqG7Q0HZ+oq+hnISqne0y6GYrRIP16GyyHqSnmDATucAQS7/0xsLDUBp1MjEJqG+vhhMZpmOZdDd+gVEKUDpg00oxUhXxoC9MSeHL/wZPTe+b1MsbHQ1pmU9Tifu6rmpyw80jxKEJeiVJU5MrRKMK254XyVq7r/kZ6nj4tGzWtcHMYppyMcx4K0mnJG3o/CrmeNbR5kzjjybzsu+Av/fhj511mxCxr2/JE0v8CDRawoT3V2OcAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
-  &gt;&lt;/span&gt;
-  &lt;img
-        class=&quot;gatsby-resp-image-image&quot;
-        alt=&quot;Untitled&quot;
-        title=&quot;Untitled&quot;
-        src=&quot;/static/3f32225a06371ef41b0f1836d945e7da/9c4c6/Untitled.png&quot;
-        srcset=&quot;/static/3f32225a06371ef41b0f1836d945e7da/9c4c6/Untitled.png 210w&quot;
-        sizes=&quot;(max-width: 210px) 100vw, 210px&quot;
-      /&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;어떤 객체 A에서 어떤 객체 B로 갈 수 있는 객체간의 그래프 경로가 있음을 의미 &lt;/p&gt;
-&lt;p&gt;여기서의 그래프 경로는 런타임에서의 영구적인 경로를 의미한다. (컴파일이 되고 런라팀에서는 항상 A는 B로 갈 수 있는 경로가 있다.)&lt;/p&gt;
-&lt;p&gt;마치 코드로 나타내면 다음과 같다.&lt;/p&gt;
-
-        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
-          &lt;code slot=&quot;code&quot;&gt;class A {
-	private B b;
-}&lt;/code&gt;
-        &lt;/deckgo-highlight-code&gt;
-      
-&lt;br/&gt;
-&lt;br/&gt;
-&lt;p&gt;Association이 객체간의 그래프가 형성되어있는지 유무를 따지는지의 일반적인 관계를 나타내는 것이라고 한다면 더 구체적으로 다음과 같이 관계를 전체와 부분의 집합으로 명확하게 명시하고자 할 때 &lt;code class=&quot;language-text&quot;&gt;Aggregation&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;Composition&lt;/code&gt; 으로 나누어서 볼 수도 있다. &lt;/p&gt;
-&lt;p&gt;(개인적으로 가장 헷갈렸던 부분이다. 블로그나 글을 찾아봐도 차이가 되게 모호하다고 생각했는데, Aggregation, Composition은 Association의 관계표현 종류 중 하나인 것이다.)&lt;/p&gt;
-&lt;br/&gt;
-&lt;br/&gt;
-&lt;h3&gt;Association - Aggregation, 집약관계&lt;/h3&gt;
-
-        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
-          &lt;code slot=&quot;code&quot;&gt;// puml
-@startuml
-class &amp;quot;A&amp;quot; as a2
-class &amp;quot;B&amp;quot; as b2
-
-a2 --ro b2 : Aggregation
-@enduml&lt;/code&gt;
-        &lt;/deckgo-highlight-code&gt;
-      
-&lt;p&gt;UML로 나타내면 아래와 같이 실선과 칠해지지 않은 다이아몬드(?)로 표현된다.
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Tech blog]]></title><description><![CDATA[끄적끄적]]></description><link>https://thxwelchs.github.io</link><generator>RSS for Node</generator><lastBuildDate>Wed, 30 Aug 2023 23:18:46 GMT</lastBuildDate><item><title><![CDATA[IntelliJ idea 커맨드 명령으로 실행하기]]></title><description><![CDATA[이 포스팅에서는 MacOS M1, M2 칩셋 버전 IntelliJ 에서 Command Line Launcher 설정이 잘 되지 않는 현상을 해결하는 이야기를 다룹니다.  문제 발생 idea 명령으로 IntelliJ…]]></description><link>https://thxwelchs.github.io/IntelliJ-command-line-launcher/</link><guid isPermaLink="false">https://thxwelchs.github.io/IntelliJ-command-line-launcher/</guid><pubDate>Thu, 31 Aug 2023 07:12:55 GMT</pubDate><content:encoded>&lt;p&gt;이 포스팅에서는 MacOS M1, M2 칩셋 버전 IntelliJ 에서 Command Line Launcher 설정이 잘 되지 않는 현상을 해결하는 이야기를 다룹니다. &lt;/p&gt;
+&lt;h1&gt;문제 발생 idea 명령으로 IntelliJ 실행이 안되네..?&lt;/h1&gt;
+&lt;p&gt;개발자라면 (특히 Java 개발자) 한번쯤 사용하는 IntelliJ IDEA&lt;/p&gt;
+&lt;p&gt;IntelliJ는 Command Line Launcher라는 기능을 제공하는데요&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;IntelliJ Command Line Launcher란? &lt;code class=&quot;language-text&quot;&gt;idea&lt;/code&gt; 명령으로 IntelliJ를 빠르게 실행할 수 있게 명령어 등록을 도와주는 기능입니다.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;설정도 매우 간단하여 IntelliJ 내에서 클릭 두번으로 설정할 수 있습니다. (아래 이미지처럼!)
 &lt;span
       class=&quot;gatsby-resp-image-wrapper&quot;
-      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 215px;&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 854px;&quot;
     &gt;
       &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/7c5af314760df17a79a8fbc115b8a0cc/61c66/Untitled%201.png&quot;
+    href=&quot;/static/bdd7d8830871a4cf993b5760b72d4b35/76b06/2.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
   &gt;
     &lt;span
     class=&quot;gatsby-resp-image-background-image&quot;
-    style=&quot;padding-bottom: 31.627906976744185%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAABY0lEQVQY022RSU/CABCF+eHeTTyaeNCoB5EgajECihKEGFBcCoiKIIsLhaQulK2ldP0sigcTJ5lMZjLvzZsZn1qrcBlb5/zIj9KIc5+IYtgOsizz2mohtSXktzfanQ6NZtOrvTI2DZgYPKUEEuEV2vcxaqktOo0XfOpjhcW1eZb2l7nNB8mGA4z6Ix5KtxxGouQyWUr5AifHCa5zFxTFPN33T+yWTHpnjbmNBTK5IGexFZ7KVXyjaplqcpNyOoTeSiKGAiheM30N46OH3R1idQfYyhAGGm5fxfjso4gVpBOB/LGfXj1BMxWicVfBpxQLDAsCev2I4U2Yq6CfsWXzn7kzn5o5UPk4FZh4Z9LrcarCKrVS2VMotSlEdxEPBMTINufemoZl/RA4Dq7r/nXH/SE2TOrpJJeREMX4HpmtANKzd8MpcDw20LQJmjrBnKn7JfijcJb/RtNyPIz+jdO9J01HfQHPn7DxcfU4zQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+    style=&quot;padding-bottom: 46.75767918088737%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAJCAYAAAAywQxIAAAACXBIWXMAAAsTAAALEwEAmpwYAAACKklEQVQoz2WRW08TURRG5+f4CKK0zHTamWmn0FbaKW2VtDwZEyMWQkFFjRhiqpGIlhIVAuFeKL3R2xQEJRpNTPxVywNGJPFhZeV8D9/ZZx9pNhNgLB3m0VicxxNxnmQSPBVMjUaYvBfmYdo69wNxztwN8WI6SbuQpVN8xXFlnq/NPN9aeX6dLGHvZZFUaxpZM3AoJt29bq46PPQ4Nbquq3T1qv8s8ivdMr4bcQrFMpuFInulKo32IQdNm6Z9RP7DCpIWGiEQCmNZEQyzH83rR/eZwiaquOgMl8CvaViyk3TQh/16hrbAnpvh80KWk1yWnyvvKDybQjIMDwP9XqyIF7/Pgc+r4DNUvLqCocvCsrBCUO8jrHRzx+qnsrTI/vscjTXxzK1VOttrnJZ2+Jh9juQ2/JixNMHUOKp1HzWaEZ7EFZlACV/CytATGiN8e5b1YovlzQrblUNqne/Uj35gH5+Sy+eQZLeOOpAikhwXxaM4/SM4zBROc0SQuqBP5Nf0YQaH02wVaoIq5doh9fYXscMTOp1PLObeIimqB8PQSSRiDA4GUd0KLvUv8gVnudPZSzQaYXd7g/L+Lo1aGbt5QKte5chusLgwj9SnagQCPpLJm4SjCbz+AIqY2uUxUC7h0rw4ZJWheIK9nQ2qpV1aBxXajaoorXHcaf0pVNwePGKP8VtJrKHY+a8qbk0U6v/5rNCKxlhbXWJ9dZnC1vr5tBUxbb1a4s3cS34DLk2RN6lKtj4AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
   &gt;&lt;/span&gt;
   &lt;img
         class=&quot;gatsby-resp-image-image&quot;
         alt=&quot;Untitled&quot;
         title=&quot;Untitled&quot;
-        src=&quot;/static/7c5af314760df17a79a8fbc115b8a0cc/61c66/Untitled%201.png&quot;
-        srcset=&quot;/static/7c5af314760df17a79a8fbc115b8a0cc/61c66/Untitled%201.png 215w&quot;
-        sizes=&quot;(max-width: 215px) 100vw, 215px&quot;
+        src=&quot;/static/bdd7d8830871a4cf993b5760b72d4b35/76b06/2.png&quot;
+        srcset=&quot;/static/bdd7d8830871a4cf993b5760b72d4b35/8890b/2.png 293w,
+/static/bdd7d8830871a4cf993b5760b72d4b35/1f316/2.png 585w,
+/static/bdd7d8830871a4cf993b5760b72d4b35/76b06/2.png 854w&quot;
+        sizes=&quot;(max-width: 854px) 100vw, 854px&quot;
       /&gt;
   &lt;/a&gt;
     &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;어떤 객체 A에 어떤 객체 B로 갈 수 있는 객체간의 그래프 경로가 있음을 의미&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;A객체가 소멸되더라도 B객체가 메모리에서 사라지지는 않음&lt;/li&gt;
-&lt;li&gt;의존관계의 생명주기는 독립적임&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;마치 코드로 나타내면 다음과 같다.&lt;/p&gt;
-
-        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
-          &lt;code slot=&quot;code&quot;&gt;class A {
-	private B b;
-	
-	public A(B b) {
-		this.b = b;
-	}
-}&lt;/code&gt;
-        &lt;/deckgo-highlight-code&gt;
-      
-&lt;br/&gt;
-&lt;br/&gt;
-&lt;h3&gt;Association - Composition, 합성관계&lt;/h3&gt;
-
-        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
-          &lt;code slot=&quot;code&quot;&gt;//puml
-@startuml
-class &amp;quot;A&amp;quot; as a3
-class &amp;quot;B&amp;quot; as b3
-
-a3 --r* b3 : Composition
-@enduml&lt;/code&gt;
-        &lt;/deckgo-highlight-code&gt;
-      
-&lt;p&gt;UML로 나타내면 아래와 같이 실선과 칠해진 다이아몬드로 표현된다.
+&lt;p&gt;&lt;br&gt;
+근데.. 잘 안됩니다.
 &lt;span
       class=&quot;gatsby-resp-image-wrapper&quot;
-      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 217px;&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 878px;&quot;
     &gt;
       &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/e4b96b9cd3f64979c08315674498a499/d6985/Untitled%202.png&quot;
+    href=&quot;/static/c17ad57dc98193b89755c7e3703a8737/8739e/1.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
   &gt;
     &lt;span
     class=&quot;gatsby-resp-image-background-image&quot;
-    style=&quot;padding-bottom: 31.336405529953915%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAABVElEQVQY03WR/UvCUBSG/fODKAiKQKgf0llIhUUfVISlqdXc1Kw1lbnQkWUzS1Yz9/F0NSgoOvBw33PgvgfeE3E7D/SKWbpyFrep8nR9hR+EEAp+VeAH39p3Rwy0Mg+FNE6tSL9SYGA/E3GbBquJWZa2FqlXk+RTcZz3IYZpULg4R1YVZKU44SST4Syfo2N3hTvUMltMx6ZIZ2OoB1H0coXI8K7J9to8qxtRrPoOl+txeuY9zn0Xu9kWus1jwxSvNemfjBbOo01jZg1tUyKamEPOJ4W5hF4ShgNdZ6CkcLR9POOQUlLipfcKnk848mCM0Ix+CEX/WhPLcru8abt45jHWkcRNURWG9QbGQQzzLImZlsisLOO4w0lOf1P8mYVeiHW6h3Ei0cqto8YXqMoKEf9jhHGloSuVCWatQRB8hR+Kw/zHuGyrw61cpl6qciv+9vt9PgH/l7BV6HXj4gAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+    style=&quot;padding-bottom: 48.122866894197955%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAABYlAAAWJQFJUiTwAAAB00lEQVQoz42Sy27TUBCGs0LiDVggVVzi+HJ8jeNr4qSxk9S5NE6cNK0QCzYsUCW2bOF9eCOegB1P8DMzkLZixeLzHB+d8/v/x9OxnD4sx4fj9RGEMbxgILh+CL8fCV4QPexx5T0+r+jeUyzbR+flh+94Nf+MIo/RtCfs2husNg2W663A6/nVCot6g9liic12j+umRZTk0HQLpnJhWA6JebLuaHkLLRgjjlNUdGFRr+kiCSw3mFYLeWdhFqvmNS7LOfLRJcrZlawZTqabtoh2lGnAMEw6vMTh5k6+vt0diCP2x1u0xO5wwp5Yrhsk2QjZcCw1zQshjFKJLA45N1tmN3z5dPdeYjV7Ejzc4nh6J5XdFZNS4rO7YTGlWksqdsl9ZZ3OOXt/kGAQZ9Ibbjx/NYoTek+RDwv6CQHedHW81QyB+9czFDSiZ9gwSEMi84OV89FE+jSezqSmoxJutiJqoZhUKCkFJ6lX15jQOUs5UMqGTVhKEe6jwz9jk0iDGZdGxfbjB87jwsh40QiZTgjdo7/tZlQzmDw2LHgWZadPMdVf/tnXlQfVe40X9Vc8//IL3W8/8ez+B7SwenR4Fv4/aJAthW5U46K6R3f2CReTjzDcCL8BeJRPCeBx1hgAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
   &gt;&lt;/span&gt;
   &lt;img
         class=&quot;gatsby-resp-image-image&quot;
         alt=&quot;Untitled&quot;
         title=&quot;Untitled&quot;
-        src=&quot;/static/e4b96b9cd3f64979c08315674498a499/d6985/Untitled%202.png&quot;
-        srcset=&quot;/static/e4b96b9cd3f64979c08315674498a499/d6985/Untitled%202.png 217w&quot;
-        sizes=&quot;(max-width: 217px) 100vw, 217px&quot;
+        src=&quot;/static/c17ad57dc98193b89755c7e3703a8737/8739e/1.png&quot;
+        srcset=&quot;/static/c17ad57dc98193b89755c7e3703a8737/8890b/1.png 293w,
+/static/c17ad57dc98193b89755c7e3703a8737/1f316/1.png 585w,
+/static/c17ad57dc98193b89755c7e3703a8737/8739e/1.png 878w&quot;
+        sizes=&quot;(max-width: 878px) 100vw, 878px&quot;
       /&gt;
   &lt;/a&gt;
     &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;어떤 객체 A에 어떤 객체 B로 갈 수 있는 객체간의 그래프 경로가 있음을 의미&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;부분 객체가 전체 객체에 속해지는 관계&lt;/li&gt;
-&lt;li&gt;의존관계의 생명주기 또한 의존적 ( B는 A에 의해서 생명주기가 결정됌)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;마치 코드로 나타내면 다음과 같다.&lt;/p&gt;
+&lt;p&gt;&lt;br&gt;
+팝업 문구에는 해당 경로 환경변수를 추가해주면 된다고 하는데, 추가해주어도 안됌..&lt;/p&gt;
+&lt;h1&gt;해결&lt;/h1&gt;
+&lt;p&gt;해결 방법은 간단한데요!&lt;/p&gt;
+&lt;p&gt;역시 문제가 생길땐 공식문서를 참고해야 한다는것을 다시 한번 느끼게 되었습니다.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.jetbrains.com/help/idea/working-with-the-ide-features-from-command-line.html#standalone&quot;&gt;JetBrains Launcher for a standalone instance&lt;/a&gt; 부분을 참고해보니 몇가지 방식을 알려주는데, 저는 idea binary 명령을 만드는 방법으로 해결했습니다.&lt;/p&gt;
+&lt;h2&gt;idea 명령 binary로 만들기&lt;/h2&gt;
+&lt;p&gt;/usr/local/bin 디렉토리에 idea 파일을 다음과 같이 작성해줍니다.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;/usr/local/bin/idea 파일 내용&lt;/em&gt;&lt;/p&gt;
 
-        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
-          &lt;code slot=&quot;code&quot;&gt;class A {
-	private B b;
-	
-	public A() {
-		this.b = new B();
-	}
-}&lt;/code&gt;
+        &lt;deckgo-highlight-code language=&quot;bash&quot; &gt;
+          &lt;code slot=&quot;code&quot;&gt;#!/bin/sh
+
+open -na &amp;quot;IntelliJ IDEA.app&amp;quot; --args &amp;quot;$@&amp;quot;&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
       
-&lt;hr&gt;
-&lt;br/&gt;
-&lt;br/&gt;
-&lt;h2&gt;Dependency, 의존관계&lt;/h2&gt;
+&lt;p&gt;&lt;em&gt;혹시 local 디렉토리 하위에 bin 디렉토리가 없다면 bin 디렉토리부터 생성합니다&lt;/em&gt;&lt;/p&gt;
+&lt;h2&gt;idea 명령 실행 권한 설정&lt;/h2&gt;
+&lt;p&gt;명령이 가능한 binary를 만들어주었으니, 실행 권한을 주도록 합니다.&lt;/p&gt;
 
-        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
-          &lt;code slot=&quot;code&quot;&gt;//puml
-@startuml
-class &amp;quot;A&amp;quot; as a4
-class &amp;quot;B&amp;quot; as b4
-
-a4 ..r&amp;gt; b4 : Dependency
-@enduml&lt;/code&gt;
+        &lt;deckgo-highlight-code language=&quot;bash&quot; &gt;
+          &lt;code slot=&quot;code&quot;&gt;sudo chmod +x idea&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
       
-&lt;p&gt;UML로 나타내면 다음과 같이 점선과 열려있는 화살표로 표현된다.
-&lt;span
-      class=&quot;gatsby-resp-image-wrapper&quot;
-      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 218px;&quot;
-    &gt;
-      &lt;a
-    class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/561c849781deba477a7327d32df754ab/1a647/Untitled%203.png&quot;
-    style=&quot;display: block&quot;
-    target=&quot;_blank&quot;
-    rel=&quot;noopener&quot;
-  &gt;
-    &lt;span
-    class=&quot;gatsby-resp-image-background-image&quot;
-    style=&quot;padding-bottom: 31.19266055045871%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAABRklEQVQY042Q21MBARSH/ft68VbTE4MuM5EwUVPNYMIWuyjkVrRGxCKxayu7X6vtoV6azpkz55yH73cuDrXTRsmlGBezaC2RcbPFf2ylvzGVBIZXKVSLm1REtNkCx6SUY9vnJHjmpibukDuJMl/qZDIZslcCWUFAsHIimaRQLCJKEsp0CoaBEPWw4XVyUwqQjmwj393jeLmV8PtdHJ94kcsh8uEj9MWS16HCsNtj1Oszs+pJ/5m5MvnqX4djRvEM+UMPm14XzXKEwpkfuWYJTqVrFqUwWv0UtRxFDIX4MKybDNO+zfyuf2bTZCEPUBIB1GqMVeeCZnyXTrWFQxFztM59tC8PqMfcpINBDGzIdn6HaQ8y9HfasX3uk3vIFpv1bdFZb6jPVZqFWxrFsvXDEk9y115sLfhHrG3w8PjFNNb8TQVN0/gEKoWxtpVnPisAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
-  &gt;&lt;/span&gt;
-  &lt;img
-        class=&quot;gatsby-resp-image-image&quot;
-        alt=&quot;Untitled&quot;
-        title=&quot;Untitled&quot;
-        src=&quot;/static/561c849781deba477a7327d32df754ab/1a647/Untitled%203.png&quot;
-        srcset=&quot;/static/561c849781deba477a7327d32df754ab/1a647/Untitled%203.png 218w&quot;
-        sizes=&quot;(max-width: 218px) 100vw, 218px&quot;
-      /&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;의존관계의 의존성이라는 것은 다음과 같은 특징중 하나에 속한다.&lt;/p&gt;
-&lt;p&gt;예) A라는 객체에 B라는 객체의 의존관계가 있을 때의 특징&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;A객체의 어떠한 함수(메소드)에서 B타입의 객체가 &lt;strong&gt;파라미터에 명시&lt;/strong&gt;됌&lt;/li&gt;
-&lt;li&gt;A객체의 어떠한 함수(메소드)에서 B타입의 객체가 &lt;strong&gt;리턴타입에 명시&lt;/strong&gt;됌&lt;/li&gt;
-&lt;li&gt;A객체의 어떠한 함수(메소드)에서 B타입의 &lt;strong&gt;인스턴스가 생성&lt;/strong&gt;됌&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;마치 코드로 나타내면 다음과 같다.&lt;/p&gt;
+&lt;h2&gt;idea 명령 실행 확인&lt;/h2&gt;
 
-        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
-          &lt;code slot=&quot;code&quot;&gt;class A {
-	public void method(B b) {
-	}
-
-	public B method2() {
-		return new B();
-	}
-
-	public void method3() {
-		B b = new B();
-	}
-}&lt;/code&gt;
+        &lt;deckgo-highlight-code language=&quot;bash&quot; &gt;
+          &lt;code slot=&quot;code&quot;&gt;idea {IntelliJ로 open 할 project 경로 혹은 파일}&lt;/code&gt;
         &lt;/deckgo-highlight-code&gt;
-      
-&lt;p&gt;Association(연관관계)과 차이가 있다면 Association은 영구적인 협력이 되는 것이고, Dependency(의존관계)는 일시적으로 협력을 필요로 하는 어떠한 시점에 관계를 맺고 끊는 관계이다.&lt;/p&gt;
-&lt;hr&gt;
-&lt;br/&gt;
-&lt;br/&gt;
-&lt;h2&gt;Inheritance, 상속관계&lt;/h2&gt;
-
-        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
-          &lt;code slot=&quot;code&quot;&gt;//puml
-@startuml
-class &amp;quot;A&amp;quot; as a5
-class &amp;quot;B&amp;quot; as b5
-
-a5 --r|&amp;gt; b5 : Inheritance
-@enduml&lt;/code&gt;
-        &lt;/deckgo-highlight-code&gt;
-      
-&lt;p&gt;UML로 나타내면 아래와 같이 실선과 칠해지지 않은 닫힌 화살표로 표현된다.
-&lt;span
-      class=&quot;gatsby-resp-image-wrapper&quot;
-      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 208px;&quot;
-    &gt;
-      &lt;a
-    class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/f157e4b8ca8e458f5c94d4d1923ee2ac/7854c/Untitled%204.png&quot;
-    style=&quot;display: block&quot;
-    target=&quot;_blank&quot;
-    rel=&quot;noopener&quot;
-  &gt;
-    &lt;span
-    class=&quot;gatsby-resp-image-background-image&quot;
-    style=&quot;padding-bottom: 32.69230769230769%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAABfklEQVQoz42Pa2vTYBiG87f9AYLoFxndh00RWtaxEx7AuLqx7mDXFntwbdPaJc2paTdXZIYlJs00uXyTWgTxgzdc3M/74b6f95FCXSOyDPyRiqebxHHC/2h+6xKITJoNTB1f1fgxj5DOSs94/3odf1ZGKW0wu/nKrfuNTq+HbppcairqSMOwTGxnzPT6KisMDIPOcYFX2zm+mPtcilm76CE9ev6Qx3urtGubHG+tMhkaTMVPG2fntM7rND9UhdeolU/pNlo0S2XCmcv3Tp9C8SkP8k+oVDY52Vth0PqENDgp0j4oEt2corzJM2opYn0EXrjAn/9xQahNuBPMjiqY1V3qcgHPKeNUdujWG0h++yVBTyZU3nJRWGM8WZwUC5K/SPUzus/cHQxxazsiJxN8foe+u74o7Mt5+vtF1ENx8lqOse0sCuOYJEn+Sao7zWAob6Ck2aMtqi9ydD82kWzDxtStDNsaE0VRFlgGl1q+M0+LxTx1rjBGJtbvvOd7/ALqEvhJsYgqwwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
-  &gt;&lt;/span&gt;
-  &lt;img
-        class=&quot;gatsby-resp-image-image&quot;
-        alt=&quot;Untitled&quot;
-        title=&quot;Untitled&quot;
-        src=&quot;/static/f157e4b8ca8e458f5c94d4d1923ee2ac/7854c/Untitled%204.png&quot;
-        srcset=&quot;/static/f157e4b8ca8e458f5c94d4d1923ee2ac/7854c/Untitled%204.png 208w&quot;
-        sizes=&quot;(max-width: 208px) 100vw, 208px&quot;
-      /&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;상속관계에서도 의존성의 의미가 있는데, 그 이유인즉슨 Super &lt;code class=&quot;language-text&quot;&gt;B&lt;/code&gt;가 변경될 때 Sub &lt;code class=&quot;language-text&quot;&gt;A&lt;/code&gt;도 변경될 가능성이 있다라는 것을 의미한다&lt;/p&gt;
-&lt;p&gt;마치 코드로 나타내면 다음과 같다.&lt;/p&gt;
-
-        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
-          &lt;code slot=&quot;code&quot;&gt;class A extends B {
-
-}&lt;/code&gt;
-        &lt;/deckgo-highlight-code&gt;
-      
-&lt;hr&gt;
-&lt;br/&gt;
-&lt;br/&gt;
-&lt;h2&gt;Realization, 실체화관계&lt;/h2&gt;
-
-        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
-          &lt;code slot=&quot;code&quot;&gt;//puml
-@startuml
-class &amp;quot;A&amp;quot; as a6
-class &amp;quot;B&amp;quot; as b6
-
-a6 ..r|&amp;gt; b6 : Realization
-@enduml&lt;/code&gt;
-        &lt;/deckgo-highlight-code&gt;
-      
-&lt;p&gt;UML로 나타내면 아래와 같이 점선과 칠해지지 않은 닫힌 화살표로 표현된다.
-&lt;span
-      class=&quot;gatsby-resp-image-wrapper&quot;
-      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 207px;&quot;
-    &gt;
-      &lt;a
-    class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/ac04dfecc94db344a5373305eff0e96f/8b2ce/Untitled%205.png&quot;
-    style=&quot;display: block&quot;
-    target=&quot;_blank&quot;
-    rel=&quot;noopener&quot;
-  &gt;
-    &lt;span
-    class=&quot;gatsby-resp-image-background-image&quot;
-    style=&quot;padding-bottom: 32.850241545893724%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAABg0lEQVQoz42R3U/TUBjG+497aWKiFyaIATEBpmMGiSGRLxkIm4HocGWz7dbB6frBFrcxNc6lXTNOf5527kZvfE+e8/Ge/J7kzaNFzjWx12YsrvjluCRJwv9UNBgSKiZlQ1co3uFuOkUrH6zwbvsZ48F7zIOX3PaHfO33sFstPN/jslbDDwK+GAZCCDrdbmY4ti0qxVXevn7KsHOo2DU8W6A9eH6fh1uL6B83OCks0nUCvvUH1Ks65+UPmaqfLjg7LVNTPaN0zmQ4YvS5ylLuEfeULiqbFAuPEZaN1jjNox/mifsljO11vKaAdOo7tUlmd/lHqiZ+j5/NgMHRCddnm1T2XjDplRBHBey6iTbW3xAau0TmDvXcMkHQyUCZSOWRZEqXTJLMexpNsv/v+iWjyhZRyjb3aGwsKUMLzdpdx9rPc1VUIy8/4WZuKGUW0D9iFtoPs0FjJ4eZssevKK8s0FI9zW/7uI6XyfcC4jjOgL/Tnr/np5QJN36HtnBnvOsRhiG/AYQZ+N5GI5OkAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
-  &gt;&lt;/span&gt;
-  &lt;img
-        class=&quot;gatsby-resp-image-image&quot;
-        alt=&quot;Untitled&quot;
-        title=&quot;Untitled&quot;
-        src=&quot;/static/ac04dfecc94db344a5373305eff0e96f/8b2ce/Untitled%205.png&quot;
-        srcset=&quot;/static/ac04dfecc94db344a5373305eff0e96f/8b2ce/Untitled%205.png 207w&quot;
-        sizes=&quot;(max-width: 207px) 100vw, 207px&quot;
-      /&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;말그대로 추상화가 실체화되는 관계이다, 인터페이스와 구현체간의 관계라고 생각하면 이해가 쉽다.&lt;/p&gt;
-&lt;p&gt;마치 코드로 나타내면 다음과 같다.&lt;/p&gt;
-
-        &lt;deckgo-highlight-code language=&quot;java&quot; &gt;
-          &lt;code slot=&quot;code&quot;&gt;class A implements B {}&lt;/code&gt;
-        &lt;/deckgo-highlight-code&gt;
-      
-&lt;hr&gt;
-&lt;br/&gt;
-&lt;br/&gt;
-&lt;p&gt;앞으로도 UML과 코드로 객체간의 의존관계를 명확히 이해해보고 더
-좋은 설계에 힘써봐야겠다. &lt;/p&gt;
-&lt;br/&gt;
-&lt;p&gt;&lt;em&gt;puml 이라고 주석쳐있는 부분의 코드는 plantuml에서 그린 uml 코드이다.
-관심이 있다면 plantuml을 찾아보기를 권장한다.
-IntelliJ에서도 plugin을 지원하는 등 많은 기능을 제공한다.&lt;/em&gt;
-&lt;a href=&quot;https://plantuml.com/ko/&quot;&gt;https://plantuml.com/ko/&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[내 redis가 해킹당했다고? 심지어 local인데?]]></title><description><![CDATA[사건의 발단 어느날.. redis와 관련된 기능을 개발해야 할 일이 있어 redis를 local에서 docker 컨테이너로 실행 후 테스트를 해보고 있었습니다. 기능은 아주 간단해서 어떤 특정한 상황 때 hash 자료구조로 redis에 key…]]></description><link>https://thxwelchs.github.io/내redis가해킹당했다고심지어local인데/</link><guid isPermaLink="false">https://thxwelchs.github.io/내redis가해킹당했다고심지어local인데/</guid><pubDate>Sun, 29 Aug 2021 07:31:54 GMT</pubDate><content:encoded>&lt;h1&gt;사건의 발단&lt;/h1&gt;
+      </content:encoded></item><item><title><![CDATA[내 redis가 해킹당했다고? 심지어 local인데?]]></title><description><![CDATA[사건의 발단 어느날.. redis와 관련된 기능을 개발해야 할 일이 있어 redis를 local에서 docker 컨테이너로 실행 후 테스트를 해보고 있었습니다. 기능은 아주 간단해서 어떤 특정한 상황 때 hash 자료구조로 redis에 key…]]></description><link>https://thxwelchs.github.io/내redis가해킹당했다고심지어local인데/</link><guid isPermaLink="false">https://thxwelchs.github.io/내redis가해킹당했다고심지어local인데/</guid><pubDate>Sun, 29 Aug 2021 07:31:54 GMT</pubDate><content:encoded>&lt;h1&gt;사건의 발단&lt;/h1&gt;
 &lt;p&gt;어느날.. redis와 관련된 기능을 개발해야 할 일이 있어 redis를 local에서 docker 컨테이너로 실행 후 테스트를 해보고 있었습니다.&lt;/p&gt;
 &lt;p&gt;기능은 아주 간단해서 어떤 특정한 상황 때 hash 자료구조로 redis에 key value를 넣으면 되는 것이었는데, 특정한 시간이 지나면 자동으로 해당 key들이 지워질 수 있게 key에 TTL을 지정해주기로 했습니다.&lt;/p&gt;
 &lt;p&gt;그래서 TTL을 5분정도로 주고 5분이 지나고 제대로 삭제가 되었는지 확인 해보기로 했습니다.&lt;/p&gt;
@@ -824,33 +554,7 @@ keys *&lt;/code&gt;
 &lt;p&gt;물론 많은 부분이 다르지는 않지만, 대표적으로 내장톰캣으로는 할 수 없지만 먼저 외장톰은 가능한 기능이 하나 있는데요 바로 tomcat의 virtual host라는 기능입니다.&lt;/p&gt;
 &lt;h2&gt;virtual host&lt;/h2&gt;
 &lt;p&gt;virtual host라는 기능은 이런겁니다.&lt;/p&gt;
-&lt;p&gt;&lt;span
-      class=&quot;gatsby-resp-image-wrapper&quot;
-      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 640px;&quot;
-    &gt;
-      &lt;a
-    class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/bc5d1bc3deb6351584193a1ddfce0d4f/1bed9/Untitled.png&quot;
-    style=&quot;display: block&quot;
-    target=&quot;_blank&quot;
-    rel=&quot;noopener&quot;
-  &gt;
-    &lt;span
-    class=&quot;gatsby-resp-image-background-image&quot;
-    style=&quot;padding-bottom: 68.94197952218431%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAAAsTAAALEwEAmpwYAAADQElEQVQ4y2WUS28bVRSA5/cgsUFCYtHQAJEQm9IFG1Ygsa0QUlRRRGmFCC3QpkrTvCrShKAClQJViUuKq5g6E2zHsRqcxLHsNI6buPErdjx+zMsz9sedG9IFHenqaO459zuPe85V2o6B27FeWI5rCmlgtJpUi1Uah3Vc91j3f2k+X0rbMel2nRcUna6L9zVrFnvJQ3LpCqbREvsWHWF7LF3p+OisF5xyoO2gtQo4jk0XW252hAOtkqZcDFGrxqjVljGaWYHvYLcNdLOFYem0hLSFvWE2MK2mBCum3SBX3mBzK4quN7wjMjJ1ZZDxv3qYCZ3i5qOTRB4PS6AvssnHY39z7laEM6NLzIWfUKnkKRT3seyWSFl49FIu1zKspVQOqnkJDC5f4/rDk3y/eJqRwFs8WrlKx9W4cW+J3k//5MPBIK+fnWd0Lo5lNcjuZgT0GYpDW/h1JMR0NDL5mEjfYDFynaEHPUwG3+WGv5fo6k1pk3xaYFZNMx/NMLuYIrVXEvY6lWqJRvMQZT+V4NlWklIuS63ibVbRmrv4gp/xxQ9vMPDTKS782Es4NiaBoY0sQ3dXmfCtce3Xx4QSezJlDyhvuZLepJSIk19dIRtWKcejlKNxpiY+on+8jzPfnubsRC8L/q+hesDgdIAeker7lwOc6L8voaZZJ5PdplDaP0q5iyvSdmXRC+U8K/EDbv/2FeenXuPCrXekVMMjMsLFtR0u/RJj/P4al+/EUNd3MQyNvKif1qii2G1dNigC/CST4YG6gWV2WQhe5fPJV/juTh8Xp18lEByWwD8iKQZ+jnFldpWLM8tEkjnRVkWKIjrTu2XL1oWZRTKdxq8mRU825MF78wN8MvKSiO6ESP1l7s59g6npfDml8vZ5Px9cCdLT72Pan8C2m2zvbJEv5FAQfbezm8O/lBTN6k2IIYELD4cZGHuToZn3uDTRR0idPOrP9SzjvnVuB5KM/h5nfaeAx6g3DmnpGkq5qhH+Z0+Ea0qFN4qdro0l6vJ0O0l6M04mnaAl6uN2bWmDrLcjZbdjClAd3aiLiWmiFCuCLGb0GCYfBTn0Airqa1ot4Ux//hB4o2a3TSFNoTf++9fllHjl+xe/hdjDQfFQNwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
-  &gt;&lt;/span&gt;
-  &lt;img
-        class=&quot;gatsby-resp-image-image&quot;
-        alt=&quot;Untitled&quot;
-        title=&quot;Untitled&quot;
-        src=&quot;/static/bc5d1bc3deb6351584193a1ddfce0d4f/1bed9/Untitled.png&quot;
-        srcset=&quot;/static/bc5d1bc3deb6351584193a1ddfce0d4f/8890b/Untitled.png 293w,
-/static/bc5d1bc3deb6351584193a1ddfce0d4f/1f316/Untitled.png 585w,
-/static/bc5d1bc3deb6351584193a1ddfce0d4f/1bed9/Untitled.png 640w&quot;
-        sizes=&quot;(max-width: 640px) 100vw, 640px&quot;
-      /&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;img/EmbeddedTomcat%E1%84%80%E1%85%AATomcat%E1%84%8B%E1%85%B4%E1%84%8E%E1%85%A1%E1%84%8B%E1%85%B5/Untitled.png&quot; alt=&quot;Untitled&quot;&gt;&lt;/p&gt;
 &lt;p&gt;위 그림처럼 도메인 host에 따라 각각의 다른 루트 컨텍스트를 갖게하여 하나의 웹애플리케이션 배포만으로 마치 여러 애플리케이션을 운영하는 것처럼 할 수 있는 것입니다.&lt;/p&gt;
 &lt;p&gt;이 기능을 사용하기 위해서는 위에서 잠깐 언급한 스프링 외장톰캣 구성요소 파일인 &lt;code class=&quot;language-text&quot;&gt;server.xml&lt;/code&gt; 을 손보면 됩니다.&lt;/p&gt;
 
@@ -899,33 +603,7 @@ public ServletWebServerFactory servletContainer() {
 &lt;p&gt;그러기 위해서는 먼저 우리는 내장톰캣이 구현된 애플리케이션 하나를 서비스 하나의 단위로 생각하는 것이 좋습니다. &lt;/p&gt;
 &lt;p&gt;하나의 서버에 여러 애플리케이션을 운영하는 것보다는 하나의 애플리케이션이 VM 혹은 Linux Container(Docker)로 하나의 서비스로 구성하고 여러 서비스를 운영하는 것이 효율적이기 때문입니다.&lt;/p&gt;
 &lt;p&gt;그렇다면 우리는 이렇게 구성해볼 수 있습니다. &lt;/p&gt;
-&lt;p&gt;&lt;span
-      class=&quot;gatsby-resp-image-wrapper&quot;
-      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 960px;&quot;
-    &gt;
-      &lt;a
-    class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/818872d9e4cb157ec0ad2b8e07ee29eb/7d769/%EC%A0%9C%EB%AA%A9_%EC%97%86%EB%8A%94_%ED%94%84%EB%A0%88%EC%A0%A0%ED%85%8C%EC%9D%B4%EC%85%98.png&quot;
-    style=&quot;display: block&quot;
-    target=&quot;_blank&quot;
-    rel=&quot;noopener&quot;
-  &gt;
-    &lt;span
-    class=&quot;gatsby-resp-image-background-image&quot;
-    style=&quot;padding-bottom: 56.31399317406143%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAIAAADwazoUAAAACXBIWXMAAAsTAAALEwEAmpwYAAABYUlEQVQoz5WSu07DMBSG+y4sIAYGxIJgRDwBElOHDkzAws4GQ5+Bi4R4AgZGoIIBhJBAAlEQGwpt06a1ncSOb8ccp1VJLwtHVuL89v/5nBOXnHPWWLDgRgNgisJ6AVg9VErW2UQmQSOghPYRuMlYgxNj7QCRPwnpPFwdU9JhLB6Y+y9EUE4znQ0Paf20jDH9T+00DqUVi3kxH29O05RRxgVXoJRTGIdH1fm95a3qbtgOkYv6gKIFgP0zgzFJj9AoSijVQqD0+vU2V1naqGzOlhfPLs9RUVw4Y2i3/XR7wmiUcjGSttYqyzKb19wIW6vb6zPlhZWdtZvHO19U3gIheBB847ZhOd4chlGz2SGESwlae3/9s75/enB9X8NmSOUrnholpOBa8b9gtxAPmdVSYZPyvBDqW/PxfJHEPSnVSNpoyUcB4YFQWHWUkveXWprGUsoxs5u8EpP3ZDxt97+AIvQXk21wuWG4WtEAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
-  &gt;&lt;/span&gt;
-  &lt;img
-        class=&quot;gatsby-resp-image-image&quot;
-        alt=&quot;제목 없는 프레젠테이션.png&quot;
-        title=&quot;제목 없는 프레젠테이션.png&quot;
-        src=&quot;/static/818872d9e4cb157ec0ad2b8e07ee29eb/7d769/%EC%A0%9C%EB%AA%A9_%EC%97%86%EB%8A%94_%ED%94%84%EB%A0%88%EC%A0%A0%ED%85%8C%EC%9D%B4%EC%85%98.png&quot;
-        srcset=&quot;/static/818872d9e4cb157ec0ad2b8e07ee29eb/8890b/%EC%A0%9C%EB%AA%A9_%EC%97%86%EB%8A%94_%ED%94%84%EB%A0%88%EC%A0%A0%ED%85%8C%EC%9D%B4%EC%85%98.png 293w,
-/static/818872d9e4cb157ec0ad2b8e07ee29eb/1f316/%EC%A0%9C%EB%AA%A9_%EC%97%86%EB%8A%94_%ED%94%84%EB%A0%88%EC%A0%A0%ED%85%8C%EC%9D%B4%EC%85%98.png 585w,
-/static/818872d9e4cb157ec0ad2b8e07ee29eb/7d769/%EC%A0%9C%EB%AA%A9_%EC%97%86%EB%8A%94_%ED%94%84%EB%A0%88%EC%A0%A0%ED%85%8C%EC%9D%B4%EC%85%98.png 960w&quot;
-        sizes=&quot;(max-width: 960px) 100vw, 960px&quot;
-      /&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;img/EmbeddedTomcat%E1%84%80%E1%85%AATomcat%E1%84%8B%E1%85%B4%E1%84%8E%E1%85%A1%E1%84%8B%E1%85%B5/%EC%A0%9C%EB%AA%A9_%EC%97%86%EB%8A%94_%ED%94%84%EB%A0%88%EC%A0%A0%ED%85%8C%EC%9D%B4%EC%85%98.png&quot; alt=&quot;제목 없는 프레젠테이션.png&quot;&gt;&lt;/p&gt;
 &lt;p&gt;이렇게 구성하는 것을 reverse proxy라고 부릅니다.&lt;/p&gt;
 &lt;p&gt;이렇게하면 웹서버의 역할과 WAS의 역할을 정확히 구분시킬 수 있습니다.&lt;/p&gt;
 &lt;p&gt;여기서 아까 외장톰캣을 쓰는 스프링 애플리케이션처럼 하나의 스프링 애플리케이션에서 여러 애플리케이션의 코드를 작성하고 관리하고 싶다면? 물론 가능합니다. 스프링부트 애플리케이션에서 여러 애플리케이션 코드를 작성하고 스프링부트 애플리케이션을 실행 할 때 컨텍스트 구성 설정 값을 argument로 넘겨주게끔 구성하면 됩니다.
