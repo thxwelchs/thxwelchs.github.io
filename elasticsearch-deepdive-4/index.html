@@ -1,0 +1,186 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ElasticSearch 딥다이브 - 4: 저장 구조와 매핑 파라미터</title><meta name="description" content="3편까지는 검색하는 쪽을 봤었습니다. 이번 편은 한 단계 내려가서, 문서가 디스크에 실제로 어떻게 저장되는지를 살펴보겠습니다. ES는 루씬(Lucene) 위에 올라가 있어서, 매핑 파라미터 몇 개가 루씬 레벨의 저장 방식을 직접 결정하는데요. 원본을 보관하는 sourc"><link rel="canonical" href="https://thxwelchs.github.io/elasticsearch-deepdive-4/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="ElasticSearch 딥다이브 - 4: 저장 구조와 매핑 파라미터"><meta property="og:description" content="3편까지는 검색하는 쪽을 봤었습니다. 이번 편은 한 단계 내려가서, 문서가 디스크에 실제로 어떻게 저장되는지를 살펴보겠습니다. ES는 루씬(Lucene) 위에 올라가 있어서, 매핑 파라미터 몇 개가 루씬 레벨의 저장 방식을 직접 결정하는데요. 원본을 보관하는 sourc"><meta property="og:url" content="https://thxwelchs.github.io/elasticsearch-deepdive-4/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/elasticsearch-deepdive-4.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="ElasticSearch 딥다이브 - 4: 저장 구조와 매핑 파라미터"><meta name="twitter:description" content="3편까지는 검색하는 쪽을 봤었습니다. 이번 편은 한 단계 내려가서, 문서가 디스크에 실제로 어떻게 저장되는지를 살펴보겠습니다. ES는 루씬(Lucene) 위에 올라가 있어서, 매핑 파라미터 몇 개가 루씬 레벨의 저장 방식을 직접 결정하는데요. 원본을 보관하는 sourc"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/elasticsearch-deepdive-4.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>ElasticSearch 딥다이브 - 4: 저장 구조와 매핑 파라미터</h1> <div class="meta" data-astro-cid-fzx4jmue> 2022-11-19 · 엔지니어링  · <a class="series-badge" href="/series/" data-astro-cid-fzx4jmue>시리즈 · ElasticSearch 딥다이브</a>  </div> <img class="cover" src="/img/covers/eng/elasticsearch-deepdive-4.png" alt="ElasticSearch 딥다이브 - 4: 저장 구조와 매핑 파라미터" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <p><a href="/elasticsearch-deepdive-3/">3편</a>까지는 검색하는 쪽을 봤었습니다. 이번 편은 한 단계 내려가서, 문서가 디스크에 실제로 어떻게 저장되는지를 살펴보겠습니다. ES는 루씬(Lucene) 위에 올라가 있어서, 매핑 파라미터 몇 개가 루씬 레벨의 저장 방식을 직접 결정하는데요. 원본을 보관하는 <code>_source</code>·<code>store</code>부터, 색인을 켜고 끄는 <code>index</code>·<code>enabled</code>, 정렬·집계를 결정하는 <code>doc_values</code>까지 한 번에 정리합니다.</p>
+<blockquote>
+<p>잠깐, 루씬이 뭐냐면: 아파치 루씬(Apache Lucene)은 자바로 만든 검색 라이브러리로, 역색인·스코어링·저장 같은 “검색 엔진의 핵심”을 담고 있습니다. ES는 이 루씬을 분산·REST API로 감싼 것이라, 매핑 파라미터 상당수가 결국 루씬의 저장·색인 방식을 켜고 끄는 스위치인 셈입니다. 참고로 루씬을 쓰는 건 ES뿐이 아닙니다. Apache Solr도 같은 루씬 위에 올라가 있고, 예전엔 애플리케이션에 루씬을 직접 임베드해 검색 기능을 붙이는 경우도 많았습니다.</p>
+</blockquote>
+<h1 id="검색용-색인과-원본-보관은-별개다">검색용 색인과 원본 보관은 별개다</h1>
+<p>처음에 헷갈렸던 게, “역색인에 단어가 들어가 있으면 원본 JSON도 거기 있는 거 아닌가?”였습니다. 그런데 아니었습니다. 조금 풀어서 설명하면, 역색인(2편)은 “단어 → 그 단어가 들어 있는 문서 번호 목록”만 들고 있습니다. 예를 들어 <code>{"title": "맛있는 사과"}</code>를 색인하면 역색인엔 <code>사과 → [3번 문서]</code>, <code>맛있 → [3번 문서]</code>처럼 쪼개진 단어와 문서 번호만 남지, <code>{"title": "맛있는 사과"}</code>라는 원래 JSON 덩어리 자체는 어디에도 없습니다. 분석을 거치며 원문이 단어 토큰으로 흩어져 있으니깐요. 그래서 역색인만으론 “3번 문서에 단어 사과가 있다”까지는 알아도, “3번 문서의 원래 JSON이 뭐였는지”는 복원할 수 없습니다.</p>
+<p>그래서 ES는 원본 JSON을 따로 보관합니다. 그게 바로 <code>_source</code> 메타 필드입니다. 검색은 역색인으로 하고, 결과로 돌려줄 원본은 <code>_source</code>에서 꺼내는 두 갈래 구조인 셈입니다.</p>
+<p><img src="/img/elasticsearch-deepdive-4/source-inverted-two-paths-v1.png" alt="검색용 역색인과 원본 보관용 _source, 그리고 검색은 역색인으로 찾고 결과 원본은 _source에서 꺼내는 흐름"></p>
+<h1 id="_source-원본-json-저장소">_source, 원본 JSON 저장소</h1>
+<p><code>_source</code>는 색인할 때 보낸 JSON 원본을 그대로 담는 메타 필드입니다. 루씬 레벨에서는 이걸 하나의 stored field로, 통째로 압축해 보관합니다(기본 LZ4, <code>index.codec</code>를 <code>best_compression</code>으로 두면 DEFLATE로 더 줄임). 여기서 stored field란 루씬이 “이 값을 원문 그대로 따로 저장해 두는 칸”을 말합니다. 역색인이 검색용이라면, stored field는 나중에 그대로 꺼내 보여주기 위한 보관용인 셈입니다.</p>
+<p>검색 결과의 <code>hits._source</code>로 내려오는 그 JSON이 여기서 나옵니다. 그런데 단순히 결과 보여주기 말고도 <code>_source</code>가 받치는 기능이 의외로 많습니다.</p>
+<ul>
+<li>검색 결과에 원본 문서를 돌려주기.</li>
+<li>부분 수정(<code>_update</code>, <code>_update_by_query</code>). 기존 원본을 읽어 병합해야 하니 필요합니다.</li>
+<li>reindex. 새 인덱스로 옮길 때 원본을 읽습니다.</li>
+<li>하이라이팅. 일치한 부분을 강조하려면 원문이 있어야 합니다.</li>
+</ul>
+<p>디스크 비용이 아깝다고 생각이 들면 <code>_source</code>를 끌 수 있는 옵션을 제공하고 있습니다(<code>"_source": { "enabled": false }</code>). 그런데 이 옵션을 끄면 감수해야 하는 부분도 존재합니다. 방금 본 부분 수정·reindex·하이라이팅 등을 활용할 수 없고, 결과로 원본의 내용도 볼 수 없습니다. 매핑을 바꿔 reindex할 일이 한 번이라도 생기면 매우 곤란해지는 셈입니다. 그래서 아예 끄는 건 어지간하면 피하는 게 좋습니다. 끄더라도 통째로가 아니라 정 무거운 일부 필드만 빼는 절충적인 방안을 고려해보는 게 좋을 것 같습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">PUT /articles</span></span>
+<span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "mappings"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "_source"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">      "excludes"</span><span style="color:#E1E4E8">: [</span><span style="color:#9ECBFF">"huge_raw_html"</span><span style="color:#E1E4E8">]</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>위와 같이 하면 검색·색인은 정상으로 하면서 원본 보관에서 무거운 필드만 제외시킬 수 있습니다. 다만 제외한 필드는 결과 <code>_source</code>에 안 나오니 reindex 때 사라진다는 점은 충분히 감안하고 결정해야 합니다.</p>
+<h1 id="store-필드를-따로-저장하기">store, 필드를 따로 저장하기</h1>
+<p>여기서 저는 의문이 들었습니다. “<code>_source</code>에 원본이 다 있는데 <code>store</code>는 왜 또 따로 있는가?” 이에 대해 설명드리자면, 기본적으로 ES는 개별 필드를 따로 저장하지 않습니다(<code>store: false</code>). 어차피 <code>_source</code>에 통째로 있으니 중복이라 안 하는 겁니다. 그런데 필드에 <code>store: true</code>를 주면 그 필드를 <code>_source</code>와 별개로 루씬의 독립 stored field로 한 번 더 저장하고, <code>stored_fields</code>로 꺼냅니다.</p>
+<p><img src="/img/elasticsearch-deepdive-4/store-on-off-v1.png" alt="store가 false면 필드는 _source 안에만, true면 그 필드를 루씬 독립 stored field로 한 번 더 저장하는 차이"></p>
+<p>솔직히 대부분은 안 써도 됐습니다. <code>_source</code>가 있으면 보통 <code>_source</code> 필터링(<code>"_source": ["title"]</code>)으로 원하는 필드만 골라 받는 게 더 간단하니까요. <code>store</code>가 의미 있는 경우는 한정적입니다. <code>_source</code>를 꺼둔 인덱스에서 특정 몇 필드만 돌려받고 싶을 때, 또는 아주 큰 문서에서 작은 필드 하나만 자주 꺼내는데 <code>_source</code>라는 큰 덩어리의 원본 데이터의 압축을 푸는 비용이 부담스러울 때 정도입니다.</p>
+<h1 id="한-필드를-받치는-세-자료구조-그리고-enabled">한 필드를 받치는 세 자료구조, 그리고 enabled</h1>
+<p>저장 구조에서 제일 정리하고 싶었던 게 이것들의 관계였습니다. ES가 필드 하나를 색인할 때 실제로 만드는 자료구조는 역색인(<code>index</code>)·<code>doc_values</code>·<code>_source</code>(stored field) 이 셋입니다. 우선 <code>index</code>부터. 필드의 <code>index</code>는 기본이 <code>true</code>이고, 역색인에 넣어 검색 가능하게 할지를 정합니다. <code>false</code>로 두면 역색인을 안 만들어 디스크가 절약됩니다. 그럼 그 필드는 검색이 아예 안 될까요?</p>
+<p>처음엔 “index를 끄면 검색 불가”일 줄 알았지만, 직접 조회해보니 타입에 따라 갈렸습니다. text는 <code>index: false</code>면 정말 막히지만, keyword·숫자는 <code>index: false</code>여도 term·range 검색이 되고 정렬·집계도 됩니다. 역색인을 껐는데도 되는 건, 검색의 빠른 길인 역색인과 별개로 “이 문서의 이 필드 값”을 읽는 <code>doc_values</code>가 따로 있기 때문입니다. text는 그 <code>doc_values</code>가 없어서 막힙니다. (자세한 결과는 뒤에서 직접 확인합니다.)</p>
+<p>정리하면 한 필드에 대해 ES는 최대 세 가지를 따로 듭니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>역색인(index)    → 검색용 "단어 → 문서"</span></span>
+<span class="line"><span>doc_values       → 정렬·집계용 "문서 → 값"</span></span>
+<span class="line"><span>_source          → 원본 JSON 보관</span></span></code></pre>
+<p>한 권의 책에 비유하면, 단어로 찾아 들어가는 뒤쪽 찾아보기(역색인), 페이지마다 값을 적어둔 색인표(doc_values), 그리고 본문 원본(_source)을 따로따로 들고 있는 셈입니다. 셋은 용도가 달라서 하나를 꺼도 나머지는 살아 있습니다.</p>
+<p><code>doc_values</code>는 “문서 → 값”을 칼럼 형태로 디스크에 정렬해 모아둔 구조라, 같은 필드 값을 문서마다 훑는 정렬·집계·스크립트가 빠릅니다. keyword·숫자·날짜·boolean 같은 타입은 기본으로 켜져 있어 별도 설정 없이 정렬·집계가 됩니다. 이걸 끄면 뭘 얻고 뭘 잃을까요? 정렬·집계에 절대 안 쓸 필드라면 <code>doc_values: false</code>로 꺼서 디스크를 아끼는 대신, 그 필드로는 정렬·집계를 못 하게 됩니다.</p>
+<p>text 타입은 예외라 따로 알아둬야 합니다. text는 분석돼 흩어지기 때문에 기본적으로 <code>doc_values</code>가 없습니다(1편에서 text는 정렬·집계가 안 된다고 했던 게 이 때문). 굳이 집계하려면 <code>fielddata</code>를 켜야 하는데 값을 힙 메모리에 올려 비용이 큽니다. 그래서 보통은 1편의 멀티 필드로 <code>keyword</code> 서브필드를 만들어 그쪽을 집계하는 게 정석이었습니다.</p>
+<h2 id="그리고-enabled-객체를-통째로-색인에서-빼기">그리고 enabled, 객체를 통째로 색인에서 빼기</h2>
+<p>마지막으로 <code>enabled</code>입니다. 앞의 셋과 달리 이건 개별 필드 타입에 거는 게 아니라, <strong>object 타입 필드(또는 매핑 전체)</strong> 에 거는 파라미터인데, “이 객체 묶음을 색인 대상으로 삼을 거냐”를 켜고 끄는 스위치인 셈이죠.</p>
+<ul>
+<li>켰을 때(<code>enabled: true</code>, 기본): 평소처럼 그 객체 안 필드들을 파싱해 역색인·<code>doc_values</code>를 만듭니다. 검색·정렬·집계가 다 됩니다.</li>
+<li>껐을 때(<code>enabled: false</code>): ES가 그 객체를 아예 파싱하지 않습니다. 역색인도 <code>doc_values</code>도 안 만들고 <code>_source</code>에만 원본 그대로 둡니다. 그래서 검색·집계엔 전혀 안 잡히고, 결과로 돌려줄 때만 보입니다.</li>
+</ul>
+<p><code>index: false</code>가 “역색인만 끈다”였다면, <code>enabled: false</code>는 한 발 더 나가 그 객체를 통째로 색인에서 뺍니다. 그래서 검색·집계엔 안 쓰지만 원본으로는 들고 있어야 하는 덩어리, 예를 들어 외부에서 받은 원시 페이로드 같은 걸 저장만 해둘 때 어울렸습니다. 파싱을 건너뛰니 색인도 빨라지고 매핑 과다(1편)도 막을 수 있습니다.</p>
+<p>조합이 헷갈려서 표로 정리해보았습니다.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>설정</th><th>검색</th><th>정렬·집계</th><th>_source 반환</th></tr></thead><tbody><tr><td>기본 (index=true, dv=true)</td><td>O (역색인, 빠름)</td><td>O</td><td>O</td></tr><tr><td>index:false (keyword/숫자)</td><td>△ (doc_values, 느림)</td><td>O</td><td>O</td></tr><tr><td>index:false (text)</td><td>X (에러)</td><td>X (원래 없음)</td><td>O</td></tr><tr><td>doc_values:false</td><td>O</td><td>X</td><td>O</td></tr><tr><td>enabled:false (object)</td><td>X</td><td>X</td><td>O</td></tr></tbody></table>
+<p>결국 이 설정들은 “이 필드를 검색에 쓰나, 정렬·집계에 쓰나, 그냥 보관만 하나”를 따져 필요 없는 자료구조를 꺼서 디스크와 색인 비용을 줄이는 도구인 셈입니다.</p>
+<h1 id="직접-실험해보기">직접 실험해보기</h1>
+<p>먼저 <code>index: false</code>. text 필드에 걸고 match를 날리니 에러가 났습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>[text, index:false]  match body=hello</span></span>
+<span class="line"><span>→ "Cannot search on field [body] since it is not indexed."</span></span></code></pre>
+<p>그런데 keyword·숫자에 <code>index: false</code>를 걸면 term·range 검색이 그대로 됐고, 집계도 됐습니다. doc_values로 응답하기 때문입니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>[keyword, index:false]  term  trace_id=abc   → hits = 2   (검색 됨)</span></span>
+<span class="line"><span>[long,    index:false]  range n>=3           → hits = 1   (검색 됨)</span></span>
+<span class="line"><span>[keyword, index:false]  terms 집계            → buckets = [(abc, 2)]</span></span></code></pre>
+<p><code>enabled: false</code>는 다음과 같은 결과가 나왔습니다. 안의 필드로 검색하면 0건인데, <code>_source</code>엔 그대로 남아 있습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>[object, enabled:false]  match raw.k=secret-value  → hits = 0   (검색 안 됨)</span></span>
+<span class="line"><span>GET /sess/_doc/1  → _source = { "raw": { "k": "secret-value" } }   (보관은 됨)</span></span></code></pre>
+<p><code>store: true</code>도 확인했습니다. <code>_source</code>를 끄고 <code>stored_fields</code>로만 꺼내봤더니 그 필드만 따로 나왔습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>{</span></span>
+<span class="line"><span>  "_source": false,</span></span>
+<span class="line"><span>  "stored_fields": ["title"]</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span>→ fields = { "title": ["제목"] }</span></span></code></pre>
+<p>이론으로만 접했던 “index를 꺼도 keyword는 검색된다” 같은 게 실제로 돌려보니 분명해졌고, “index를 끄면 무조건 검색 불가”라는 것을 명확하게 이해할 수 있었습니다.</p>
+<h1 id="정리">정리</h1>
+<p>검색용 역색인과 원본 보관은 별개고, 원본은 <code>_source</code>가 원본 데이터를 압축해 듭니다. <code>_source</code>는 결과 반환뿐 아니라 부분 수정·reindex·하이라이팅까지 받치니 어지간하면 끄지 말고, <code>store</code>는 <code>_source</code> 필터링으로 대개 대체돼 특수한 경우에만 의미가 있었음. <code>index</code>(검색)·<code>doc_values</code>(정렬·집계)·<code>_source</code>(보관)가 따로 놀기 때문에, <code>index: false</code>여도 doc_values가 있는 keyword·숫자는 정렬·집계는 물론 term·range 검색까지 됐고(text만 정말 막힘), <code>enabled: false</code>는 객체를 파싱조차 안 하고 보관만 됩니다.</p>
+<p>다음 편에서는 시야를 클러스터로 넓혀, 이 인덱스가 여러 노드에 어떻게 흩어지는지(샤딩·라우팅)와 Spring Boot 연동·대용량 색인 같은 형태로 시리즈를 마무리 하려 합니다..!</p>
+<h1 id="참고">참고</h1>
+<blockquote>
+<p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/8.1/mapping-source-field.html">Elasticsearch Reference: Source field (_source)</a>
+<a href="https://www.elastic.co/guide/en/elasticsearch/reference/8.1/doc-values.html">Elasticsearch Reference: doc_values</a></p>
+</blockquote> </div> <section class="series-foot" data-astro-cid-fzx4jmue> <p class="sf-h" data-astro-cid-fzx4jmue> <span class="sf-label" data-astro-cid-fzx4jmue>시리즈</span> <a href="/series/" data-astro-cid-fzx4jmue>ElasticSearch 딥다이브</a> <span class="sf-count" data-astro-cid-fzx4jmue>전 6편</span> </p> <ol class="sf-list" data-astro-cid-fzx4jmue> <li data-astro-cid-fzx4jmue> <a href="/elasticsearch-deepdive-1/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>01</span> <span class="sf-text" data-astro-cid-fzx4jmue>문서 모델과 매핑</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/elasticsearch-deepdive-2/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>02</span> <span class="sf-text" data-astro-cid-fzx4jmue>역색인과 텍스트 분석</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/elasticsearch-deepdive-3/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>03</span> <span class="sf-text" data-astro-cid-fzx4jmue>Query DSL과 스코어링</span> <span class="sf-tag" data-astro-cid-fzx4jmue>이전</span>   </a> </li><li class="cur" data-astro-cid-fzx4jmue> <a href="/elasticsearch-deepdive-4/" aria-current="page" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>04</span> <span class="sf-text" data-astro-cid-fzx4jmue>저장 구조와 매핑 파라미터</span>  <span class="sf-tag cur" data-astro-cid-fzx4jmue>현재 글</span>  </a> </li><li data-astro-cid-fzx4jmue> <a href="/elasticsearch-deepdive-5/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>05</span> <span class="sf-text" data-astro-cid-fzx4jmue>분산 아키텍처와 실무 적용</span>   <span class="sf-tag" data-astro-cid-fzx4jmue>다음</span> </a> </li><li data-astro-cid-fzx4jmue> <a href="/elasticsearch-deepdive-6/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>06</span> <span class="sf-text" data-astro-cid-fzx4jmue>역색인을 Java로 직접 만들어보기</span>    </a> </li> </ol> </section> <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#검색용-색인과-원본-보관은-별개다" data-astro-cid-fzx4jmue>검색용 색인과 원본 보관은 별개다</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#_source-원본-json-저장소" data-astro-cid-fzx4jmue>_source, 원본 JSON 저장소</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#store-필드를-따로-저장하기" data-astro-cid-fzx4jmue>store, 필드를 따로 저장하기</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#한-필드를-받치는-세-자료구조-그리고-enabled" data-astro-cid-fzx4jmue>한 필드를 받치는 세 자료구조, 그리고 enabled</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#그리고-enabled-객체를-통째로-색인에서-빼기" data-astro-cid-fzx4jmue>그리고 enabled, 객체를 통째로 색인에서 빼기</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#직접-실험해보기" data-astro-cid-fzx4jmue>직접 실험해보기</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#정리" data-astro-cid-fzx4jmue>정리</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/elasticsearch-deepdive-4/";
+const pageId = "elasticsearch-deepdive-4";
+const pageTitle = "ElasticSearch 딥다이브 - 4: 저장 구조와 매핑 파라미터";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

@@ -1,0 +1,135 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>스프링과 코틀린이 만나면 생기는 불편한 상황들</title><meta name="description" content="지난 글에서 코틀린의 편함과 비용을 언어 차원에서 봤습니다. 코틀린을 스프링과 함께 사용하다보면 여러가지 불편한점들이 있는데, 결국 그 불편함을 해결하기 위한 방법을 여러 대체방안으로 해소해야 했습니다. 이번 글은 그런 부분을 정리하고자 합니다. 예전에 코틀린으로 JP"><link rel="canonical" href="https://thxwelchs.github.io/kotlin-spring-jpa/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="스프링과 코틀린이 만나면 생기는 불편한 상황들"><meta property="og:description" content="지난 글에서 코틀린의 편함과 비용을 언어 차원에서 봤습니다. 코틀린을 스프링과 함께 사용하다보면 여러가지 불편한점들이 있는데, 결국 그 불편함을 해결하기 위한 방법을 여러 대체방안으로 해소해야 했습니다. 이번 글은 그런 부분을 정리하고자 합니다. 예전에 코틀린으로 JP"><meta property="og:url" content="https://thxwelchs.github.io/kotlin-spring-jpa/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/kotlin-spring-jpa.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="스프링과 코틀린이 만나면 생기는 불편한 상황들"><meta name="twitter:description" content="지난 글에서 코틀린의 편함과 비용을 언어 차원에서 봤습니다. 코틀린을 스프링과 함께 사용하다보면 여러가지 불편한점들이 있는데, 결국 그 불편함을 해결하기 위한 방법을 여러 대체방안으로 해소해야 했습니다. 이번 글은 그런 부분을 정리하고자 합니다. 예전에 코틀린으로 JP"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/kotlin-spring-jpa.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>스프링과 코틀린이 만나면 생기는 불편한 상황들</h1> <div class="meta" data-astro-cid-fzx4jmue> 2022-02-16 · 엔지니어링  </div> <img class="cover" src="/img/covers/eng/kotlin-spring-jpa.png" alt="스프링과 코틀린이 만나면 생기는 불편한 상황들" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <p><a href="/kotlin-from-java/">지난 글</a>에서 코틀린의 편함과 비용을 언어 차원에서 봤습니다. 코틀린을 스프링과 함께 사용하다보면 여러가지 불편한점들이 있는데, 결국 그 불편함을 해결하기 위한 방법을 여러 대체방안으로 해소해야 했습니다. 이번 글은 그런 부분을 정리하고자 합니다. 예전에 <a href="/Kotlin%20JPA%20Entity%20%EB%AA%A8%EB%8D%B8%EB%A7%81%ED%95%98%EA%B8%B0/">코틀린으로 JPA 엔티티를 모델링</a>하면서도 한 번 짚었지만, 이번엔 “왜 그렇게 해야 하나”의 내부 동작까지 좀 더 파봤습니다.</p>
+<h1 id="코틀린-클래스는-final이라-프록시가-안-만들어진다">코틀린 클래스는 final이라 프록시가 안 만들어진다</h1>
+<p>자바 클래스는 기본이 상속 가능하지만, 코틀린은 클래스도 메서드도 기본이 <code>final</code>입니다. 평소엔 좋은 기본값인데, Spring·JPA에선 오히려 불편한 점으로 다가올수 있습니다. 왜 그럴까요? 스프링 DI/AOP 구조를 이해하고 있는 분들은 아시겠지만, 이 둘이 런타임에 클래스를 상속한 프록시(proxy)를 만들어 동작하기 때문입니다.</p>
+<ul>
+<li>Spring은 <code>@Transactional</code> 같은 빈을 CGLIB 프록시로 감싸 부가 기능을 끼워 넣습니다.</li>
+<li>JPA(Hibernate)는 지연 로딩을 위해 엔티티를 상속한 프록시를 만듭니다.</li>
+</ul>
+<p>클래스가 <code>final</code>이면 상속이 안 되니 프록시를 못 만들어 깨집니다. 클래스마다 <code>open</code>을 붙이는 건 비현실적이라, 컴파일러 플러그인으로 풉니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#B392F0">plugins</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#B392F0">    kotlin</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"plugin.spring"</span><span style="color:#E1E4E8">) version </span><span style="color:#9ECBFF">"1.6.10"</span><span style="color:#6A737D">  // 스프링 애너테이션 붙은 클래스를 자동 open</span></span>
+<span class="line"><span style="color:#B392F0">    kotlin</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"plugin.jpa"</span><span style="color:#E1E4E8">) version </span><span style="color:#9ECBFF">"1.6.10"</span><span style="color:#6A737D">     // @Entity 등에 기본 생성자 합성 + open</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h1 id="jpa는-기본-생성자를-요구한다">JPA는 기본 생성자를 요구한다</h1>
+<p>JPA 명세상 엔티티는 인자 없는 기본 생성자가 있어야 합니다. Hibernate가 데이터를 객체화 하기위해 빈 객체를 먼저 만든 뒤 채우기 때문인데요. 코틀린에서는 주 생성자에 프로퍼티를 다 넣으면 인자 없는 기본생성자가 없으니, 위의 <code>kotlin-jpa</code> 플러그인이 합성 기본 생성자를 만들어 해결합니다.</p>
+<h1 id="data-class를-엔티티로-쓰면-안-되는-이유">data class를 엔티티로 쓰면 안 되는 이유</h1>
+<p><code>data class</code>는 DTO와 같이 데이터 전달용이나 Value Object 같은 객체로서는 알맞지만, JPA 엔티티로는 어울리지 않는 부분이 있습니다. <code>data class</code>가 자동으로 만들어주는 것들이 엔티티 생애주기와 충돌하는 부분이 많기 때문입니다.</p>
+<ul>
+<li>equals/hashCode가 모든 프로퍼티 기반이라, id가 자동 생성이면 영속화 전후로 <code>hashCode</code>가 바뀌어 <code>Set</code>에서 객체를 잃어버립니다. 연관관계 필드까지 포함하면 비교하다 지연 로딩이 트리거되거나 무한 순환에 빠집니다.</li>
+<li>toString도 모든 필드를 찍어, 로그 한 줄에 쿼리가 나가거나 양방향이면 <code>StackOverflowError</code>가 납니다.</li>
+<li>copy()로 영속 엔티티를 복사하면 같은 id의 detached 객체가 떠돌게 됩니다.</li>
+</ul>
+<p>그래서 엔티티는 <code>data class</code>가 아니라 일반 class로 두고, equals/hashCode가 필요하면 도메인 생명주기의 기초가 되는 id와 같은 값들로 정의하는 편이 안전했습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#B392F0">@Entity</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> Member</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#B392F0">    @Column</span><span style="color:#E1E4E8">(nullable </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> false</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    var</span><span style="color:#E1E4E8"> name: </span><span style="color:#B392F0">String</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#B392F0">    @Id</span><span style="color:#B392F0"> @GeneratedValue</span><span style="color:#E1E4E8">(strategy </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> GenerationType.IDENTITY)</span></span>
+<span class="line"><span style="color:#F97583">    val</span><span style="color:#E1E4E8"> id: </span><span style="color:#B392F0">Long</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> 0</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>엔티티 필드를 <code>val</code>로 막고 싶은 욕심이 들지만, 엔티티는 변경 감지(dirty checking) 기반 update를 전제로 하니 수정될 필드는 <code>var</code>여야 합니다. id처럼 안 바뀌는 값만 <code>val</code>로 둘 수 있습니다.</p>
+<h1 id="그리고-jackson-data-class-역직렬화">그리고 Jackson, data class 역직렬화</h1>
+<p>직렬화로 넘어가도 같은 뿌리의 함정이 나옵니다. Jackson은 역직렬화할 때 기본 생성자로 빈 객체를 만든 뒤 채우는데, <code>data class</code>는 보통 주 생성자에서 값을 다 받으니 기본 생성자가 없습니다. 그래서 순정 Jackson은 data class를 역직렬화하지 못합니다.</p>
+<p>이걸 풀어주는 게 <code>jackson-module-kotlin</code>입니다. 코틀린이 심어둔 메타데이터를 읽어 주 생성자 파라미터 이름으로 역직렬화 해주는 중요한 역할을 가지고 있습니다. Spring Boot라면 클래스패스에 있기만 하면 자동 등록되어 따로 신경써야 할 부분이 적습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#F97583">val</span><span style="color:#E1E4E8"> mapper </span><span style="color:#F97583">=</span><span style="color:#B392F0"> jacksonObjectMapper</span><span style="color:#E1E4E8">()   </span><span style="color:#6A737D">// KotlinModule이 등록된 ObjectMapper</span></span>
+<span class="line"><span style="color:#F97583">val</span><span style="color:#E1E4E8"> user </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> mapper.</span><span style="color:#B392F0">readValue</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">User</span><span style="color:#E1E4E8">>(</span><span style="color:#9ECBFF">"""{"id":1,"name":"kim"}"""</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<h1 id="애너테이션을-어디에-붙여야-할까-use-site-target">애너테이션을 어디에 붙여야 할까? (use-site target)</h1>
+<p>코틀린에서 프로퍼티 하나는 사실 생성자 파라미터(<code>param</code>)·백킹 필드(<code>field</code>)·getter(<code>get</code>)·setter(<code>set</code>)로 펼쳐집니다. 여기서 백킹 필드(backing field)는 그 프로퍼티의 값이 실제로 저장되는 숨은 필드를 말합니다. 코틀린은 프로퍼티에 접근할 때 기본적으로 getter/setter를 거치는데, 그 안쪽에서 값을 담아두는 진짜 변수가 바로 이 backing field입니다. 자바로 치면 <code>private String name</code> 같은 필드에 해당하죠.</p>
+<p>그래서 프로퍼티에 애너테이션을 달면 코틀린이 “이걸 파라미터·필드·getter·setter 중 어디에 붙일지”를 정해야 하는데, 이걸 use-site target이라 하고 <code>@field:</code>/<code>@get:</code>/<code>@param:</code>/<code>@set:</code>으로 지정합니다.</p>
+<p>예를 들어 DTO 프로퍼티에 <code>@JsonProperty</code>로 JSON 키 이름을 지정한다고 해보겠습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#F97583">data</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> UserDto</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#B392F0">    @get</span><span style="color:#E1E4E8">:</span><span style="color:#B392F0">JsonProperty</span><span style="color:#E1E4E8">("</span><span style="color:#B392F0">user_name</span><span style="color:#E1E4E8">")</span></span>
+<span class="line"><span style="color:#F97583">    val</span><span style="color:#E1E4E8"> name: </span><span style="color:#B392F0">String</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span></code></pre>
+<p>여기서 <code>@get:</code>을 빼고 그냥 <code>@JsonProperty</code>만 달면, target을 안 줬으니 코틀린이 기본 규칙으로 한 곳을 고르는데, 그게 Jackson이 실제로 읽는 위치와 어긋나면 애너테이션이 무시된 것처럼 동작합니다. “분명 <code>@JsonProperty</code>를 붙였는데 왜 안 먹지?”의 답이 대개 이 target 불일치였습니다.</p>
+<p>target별로 애너테이션이 실제 어디에 붙는지 정리하면 이렇습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> Example</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#B392F0">    @param</span><span style="color:#E1E4E8">:</span><span style="color:#B392F0">Min</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">0</span><span style="color:#E1E4E8">)            // </span><span style="color:#B392F0">생성자</span><span style="color:#B392F0"> 파라미터에</span></span>
+<span class="line"><span style="color:#B392F0">    @field</span><span style="color:#E1E4E8">:</span><span style="color:#B392F0">NotNull</span><span style="color:#E1E4E8">           // </span><span style="color:#B392F0">백킹</span><span style="color:#B392F0"> 필드에</span></span>
+<span class="line"><span style="color:#B392F0">    @get</span><span style="color:#E1E4E8">:</span><span style="color:#B392F0">JsonProperty</span><span style="color:#E1E4E8">("</span><span style="color:#B392F0">v</span><span style="color:#E1E4E8">")   // </span><span style="color:#B392F0">getter에</span></span>
+<span class="line"><span style="color:#B392F0">    @set</span><span style="color:#E1E4E8">:</span><span style="color:#B392F0">Inject</span><span style="color:#E1E4E8">              // </span><span style="color:#B392F0">setter에</span><span style="color:#E1E4E8"> (</span><span style="color:#B392F0">var일</span><span style="color:#B392F0"> 때만</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    var</span><span style="color:#F97583"> value</span><span style="color:#E1E4E8">: </span><span style="color:#B392F0">Int</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span></code></pre>
+<ul>
+<li><code>@param:</code> 생성자 파라미터. 역직렬화·DI가 생성자로 값을 받을 때 보는 자리입니다.</li>
+<li><code>@field:</code> 백킹 필드. 보통 JPA <code>@Column</code>이나 필드 주입 애너테이션에 활용됩니다.</li>
+<li><code>@get:</code> getter. Jackson 직렬화나 Bean Validation에 보통 활용합니다.</li>
+<li><code>@set:</code> setter. <code>var</code> 프로퍼티에만 생기고, setter 주입 같은 데 씁니다.</li>
+</ul>
+<p>target을 생략하면 코틀린이 <code>param → property → field</code> 순으로 적용 가능한 한 곳을 골라줍니다. 문제는 그 기본 선택이 프레임워크가 읽는 위치와 늘 같진 않다는 점이라, 안 먹을 땐 target을 명시하는 게 확실했습니다.</p>
+<h1 id="정리">정리</h1>
+<p>결국 코틀린의 좋은 기본값(final·data class·프로퍼티 펼침)이 프레임워크의 런타임 동작(프록시·기본 생성자·자바빈 규칙)과 어긋나는 게 핵심이었습니다. 대부분은 <code>kotlin-spring</code>/<code>kotlin-jpa</code>/<code>jackson-module-kotlin</code>과 같은 대체방안들이 있습니다.</p>
+<h1 id="참고">참고</h1>
+<blockquote>
+<p><a href="https://kotlinlang.org/docs/all-open-plugin.html">Kotlin Docs: All-open / No-arg compiler plugins</a>
+<a href="https://github.com/FasterXML/jackson-module-kotlin">jackson-module-kotlin (GitHub)</a></p>
+</blockquote> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#코틀린-클래스는-final이라-프록시가-안-만들어진다" data-astro-cid-fzx4jmue>코틀린 클래스는 final이라 프록시가 안 만들어진다</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#jpa는-기본-생성자를-요구한다" data-astro-cid-fzx4jmue>JPA는 기본 생성자를 요구한다</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#data-class를-엔티티로-쓰면-안-되는-이유" data-astro-cid-fzx4jmue>data class를 엔티티로 쓰면 안 되는 이유</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#그리고-jackson-data-class-역직렬화" data-astro-cid-fzx4jmue>그리고 Jackson, data class 역직렬화</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#애너테이션을-어디에-붙여야-할까-use-site-target" data-astro-cid-fzx4jmue>애너테이션을 어디에 붙여야 할까? (use-site target)</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#정리" data-astro-cid-fzx4jmue>정리</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/kotlin-spring-jpa/";
+const pageId = "kotlin-spring-jpa";
+const pageTitle = "스프링과 코틀린이 만나면 생기는 불편한 상황들";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

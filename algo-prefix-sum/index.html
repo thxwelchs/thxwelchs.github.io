@@ -1,0 +1,116 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>누적 합 (Prefix Sum) 정리</title><meta name="description" content="누적 합 배열의 앞에서부터의 합을 미리 구해 두어, 임의 구간의 합을 O(1) 에 답하는 기법. 매번 구간을 직접 더하면 질의 1번에 O(N) , 질의가 많으면 O(NQ) 로 터진다. 누적 합을 한 번 O(N) 에 만들어 두면 그 뒤로는 질의마다 O(1) 이다. 1차원"><link rel="canonical" href="https://thxwelchs.github.io/algo-prefix-sum/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="누적 합 (Prefix Sum) 정리"><meta property="og:description" content="누적 합 배열의 앞에서부터의 합을 미리 구해 두어, 임의 구간의 합을 O(1) 에 답하는 기법. 매번 구간을 직접 더하면 질의 1번에 O(N) , 질의가 많으면 O(NQ) 로 터진다. 누적 합을 한 번 O(N) 에 만들어 두면 그 뒤로는 질의마다 O(1) 이다. 1차원"><meta property="og:url" content="https://thxwelchs.github.io/algo-prefix-sum/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="누적 합 (Prefix Sum) 정리"><meta name="twitter:description" content="누적 합 배열의 앞에서부터의 합을 미리 구해 두어, 임의 구간의 합을 O(1) 에 답하는 기법. 매번 구간을 직접 더하면 질의 1번에 O(N) , 질의가 많으면 O(NQ) 로 터진다. 누적 합을 한 번 O(N) 에 만들어 두면 그 뒤로는 질의마다 O(1) 이다. 1차원"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>누적 합 (Prefix Sum) 정리</h1> <div class="meta" data-astro-cid-fzx4jmue> 2018-10-14 · PS  </div> <img class="cover" src="/img/covers/ps-algorithm.jpg" alt="누적 합 (Prefix Sum) 정리" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <h1 id="누적-합">누적 합</h1>
+<p>배열의 앞에서부터의 합을 미리 구해 두어, 임의 구간의 합을 <strong><code>O(1)</code></strong> 에 답하는 기법.</p>
+<p>매번 구간을 직접 더하면 질의 1번에 <code>O(N)</code>, 질의가 많으면 <code>O(NQ)</code>로 터진다. 누적 합을 한 번 <code>O(N)</code>에 만들어 두면 그 뒤로는 질의마다 <code>O(1)</code>이다.</p>
+<h1 id="1차원-누적-합">1차원 누적 합</h1>
+<p><code>prefix[i]</code> = <code>a[0] + a[1] + ... + a[i]</code> (0번부터 i번까지의 합)</p>
+<p>구간 <code>[l, r]</code>의 합은</p>
+<p><code>sum(l, r) = prefix[r] - prefix[l - 1]</code></p>
+<p><code>l == 0</code>일 때 <code>prefix[l-1]</code>이 없으니, <code>prefix</code> 배열을 1칸 밀어서(1-indexed) 두면 경계 처리가 깔끔하다.</p>
+<p><img src="/img/algo-prefix-sum/prefix-sum-1d-v2.gif" alt="1차원 누적 합 - prefix를 만들고 구간 합을 prefix[r] - prefix[l-1]로 구하는 과정"></p>
+<h2 id="기본-코드-구조">기본 코드 구조</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="cpp"><code><span class="line"><span style="color:#6A737D">// 1-indexed 누적 합</span></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#E1E4E8"> a[</span><span style="color:#79B8FF">100001</span><span style="color:#E1E4E8">], prefix[</span><span style="color:#79B8FF">100001</span><span style="color:#E1E4E8">];</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">void</span><span style="color:#B392F0"> build</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#FFAB70"> n</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">; i </span><span style="color:#F97583">&#x3C;=</span><span style="color:#E1E4E8"> n; i</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">        prefix[i] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> prefix[i </span><span style="color:#F97583">-</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> a[i];</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#B392F0"> rangeSum</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#FFAB70"> l</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> r</span><span style="color:#E1E4E8">) {</span><span style="color:#6A737D"> // [l, r] 합</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> prefix[r] </span><span style="color:#F97583">-</span><span style="color:#E1E4E8"> prefix[l </span><span style="color:#F97583">-</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">];</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h1 id="2차원-누적-합">2차원 누적 합</h1>
+<p>솔직히 1차원은 금방 받아들였는데, 2차원은 처음에 되게 어려웠다. 1차원처럼 “앞에서부터의 합”이라는 감으로 접근했다가, 직사각형 영역 합을 구하는 식에서 막혔다.</p>
+<p>내가 막혔던 지점을 그대로 적어 보면 이렇다.</p>
+<ul>
+<li><code>S(r, c)</code>를 “<code>(0,0)</code>부터 <code>(r,c)</code>까지 직사각형의 합”으로 두는 것까지는 자연스러웠다.</li>
+<li>문제는 임의의 직사각형 <code>(r1,c1) ~ (r2,c2)</code>의 합을 어떻게 빼서 만드느냐였다. <code>S(r2,c2)</code>에서 위쪽과 왼쪽을 빼야 하는데, 빼는 두 영역이 왼쪽 위 모서리에서 겹친다는 걸 처음엔 못 봤다.</li>
+</ul>
+<p>그래서 직접 작은 격자를 그려 놓고 손으로 칸을 색칠해 봤다. <code>S(r1-1,c2)</code>(위쪽 띠)와 <code>S(r2,c1-1)</code>(왼쪽 띠)를 둘 다 빼면, 두 띠가 겹치는 왼쪽 위 사각형이 <strong>두 번 빠진다</strong>는 게 그제서야 눈에 들어왔다. 그 한 번을 다시 더해 줘야 한다.</p>
+<p>이게 결국 <strong>포함–배제</strong>다.</p>
+<p><code>넓이 = S(r2,c2) - S(r1-1,c2) - S(r2,c1-1) + S(r1-1,c1-1)</code></p>
+<p>마지막 <code>+ S(r1-1,c1-1)</code>이 “두 번 빠진 모서리를 되돌려 주는” 항이다. 이 한 항의 의미를 손으로 칠해 보고 나서야 2차원 누적 합이 비로소 이해됐다.</p>
+<h2 id="기본-코드-구조-2차원">기본 코드 구조 (2차원)</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="cpp"><code><span class="line"><span style="color:#F97583">int</span><span style="color:#E1E4E8"> a[</span><span style="color:#79B8FF">1001</span><span style="color:#E1E4E8">][</span><span style="color:#79B8FF">1001</span><span style="color:#E1E4E8">], S[</span><span style="color:#79B8FF">1001</span><span style="color:#E1E4E8">][</span><span style="color:#79B8FF">1001</span><span style="color:#E1E4E8">];</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">void</span><span style="color:#B392F0"> build</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#FFAB70"> n</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> m</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">; i </span><span style="color:#F97583">&#x3C;=</span><span style="color:#E1E4E8"> n; i</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">        for</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> j </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">; j </span><span style="color:#F97583">&#x3C;=</span><span style="color:#E1E4E8"> m; j</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">            S[i][j] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> a[i][j] </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> S[i</span><span style="color:#F97583">-</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">][j] </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> S[i][j</span><span style="color:#F97583">-</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">-</span><span style="color:#E1E4E8"> S[i</span><span style="color:#F97583">-</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">][j</span><span style="color:#F97583">-</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">];</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// (r1,c1) ~ (r2,c2) 직사각형 합</span></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#B392F0"> rectSum</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#FFAB70"> r1</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> c1</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> r2</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> c2</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> S[r2][c2] </span><span style="color:#F97583">-</span><span style="color:#E1E4E8"> S[r1</span><span style="color:#F97583">-</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">][c2] </span><span style="color:#F97583">-</span><span style="color:#E1E4E8"> S[r2][c1</span><span style="color:#F97583">-</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> S[r1</span><span style="color:#F97583">-</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">][c1</span><span style="color:#F97583">-</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">];</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h1 id="차분-반대-방향">차분 (반대 방향)</h1>
+<p>누적 합의 짝으로 차분(difference array, imos법) 이 있다. “구간에 일괄로 값을 더하는” 연산이 여러 번 들어올 때, 시작 지점에 <code>+v</code>, 끝 다음 지점에 <code>-v</code>만 기록해 두고 마지막에 한 번 누적 합을 돌리면 모든 구간 업데이트가 <code>O(N + Q)</code>에 끝난다.</p> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#누적-합" data-astro-cid-fzx4jmue>누적 합</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#1차원-누적-합" data-astro-cid-fzx4jmue>1차원 누적 합</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#기본-코드-구조" data-astro-cid-fzx4jmue>기본 코드 구조</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#2차원-누적-합" data-astro-cid-fzx4jmue>2차원 누적 합</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#기본-코드-구조-2차원" data-astro-cid-fzx4jmue>기본 코드 구조 (2차원)</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#차분-반대-방향" data-astro-cid-fzx4jmue>차분 (반대 방향)</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/algo-prefix-sum/";
+const pageId = "algo-prefix-sum";
+const pageTitle = "누적 합 (Prefix Sum) 정리";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

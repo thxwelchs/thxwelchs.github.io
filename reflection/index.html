@@ -1,0 +1,193 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Java Reflection</title><meta name="description" content="Java Reflection 객체를 통해서 그 객체의 클래스 정보를 분석해내는 프로그래밍 기법 을 의미합니다. 위키백과에서는 컴퓨터 과학에서의 Reflection(반영)을 &#34;런타임 시점에 자신의 구조와 행위를 관리하고 수정할 수 있는 프로세스&#34; 라고 설명합니다. <br"><link rel="canonical" href="https://thxwelchs.github.io/reflection/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="Java Reflection"><meta property="og:description" content="Java Reflection 객체를 통해서 그 객체의 클래스 정보를 분석해내는 프로그래밍 기법 을 의미합니다. 위키백과에서는 컴퓨터 과학에서의 Reflection(반영)을 &#34;런타임 시점에 자신의 구조와 행위를 관리하고 수정할 수 있는 프로세스&#34; 라고 설명합니다. <br"><meta property="og:url" content="https://thxwelchs.github.io/reflection/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/reflection.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Java Reflection"><meta name="twitter:description" content="Java Reflection 객체를 통해서 그 객체의 클래스 정보를 분석해내는 프로그래밍 기법 을 의미합니다. 위키백과에서는 컴퓨터 과학에서의 Reflection(반영)을 &#34;런타임 시점에 자신의 구조와 행위를 관리하고 수정할 수 있는 프로세스&#34; 라고 설명합니다. <br"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/reflection.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>Java Reflection</h1> <div class="meta" data-astro-cid-fzx4jmue> 2016-08-22 · 엔지니어링  </div> <img class="cover" src="/img/covers/eng/reflection.png" alt="Java Reflection" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <h1 id="java-reflection">Java Reflection</h1>
+<p><strong>객체를 통해서 그 객체의 클래스 정보를 분석해내는 프로그래밍 기법</strong>을 의미합니다.</p>
+<p>위키백과에서는 컴퓨터 과학에서의 Reflection(반영)을 <strong>“런타임 시점에 자신의 구조와 행위를 관리하고 수정할 수 있는 프로세스”</strong> 라고 설명합니다.</p>
+<br>
+<h2 id="그래도-잘-이해가-안-가는-reflection">그래도 잘 이해가 안 가는 Reflection?</h2>
+<p>맞습니다. 사전적인 의미만 가지고는 잘 와닿지 않는 것 같습니다. 뭐든 예를 들어보는 게 이해가 제일 잘 됐던 것 같아서, 이번에도 예를 들어보겠습니다.</p>
+<p>자바로 코드를 작성해본 사람이라면 다 아시다시피, Java는 컴파일이 필요한 언어입니다. 우리가 작성한 <code>.java</code> 소스 파일을 그대로 실행하는 게 아니라, <strong>자바 컴파일러(<code>javac</code>)가 먼저 <code>.class</code> 바이트코드(bytecode) 파일로 변환</strong>하고, 실행할 땐 그 <code>.class</code>를 <strong>JVM이 읽어서</strong> 돌립니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Hello.java  --(javac)-->  Hello.class  --(java/JVM)-->  실행</span></span>
+<span class="line"><span>  소스 코드        컴파일       바이트코드      실행</span></span></code></pre>
+<p>이 과정에서 핵심은 <strong>타입이 컴파일 시점에 다 정해진다</strong>는 점입니다. 즉 Java는 기본적으로 정적인 영역에서 타입이 결정되는 언어입니다.</p>
+<p>그런데 가끔은 <strong>프로그램을 실행해봐야</strong> 어떤 클래스를 써야 할지 알게 되는 경우가 있습니다. 예를 들어 설정 파일에 적힌 클래스 이름(문자열)으로 객체를 만들어야 할 때처럼요. 이러면 코드를 짤 때는 그게 무슨 클래스일지 모르니, 평소처럼 <code>new 타입()</code>이라고 미리 적어둘 수가 없습니다.</p>
+<p>이럴 때 사용하는 개념이 바로 <strong>Reflection</strong>입니다. 객체나 클래스 이름만 있으면, 런타임에 그 클래스의 필드·메서드·생성자를 들여다보고, 심지어 호출까지 할 수 있게 해줍니다.</p>
+<p><img src="/img/reflection/reflection-concept-v2.png" alt="Reflection 개념도 - 내 클래스를 런타임에 들여다보고 다루기"></p>
+<br>
+<h2 id="코드로-보기">코드로 보기</h2>
+<p>직관적인 이해를 위해 코드로 이해해보겠습니다. 간단한 클래스 하나를 두고 Reflection으로 분석해봅니다. 먼저 분석 대상입니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> Person</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#E1E4E8"> String name;</span></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#F97583"> int</span><span style="color:#E1E4E8"> age;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#B392F0"> Person</span><span style="color:#E1E4E8">(String </span><span style="color:#FFAB70">name</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> age</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#79B8FF">        this</span><span style="color:#E1E4E8">.name </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> name;</span></span>
+<span class="line"><span style="color:#79B8FF">        this</span><span style="color:#E1E4E8">.age </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> age;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#E1E4E8"> String </span><span style="color:#B392F0">greet</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> name </span><span style="color:#F97583">+</span><span style="color:#9ECBFF"> "님 안녕하세요 ("</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> age </span><span style="color:#F97583">+</span><span style="color:#9ECBFF"> "살)"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#E1E4E8"> String </span><span style="color:#B392F0">secret</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#9ECBFF"> "내 비밀 이름은 "</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> name;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>이제 이 <code>Person</code>을, <strong>타입을 직접 쓰지 않고</strong> 문자열 이름과 Reflection만으로 다뤄보겠습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> java.lang.reflect.</span><span style="color:#79B8FF">*</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">public</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> ReflectDemo</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#F97583"> static</span><span style="color:#F97583"> void</span><span style="color:#B392F0"> main</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">String</span><span style="color:#E1E4E8">[] </span><span style="color:#FFAB70">args</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">throws</span><span style="color:#E1E4E8"> Exception {</span></span>
+<span class="line"><span style="color:#6A737D">        // 1. 문자열 이름만으로 Class 객체 얻기</span></span>
+<span class="line"><span style="color:#E1E4E8">        Class&#x3C;</span><span style="color:#F97583">?</span><span style="color:#E1E4E8">> clazz </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Class.</span><span style="color:#B392F0">forName</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"Person"</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">        System.out.</span><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"클래스 이름: "</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> clazz.</span><span style="color:#B392F0">getName</span><span style="color:#E1E4E8">());</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">        // 2. 필드 목록 들여다보기</span></span>
+<span class="line"><span style="color:#E1E4E8">        System.out.</span><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"--- 필드 목록 ---"</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#F97583">        for</span><span style="color:#E1E4E8"> (Field f </span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> clazz.</span><span style="color:#B392F0">getDeclaredFields</span><span style="color:#E1E4E8">()) {</span></span>
+<span class="line"><span style="color:#E1E4E8">            System.out.</span><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(f.</span><span style="color:#B392F0">getType</span><span style="color:#E1E4E8">().</span><span style="color:#B392F0">getSimpleName</span><span style="color:#E1E4E8">() </span><span style="color:#F97583">+</span><span style="color:#9ECBFF"> " "</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> f.</span><span style="color:#B392F0">getName</span><span style="color:#E1E4E8">());</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">        // 3. 런타임에 인스턴스 생성 + 메서드 호출</span></span>
+<span class="line"><span style="color:#E1E4E8">        Constructor&#x3C;</span><span style="color:#F97583">?</span><span style="color:#E1E4E8">> ctor </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> clazz.</span><span style="color:#B392F0">getDeclaredConstructor</span><span style="color:#E1E4E8">(String.class, int.class);</span></span>
+<span class="line"><span style="color:#E1E4E8">        Object person </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> ctor.</span><span style="color:#B392F0">newInstance</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"welchs"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">30</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">        Method greet </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> clazz.</span><span style="color:#B392F0">getDeclaredMethod</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"greet"</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">        System.out.</span><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"--- greet() 호출 ---"</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">        System.out.</span><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(greet.</span><span style="color:#B392F0">invoke</span><span style="color:#E1E4E8">(person));</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">        // 4. private 멤버에 강제로 접근</span></span>
+<span class="line"><span style="color:#E1E4E8">        Field nameField </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> clazz.</span><span style="color:#B392F0">getDeclaredField</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"name"</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">        nameField.</span><span style="color:#B392F0">setAccessible</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">true</span><span style="color:#E1E4E8">);   </span><span style="color:#6A737D">// private 접근 제한 풀기</span></span>
+<span class="line"><span style="color:#E1E4E8">        System.out.</span><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"--- private 필드 강제 접근 ---"</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">        System.out.</span><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"name = "</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> nameField.</span><span style="color:#B392F0">get</span><span style="color:#E1E4E8">(person));</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        Method secret </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> clazz.</span><span style="color:#B392F0">getDeclaredMethod</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"secret"</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">        secret.</span><span style="color:#B392F0">setAccessible</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">true</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">        System.out.</span><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(secret.</span><span style="color:#B392F0">invoke</span><span style="color:#E1E4E8">(person));</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>실제로 실행하면 이렇게 나옵니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>클래스 이름: Person</span></span>
+<span class="line"><span>--- 필드 목록 ---</span></span>
+<span class="line"><span>String name</span></span>
+<span class="line"><span>int age</span></span>
+<span class="line"><span>--- greet() 호출 ---</span></span>
+<span class="line"><span>welchs님 안녕하세요 (30살)</span></span>
+<span class="line"><span>--- private 필드 강제 접근 ---</span></span>
+<span class="line"><span>name = welchs</span></span>
+<span class="line"><span>내 비밀 이름은 welchs</span></span></code></pre>
+<p><code>Person</code>이라는 타입을 코드에 한 번도 직접 쓰지 않고, <strong>문자열 <code>"Person"</code> 하나로</strong> 객체를 만들고 메서드를 호출했습니다. 심지어 <code>private</code>으로 막아둔 <code>name</code> 필드와 <code>secret()</code> 메서드까지 <code>setAccessible(true)</code>로 접근해버렸습니다. 이게 Reflection의 힘입니다.</p>
+<blockquote>
+<p>처음 <code>setAccessible(true)</code>로 private 필드가 그냥 열리는 걸 봤을 때, 신기하면서도 한편으론 “이래도 되나?” 싶었습니다.</p>
+</blockquote>
+<br>
+<h2 id="reflection은-어디에-쓰일까">Reflection은 어디에 쓰일까?</h2>
+<p>“이걸 실무에서 직접 쓸 일이 있나?” 싶을 수도 있는데, 저는 오히려 리플렉션을 좀 더 고도화해서 써보고 싶어졌습니다. 게다가 우리가 매일 쓰는 프레임워크 상당수가 이미 내부에서 Reflection을 쓰고 있습니다.</p>
+<ul>
+<li><strong>Spring의 DI</strong>: 클래스 정보를 읽어 빈을 생성하고 의존성을 주입할 때</li>
+<li><strong>JSON 직렬화/역직렬화</strong>(Jackson 등): 필드 이름을 읽어 JSON 키와 매핑할 때</li>
+<li><strong>ORM</strong>(JPA/Hibernate): 엔티티의 필드를 읽어 컬럼과 매핑할 때</li>
+<li><strong>어노테이션 처리·테스트 프레임워크</strong>(JUnit 등): <code>@Test</code> 붙은 메서드를 찾아 실행할 때</li>
+</ul>
+<p>공통점은 모두 <strong>“컴파일 시점엔 어떤 타입이 올지 모른 채, 런타임에 범용적으로 다뤄야 하는”</strong> 상황이라는 점입니다. 그래서 프레임워크를 만드는 입장에선 Reflection이 거의 필수입니다.</p>
+<br>
+<h2 id="쓸-때-주의할-점">쓸 때 주의할 점</h2>
+<p>강력한 만큼 대가도 있습니다.</p>
+<ul>
+<li><strong>성능 비용</strong>: 직접 호출보다 느립니다. 매 호출마다 메타데이터를 거치기 때문입니다.</li>
+<li><strong>캡슐화 위반</strong>: <code>setAccessible(true)</code>로 private을 열 수 있다는 건, 반대로 <strong>내부 구현에 마음대로 손댈 수 있다</strong>는 뜻이라 위험할 수 있습니다.</li>
+<li><strong>컴파일 타임 안전성 상실</strong>: 메서드·필드를 문자열로 찾기 때문에, 이름을 오타 내면 컴파일은 통과하고 <strong>런타임에 가서야 터집니다</strong>.</li>
+</ul>
+<p>그래서 Reflection은 “애플리케이션 코드에서 남발하는 도구”라기보단, <strong>프레임워크나 라이브러리가 범용성을 위해 쓰는 도구</strong>에 가깝다고 생각합니다.</p>
+<br>
+<h2 id="그런데-리플렉션은-느리다-사실일까">그런데 “리플렉션은 느리다”, 사실일까?</h2>
+<p>“리플렉션은 느리니 쓰지 마라”는 말, 한 번쯤 들어보셨을 겁니다. 그런데 직접 재보면 <strong>평판만큼 극단적으로 느리진 않습니다.</strong></p>
+<p><img src="/img/reflection/reflection-perf-v3.png" alt="리플렉션, 정말 느릴까 - 통념 vs 실제 (Java 8 기준)"></p>
+<p>간단한 메서드를 직접 호출 vs 리플렉션으로 호출해(워밍업 후) 재봤습니다. 제 환경(Java 8)에선 직접 호출이 호출당 약 0.65ns, 리플렉션이 약 1.92ns로 <strong>3배쯤</strong> 차이가 났습니다. 잘 알려진 JMH 벤치마크에서도 대략 2배 수준으로 나옵니다.</p>
+<p>다만 솔직하게 짚을 게 있습니다. ‘몇 배’라는 숫자는 측정 방식에 따라 들쭉날쭉합니다. 직접 호출은 JIT가 인라인해서 거의 0에 수렴해버리기 때문에, 비율만 부풀어 보이기 쉽거든요. 중요한 건 <strong>절대 비용이 고작 몇 나노초</strong>라는 점입니다. 호출당 2ns 안팎이면 100만 번을 호출해도 수 밀리초고, 단순 성능만 놓고 보면 웬만한 애플리케이션에선 남발하지 않는 이상 크게 리스크가 있어 보이진 않습니다.</p>
+<h3 id="왜-생각보다-빠를까">왜 생각보다 빠를까?</h3>
+<p>“리플렉션 = 무조건 네이티브 호출이라 느림”이라고 알기 쉽지만, JVM은 생각보다 잘 만들어져 있습니다.</p>
+<ul>
+<li><strong>inflation</strong>: 같은 대상을 여러 번(기본 15회) 호출하면, JVM이 느린 네이티브 경로 대신 <strong>더 빠른 바이트코드 accessor를 즉석에서 생성</strong>해 갈아끼웁니다. 즉 자주 불리는 리플렉션은 생각보다 훨씬 빠릅니다.</li>
+<li><strong>JIT 워밍업</strong>: 거기에 JIT 최적화까지 더해지면, 반복 호출 구간에선 직접 호출과의 격차가 더 줄어듭니다.</li>
+<li><code>setAccessible(true)</code>로 접근 검사를 꺼두면 호출이 조금 더 빨라지기도 합니다.</li>
+</ul>
+<p>정리하면 “리플렉션은 느리다”는 건 사실 <strong>첫 호출이거나, 아주 빡빡하게 반복되는 일부 상황에 가까운 얘기</strong>입니다. 대부분의 코드에선 상황에 맞게 합리적으로 쓰는 한 괜찮습니다. 다만 같은 호출이 초당 수천만 번씩 도는 정도로 성능이 빠듯한 구간이라면, 그땐 리플렉션으로 얻은 <code>Method</code>·<code>Field</code> 객체를 캐싱하거나 직접 호출로 바꾸는 걸 고려하면 됩니다.</p>
+<br>
+<h1 id="결론">결론</h1>
+<p>Reflection은 한 줄로 말하면 <strong>“런타임에 클래스를 들여다보고 다루는 기능”</strong> 입니다. 정적 타입 언어인 Java에서 동적인 일을 할 수 있게 열어주는 통로인 셈입니다.</p>
+<p>평소엔 직접 쓸 일이 많지 않지만, 우리가 쓰는 프레임워크들이 “어떻게 내 클래스를 알아서 생성하고 주입하지?” 싶었다면 그 답의 상당 부분이 바로 이 Reflection입니다. 원리를 알아두면 프레임워크의 동작이 한결 덜 마법처럼 느껴집니다.</p>
+<br>
+<h1 id="참고">참고</h1>
+<blockquote>
+<ul>
+<li><a href="https://docs.oracle.com/javase/tutorial/reflect/">The Reflection API: Oracle Java Tutorials</a></li>
+<li>직접 호출 vs 리플렉션 비용은 Java 8에서 직접 측정 (warm 기준 약 2 ns/호출)</li>
+</ul>
+</blockquote> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#java-reflection" data-astro-cid-fzx4jmue>Java Reflection</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#그래도-잘-이해가-안-가는-reflection" data-astro-cid-fzx4jmue>그래도 잘 이해가 안 가는 Reflection?</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#코드로-보기" data-astro-cid-fzx4jmue>코드로 보기</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#reflection은-어디에-쓰일까" data-astro-cid-fzx4jmue>Reflection은 어디에 쓰일까?</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#쓸-때-주의할-점" data-astro-cid-fzx4jmue>쓸 때 주의할 점</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#그런데-리플렉션은-느리다-사실일까" data-astro-cid-fzx4jmue>그런데 “리플렉션은 느리다”, 사실일까?</a> </li><li class="lv2" data-astro-cid-fzx4jmue> <a href="#왜-생각보다-빠를까" data-astro-cid-fzx4jmue>왜 생각보다 빠를까?</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#결론" data-astro-cid-fzx4jmue>결론</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/reflection/";
+const pageId = "reflection";
+const pageTitle = "Java Reflection";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

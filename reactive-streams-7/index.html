@@ -1,0 +1,112 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>리액티브 스트림즈 7편 - Spring WebFlux와 논블로킹 스택</title><meta name="description" content="6편에서 Mono / Flux 등 Reactor의 상세 스펙에 대해 다루어봤었는데요, 이번에는 웹 계층에서의 동작 구현체인 Spring WebFlux에 대해 알아보겠습니다. Spring MVC와는 다른 Spring WebFlux WebFlux로 작성한 컨트롤러는 Spr"><link rel="canonical" href="https://thxwelchs.github.io/reactive-streams-7/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="리액티브 스트림즈 7편 - Spring WebFlux와 논블로킹 스택"><meta property="og:description" content="6편에서 Mono / Flux 등 Reactor의 상세 스펙에 대해 다루어봤었는데요, 이번에는 웹 계층에서의 동작 구현체인 Spring WebFlux에 대해 알아보겠습니다. Spring MVC와는 다른 Spring WebFlux WebFlux로 작성한 컨트롤러는 Spr"><meta property="og:url" content="https://thxwelchs.github.io/reactive-streams-7/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/reactive-streams-7.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="리액티브 스트림즈 7편 - Spring WebFlux와 논블로킹 스택"><meta name="twitter:description" content="6편에서 Mono / Flux 등 Reactor의 상세 스펙에 대해 다루어봤었는데요, 이번에는 웹 계층에서의 동작 구현체인 Spring WebFlux에 대해 알아보겠습니다. Spring MVC와는 다른 Spring WebFlux WebFlux로 작성한 컨트롤러는 Spr"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/reactive-streams-7.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>리액티브 스트림즈 7편 - Spring WebFlux와 논블로킹 스택</h1> <div class="meta" data-astro-cid-fzx4jmue> 2023-11-05 · 엔지니어링  · <a class="series-badge" href="/series/" data-astro-cid-fzx4jmue>시리즈 · 리액티브 스트림즈</a>  </div> <img class="cover" src="/img/covers/eng/reactive-streams-7.png" alt="리액티브 스트림즈 7편 - Spring WebFlux와 논블로킹 스택" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <p><a href="/reactive-streams-6/">6편</a>에서 <code>Mono</code>/<code>Flux</code> 등 Reactor의 상세 스펙에 대해 다루어봤었는데요, 이번에는 웹 계층에서의 동작 구현체인 Spring WebFlux에 대해 알아보겠습니다.</p>
+<h1 id="spring-mvc와는-다른-spring-webflux">Spring MVC와는 다른 Spring WebFlux</h1>
+<p>WebFlux로 작성한 컨트롤러는 Spring MVC와 모양이 비슷합니다. <code>@RestController</code>도 그대로 쓰지만, 반환 타입이 달라집니다. <code>User</code> 대신 <code>Mono&#x3C;User></code>, <code>List&#x3C;User></code> 대신 <code>Mono&#x3C;List&#x3C;User>></code> 혹은 상황에 따라 <code>Flux&#x3C;User></code>를 돌려줍니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#E1E4E8">@</span><span style="color:#F97583">RestController</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> UserController</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#F97583"> final</span><span style="color:#E1E4E8"> UserRepository repository;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">    UserController</span><span style="color:#E1E4E8">(UserRepository </span><span style="color:#FFAB70">repository</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#79B8FF">        this</span><span style="color:#E1E4E8">.repository </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> repository;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">GetMapping</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/users/{id}"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    Mono&#x3C;</span><span style="color:#F97583">User</span><span style="color:#E1E4E8">> </span><span style="color:#B392F0">getUser</span><span style="color:#E1E4E8">(@</span><span style="color:#F97583">PathVariable</span><span style="color:#E1E4E8"> String </span><span style="color:#FFAB70">id</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> repository.</span><span style="color:#B392F0">findById</span><span style="color:#E1E4E8">(id);</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">GetMapping</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/users"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    Flux&#x3C;</span><span style="color:#F97583">User</span><span style="color:#E1E4E8">> </span><span style="color:#B392F0">getUsers</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> repository.</span><span style="color:#B392F0">findAll</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>겉모습은 비슷한데, 밑단은 꽤 다릅니다.</p>
+<p><img src="/img/reactive-streams-7/webflux-stack-v1.png" alt="같은 @RestController 어노테이션을 써도 Spring MVC와 비슷해 보이지만 밑단이 다르다: MVC는 서블릿 컨테이너에서 요청마다 스레드를 점유하고, WebFlux는 네티 이벤트 루프에서 적은 스레드로 논블로킹 처리"></p>
+<p>Spring MVC는 서블릿 컨테이너(Tomcat) 위에서 요청 하나당 스레드 하나를 점유하는 방식입니다. 동시성이 스레드 풀 크기에 묶이지만, WebFlux는 기본적으로 네티(Netty)의 이벤트 루프 위에서 돕니다. 적은 수의 스레드로 많은 요청을 논블로킹으로 처리하니, 동시성이 스레드 수와 어느 정도 분리됩니다.</p>
+<h1 id="핵심은-전체가-논블로킹">핵심은 “전체가 논블로킹”</h1>
+<p>그렇다면 WebFlux로 바꾸기만 하면 빨라질까요? 여기서 가장 자주 오해하는 지점이 있습니다. “WebFlux로 바꾸면 빨라진다”가 아니라는 것입니다. WebFlux의 이점은 요청 처리 경로가 끝까지 논블로킹일 때만 제대로 나오는 것 같습니다. 만약 중간에 블로킹 호출(JPA, JDBC, RestTemplate)이 하나라도 끼면, 그 호출이 소중한 이벤트 루프 스레드를 점유하게 되어 오히려 상황이 나빠질 수 있습니다.</p>
+<p>그래서 WebFlux를 도입하는 것은 단순히 “웹 계층만 바꾸는” 선택이 아니라, DB 접근까지 포함한 전 구간을 논블로킹으로 맞추겠다는 결정에 가깝습니다.</p>
+<h1 id="함수형-라우팅이라는-선택지">함수형 라우팅이라는 선택지</h1>
+<p>WebFlux는 함수형으로 요청 경로를 정의할 수 있는데요, 취향과 상황에 따라 고르면 됩니다. 라우팅을 코드로 조립한다는 발상이 꽤 깔끔하게 느껴졌습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#E1E4E8">@</span><span style="color:#F97583">Bean</span></span>
+<span class="line"><span style="color:#E1E4E8">RouterFunction</span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8">ServerResponse</span><span style="color:#F97583">></span><span style="color:#B392F0"> routes</span><span style="color:#E1E4E8">(UserHandler handler) {</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> RouterFunctions</span></span>
+<span class="line"><span style="color:#E1E4E8">        .</span><span style="color:#B392F0">route</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">GET</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/users/{id}"</span><span style="color:#E1E4E8">), handler</span><span style="color:#F97583">::</span><span style="color:#E1E4E8">getUser)</span></span>
+<span class="line"><span style="color:#E1E4E8">        .</span><span style="color:#B392F0">andRoute</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">GET</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/users"</span><span style="color:#E1E4E8">), handler</span><span style="color:#F97583">::</span><span style="color:#E1E4E8">getUsers);</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h1 id="참고">참고</h1>
+<blockquote>
+<ul>
+<li>김중철 역, <em>실전! 스프링 5를 활용한 리액티브 프로그래밍</em> (원서: <em>Hands-On Reactive Programming in Spring 5</em>)</li>
+<li><a href="https://docs.spring.io/spring-framework/reference/web/webflux.html">Spring WebFlux Reference</a></li>
+<li>토비의 봄 TV: <a href="https://www.youtube.com/watch?v=ScH7NZU_zvk">(8) WebFlux</a> · <a href="https://www.youtube.com/watch?v=ExUfZkh7Puk">(5) 비동기 RestTemplate과 비동기 MVC/Servlet</a></li>
+</ul>
+</blockquote> </div> <section class="series-foot" data-astro-cid-fzx4jmue> <p class="sf-h" data-astro-cid-fzx4jmue> <span class="sf-label" data-astro-cid-fzx4jmue>시리즈</span> <a href="/series/" data-astro-cid-fzx4jmue>리액티브 스트림즈</a> <span class="sf-count" data-astro-cid-fzx4jmue>전 9편</span> </p> <ol class="sf-list" data-astro-cid-fzx4jmue> <li data-astro-cid-fzx4jmue> <a href="/reactive-streams-1/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>01</span> <span class="sf-text" data-astro-cid-fzx4jmue>리액티브란 무엇인가, 옵저버 패턴에서 백프레셔로</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-2/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>02</span> <span class="sf-text" data-astro-cid-fzx4jmue>명세와 백프레셔, 네 개의 인터페이스</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-3/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>03</span> <span class="sf-text" data-astro-cid-fzx4jmue>직접 만들어보기, pull에서 push까지</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-4/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>04</span> <span class="sf-text" data-astro-cid-fzx4jmue>백프레셔, 흐름을 누가 통제하는가</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-5/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>05</span> <span class="sf-text" data-astro-cid-fzx4jmue>구현체들 둘러보기</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-6/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>06</span> <span class="sf-text" data-astro-cid-fzx4jmue>Project Reactor 입문, Flux와 Mono</span> <span class="sf-tag" data-astro-cid-fzx4jmue>이전</span>   </a> </li><li class="cur" data-astro-cid-fzx4jmue> <a href="/reactive-streams-7/" aria-current="page" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>07</span> <span class="sf-text" data-astro-cid-fzx4jmue>Spring WebFlux와 논블로킹 스택</span>  <span class="sf-tag cur" data-astro-cid-fzx4jmue>현재 글</span>  </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-8/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>08</span> <span class="sf-text" data-astro-cid-fzx4jmue>끝까지 논블로킹, 그리고 한계</span>   <span class="sf-tag" data-astro-cid-fzx4jmue>다음</span> </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-9/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>09</span> <span class="sf-text" data-astro-cid-fzx4jmue>가상 스레드와 리액티브의 미래</span>    </a> </li> </ol> </section> <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#spring-mvc와는-다른-spring-webflux" data-astro-cid-fzx4jmue>Spring MVC와는 다른 Spring WebFlux</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#핵심은-전체가-논블로킹" data-astro-cid-fzx4jmue>핵심은 “전체가 논블로킹”</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#함수형-라우팅이라는-선택지" data-astro-cid-fzx4jmue>함수형 라우팅이라는 선택지</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/reactive-streams-7/";
+const pageId = "reactive-streams-7";
+const pageTitle = "리액티브 스트림즈 7편 - Spring WebFlux와 논블로킹 스택";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

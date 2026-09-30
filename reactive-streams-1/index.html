@@ -1,0 +1,108 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>리액티브 스트림즈 1편 - 리액티브란 무엇인가, 옵저버 패턴에서 백프레셔로</title><meta name="description" content="요즘 스터디로 실전! 스프링 5를 활용한 리액티브 프로그래밍 (원서 Hands-On Reactive Programming in Spring 5 )을 보고 있습니다. 개념이 만만치 않아서, 정리할 겸 시리즈로 남겨보려 합니다. 첫 편은 코드보다 &#34;리액티브가 대체 무엇이고"><link rel="canonical" href="https://thxwelchs.github.io/reactive-streams-1/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="리액티브 스트림즈 1편 - 리액티브란 무엇인가, 옵저버 패턴에서 백프레셔로"><meta property="og:description" content="요즘 스터디로 실전! 스프링 5를 활용한 리액티브 프로그래밍 (원서 Hands-On Reactive Programming in Spring 5 )을 보고 있습니다. 개념이 만만치 않아서, 정리할 겸 시리즈로 남겨보려 합니다. 첫 편은 코드보다 &#34;리액티브가 대체 무엇이고"><meta property="og:url" content="https://thxwelchs.github.io/reactive-streams-1/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/reactive-streams-1.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="리액티브 스트림즈 1편 - 리액티브란 무엇인가, 옵저버 패턴에서 백프레셔로"><meta name="twitter:description" content="요즘 스터디로 실전! 스프링 5를 활용한 리액티브 프로그래밍 (원서 Hands-On Reactive Programming in Spring 5 )을 보고 있습니다. 개념이 만만치 않아서, 정리할 겸 시리즈로 남겨보려 합니다. 첫 편은 코드보다 &#34;리액티브가 대체 무엇이고"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/reactive-streams-1.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>리액티브 스트림즈 1편 - 리액티브란 무엇인가, 옵저버 패턴에서 백프레셔로</h1> <div class="meta" data-astro-cid-fzx4jmue> 2022-04-10 · 엔지니어링  · <a class="series-badge" href="/series/" data-astro-cid-fzx4jmue>시리즈 · 리액티브 스트림즈</a>  </div> <img class="cover" src="/img/covers/eng/reactive-streams-1.png" alt="리액티브 스트림즈 1편 - 리액티브란 무엇인가, 옵저버 패턴에서 백프레셔로" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <p>요즘 스터디로 <em>실전! 스프링 5를 활용한 리액티브 프로그래밍</em>(원서 <em>Hands-On Reactive Programming in Spring 5</em>)을 보고 있습니다. 개념이 만만치 않아서, 정리할 겸 시리즈로 남겨보려 합니다. 첫 편은 코드보다 “리액티브가 대체 무엇이고, 그 핵심이 뭔가”부터 짚고 가보려고 합니다.</p>
+<h1 id="리액티브-프로그래밍이란">리액티브 프로그래밍이란</h1>
+<p>리액티브 프로그래밍이라는 말, 저만 어렵게 느껴지는 건지 모르겠지만, 솔직히 원론적인 의미 이상으로 받아들이기는 어려웠습니다. 😂 리액티브를 이해하기 전에, 먼저 기존의 프로그래밍 방식부터 보겠습니다. 우리가 보통 짜는 코드는 “지금 이 값을 줘”라고 필요할 때 당겨오는(pull) 명령형 프로그래밍이라고 표현합니다. 하지만 리액티브 프로그래밍은 방향이 정반대입니다. “값이 바뀌거나 흘러오면, 그때 이렇게 반응(react)해줘”를 미리 엮어두는 방식이라고 정리할 수 있을 것 같습니다.</p>
+<p>비유하면 엑셀, 스프레드시트가 떠오릅니다. <code>A1</code> 셀에 <code>=B1+C1</code>이라고 적어두면, 이후 <code>B1</code>이 바뀔 때마다 <code>A1</code>이 알아서 다시 계산됩니다. 내가 매번 “지금 더해줘”라고 부르지 않아도, 값의 변화가 흘러 내려가는 거죠. 이렇게 데이터의 흐름(stream)과 그 변화를 선언적으로 먼저 다뤄보는 게 리액티브의 감각을 깨우칠 수 있는 가장 첫 번째 걸음마일 것 같습니다! 😺</p>
+<h1 id="리액티브의-조상-아니-화석-그-자체인-옵저버-패턴">리액티브의 조상, 아니 화석 그 자체인 옵저버 패턴</h1>
+<p>그런데 리액티브의 발상이 완전히 새로운 방식은 아닙니다. 과거 객체지향에서부터 오래 써온 옵저버(Observer) 패턴이 리액티브의 친숙한 조상이거든요. 관찰 대상(Subject)의 상태가 바뀌면, 거기 등록해 둔 구독자(Observer)들에게 변화를 알려주는 구조입니다.</p>
+<p><img src="/img/reactive-streams-1/observer-pattern-v1.png" alt="옵저버 패턴: Subject가 상태 변화를 등록된 Observer들에게 통지(push)하는 구조와, 완료·에러 신호와 백프레셔가 없다는 한계"></p>
+<p>자바에서도 리스너, 이벤트 핸들러처럼 같은 모양을 늘 써왔습니다. 그런데 이 패턴만으로 충분했을까요? 옵저버 패턴엔 해결할 수 없는 빈 틈이 있었습니다.</p>
+<ul>
+<li>“이제 끝났다”(완료)나 “에러가 났다”라는 신호를 명확히 전달할 수 있는 표준이 없습니다.</li>
+<li>받는 쪽(구독자)가 느려도 그냥 계속 이벤트는 무한정 push 됩니다. 받는 속도를 조절하는 장치가 없습니다.</li>
+<li>여러 흐름을 변환하고 합치는(<code>map</code>·<code>filter</code>·<code>merge</code>) 합성적인 흐름의 표준이 없습니다.</li>
+</ul>
+<p>리액티브 스트림즈는 바로 이 옵저버 패턴에 완료·에러 신호와 받는 속도 조절, 합성을 더해 표준으로 다듬은 것이라고 보는 게 더 자연스러울 것 같습니다. 실제로 RxJava를 두고 “제대로 만든 옵저버 패턴”이라 부르기도 하는데, 그게 바로 그 이유입니다.</p>
+<h1 id="리액티브는-비동기-논블로킹">리액티브는 비동기? 논블로킹?</h1>
+<p>흔히 “리액티브 = 논블로킹”이라고 합니다. 물론 그 말도 완전히 틀린 말은 아니지만, 명세를 들여다보면 정체성이 좀 다릅니다. 리액티브 스트림즈는 스스로를 “비동기 스트림 처리와 논블로킹 백프레셔(backpressure)를 위한 표준”이라고 정의합니다.</p>
+<p>그러니까 근본은 백프레셔, 즉 흐름 제어입니다. 빠른 생산자가 느린 소비자를 덮치지 않도록, 소비자가 “나는 이만큼만 받을 수 있어”라고 받을 양을 정하는 것. 이게 리액티브 스트림즈를 그냥 “비동기”와 구분 짓는 진짜 정체성입니다.</p>
+<p>그럼 “논블로킹”은 뭘까요? 그 백프레셔(받을 양을 알리는 신호)가 블로킹 없이 이뤄져야 한다는 의미이지, “리액티브 = 논블로킹 I/O”라는 뜻은 아닙니다. 실제로 리액티브 스트림즈 파이프라인은 단일 스레드에서 동기적으로도 돌 수 있습니다. 받을 양을 소비자가 정한다는 것, 그게 핵심입니다.</p>
+<h1 id="그래서-리액티브-스트림즈란">그래서 리액티브 스트림즈란</h1>
+<p>여기까지가 “리액티브”라는 큰 그림이었다면, 이 시리즈의 제목이기도 한 리액티브 스트림즈(Reactive Streams)는 그 그림을 코드가 합의할 수 있게 못 박은 하나의 명세이자 약속이라고 볼 수 있습니다. 다시 한 줄로 정의하자면 비동기 스트림을 백프레셔와 함께 주고받는 방식을 표준 인터페이스로 정한 약속입니다.</p>
+<p>왜 굳이 표준이 필요했을까요? 리액티브가 인기를 끌면서 RxJava, Reactor 같은 라이브러리가 각자의 방식으로 비동기 스트림을 다뤘는데, 그 기술들의 핵심 역할은 같지만, 각자의 명세가 다르다는 게 문제였습니다. 그래서 “비동기 스트림을 주고받는 최소 공통 약속”을 정한 게 리액티브 스트림즈 명세(1.0, 2015년)입니다. 워낙 기본적인 명세가 되는 것이라 나중엔 JDK 9의 <code>java.util.concurrent.Flow</code>로 표준 라이브러리에까지 들어왔습니다.</p>
+<p>이 약속은 인터페이스 딱 네 개(<code>Publisher</code>·<code>Subscriber</code>·<code>Subscription</code>·<code>Processor</code>)로 이뤄지는데, 그 한가운데에 방금 본 백프레셔가 있습니다. 구체적인 인터페이스와 동작은 이후 <a href="/reactive-streams-2/">2편</a>에서 하나씩 뜯어보겠습니다.</p>
+<h1 id="리액티브-선언문">리액티브 선언문</h1>
+<p>마지막으로 시스템 차원의 큰 그림도 한 장으로 정리된 게 있습니다. 리액티브 선언문(Reactive Manifesto, 2014년에 정리됨)인데, 총 네 가지 성질에 대해 이야기합니다.</p>
+<p><img src="/img/reactive-streams-1/manifesto-v1.png" alt="리액티브 선언문의 네 성질: 메시지 기반을 토대로 탄력성·회복성을 얻고, 그 결과가 응답성으로 나타난다"></p>
+<ul>
+<li><strong>응답성(Responsive)</strong>: 가능한 한 빨리, 그리고 무엇보다 일정하게 응답한다. 빠를 때와 느릴 때가 들쭉날쭉하지 않고 응답 시간이 예측 가능한 게 핵심입니다. 사용자가 체감하는 최종 목표이자, 나머지 셋이 떠받쳐 만들어내는 결과이기도 합니다.</li>
+<li><strong>회복성(Resilient)</strong>: 일부가 실패해도 전체가 무너지지 않고 응답을 유지한다. 한 컴포넌트의 장애가 옆으로 번지지 않게 격리하고(isolation), 복구는 다른 컴포넌트에 맡겨 회복하는 식입니다.</li>
+<li><strong>탄력성(Elastic)</strong>: 부하가 늘고 줄어듦에 따라 자원을 늘리거나 줄여 대응한다. 특정 지점에 병목이 없어야 가능한데, 그래서 상태를 한곳에 묶지 않고 나눌 수 있는 설계가 전제됩니다.</li>
+<li><strong>메시지 기반(Message Driven)</strong>: 컴포넌트들을 비동기 메시지로 느슨하게 연결한다. 위 셋을 떠받치는 토대입니다. 비동기 메시지 전달이 위치 투명성(어디 있든 메시지로 통신)과 격리, 그리고 부하 관리를 가능하게 하는데, 바로 이 부하 관리 자리에서 우리가 본 백프레셔가 등장합니다.</li>
+</ul>
+<p>정리하면 메시지 기반이라는 토대 위에서 탄력성·회복성을 얻고, 그 결과가 사용자에겐 응답성으로 나타나는 구조입니다. 흥미롭게도 선언문조차 백프레셔를 “부하를 감당하는 수단”으로 콕 집어 언급합니다.</p>
+<h1 id="참고">참고</h1>
+<blockquote>
+<ul>
+<li>김중철 역, <em>실전! 스프링 5를 활용한 리액티브 프로그래밍</em> (원서: Oleh Dokuka·Igor Lozynskyi, <em>Hands-On Reactive Programming in Spring 5</em>)</li>
+<li><a href="https://www.reactive-streams.org/">Reactive Streams</a> · <a href="https://www.reactivemanifesto.org/">The Reactive Manifesto</a></li>
+<li>토비의 봄 TV: <a href="https://www.youtube.com/watch?v=8fenTR3KOJo">스프링 리액티브 프로그래밍 (1) Reactive Streams</a> (리액티브 스트림즈 개념을 라이브 코딩으로 풀어주는 입문 영상)</li>
+</ul>
+</blockquote> </div> <section class="series-foot" data-astro-cid-fzx4jmue> <p class="sf-h" data-astro-cid-fzx4jmue> <span class="sf-label" data-astro-cid-fzx4jmue>시리즈</span> <a href="/series/" data-astro-cid-fzx4jmue>리액티브 스트림즈</a> <span class="sf-count" data-astro-cid-fzx4jmue>전 9편</span> </p> <ol class="sf-list" data-astro-cid-fzx4jmue> <li class="cur" data-astro-cid-fzx4jmue> <a href="/reactive-streams-1/" aria-current="page" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>01</span> <span class="sf-text" data-astro-cid-fzx4jmue>리액티브란 무엇인가, 옵저버 패턴에서 백프레셔로</span>  <span class="sf-tag cur" data-astro-cid-fzx4jmue>현재 글</span>  </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-2/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>02</span> <span class="sf-text" data-astro-cid-fzx4jmue>명세와 백프레셔, 네 개의 인터페이스</span>   <span class="sf-tag" data-astro-cid-fzx4jmue>다음</span> </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-3/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>03</span> <span class="sf-text" data-astro-cid-fzx4jmue>직접 만들어보기, pull에서 push까지</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-4/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>04</span> <span class="sf-text" data-astro-cid-fzx4jmue>백프레셔, 흐름을 누가 통제하는가</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-5/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>05</span> <span class="sf-text" data-astro-cid-fzx4jmue>구현체들 둘러보기</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-6/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>06</span> <span class="sf-text" data-astro-cid-fzx4jmue>Project Reactor 입문, Flux와 Mono</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-7/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>07</span> <span class="sf-text" data-astro-cid-fzx4jmue>Spring WebFlux와 논블로킹 스택</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-8/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>08</span> <span class="sf-text" data-astro-cid-fzx4jmue>끝까지 논블로킹, 그리고 한계</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-9/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>09</span> <span class="sf-text" data-astro-cid-fzx4jmue>가상 스레드와 리액티브의 미래</span>    </a> </li> </ol> </section> <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#리액티브-프로그래밍이란" data-astro-cid-fzx4jmue>리액티브 프로그래밍이란</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#리액티브의-조상-아니-화석-그-자체인-옵저버-패턴" data-astro-cid-fzx4jmue>리액티브의 조상, 아니 화석 그 자체인 옵저버 패턴</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#리액티브는-비동기-논블로킹" data-astro-cid-fzx4jmue>리액티브는 비동기? 논블로킹?</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#그래서-리액티브-스트림즈란" data-astro-cid-fzx4jmue>그래서 리액티브 스트림즈란</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#리액티브-선언문" data-astro-cid-fzx4jmue>리액티브 선언문</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/reactive-streams-1/";
+const pageId = "reactive-streams-1";
+const pageTitle = "리액티브 스트림즈 1편 - 리액티브란 무엇인가, 옵저버 패턴에서 백프레셔로";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

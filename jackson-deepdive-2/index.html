@@ -1,0 +1,250 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Jackson 딥다이브 - 2: Jackson 직접 구현해보기</title><meta name="description" content="1편에서 Jackson의 구현체 흐름을 따라가 봤습니다. 직렬화는 BeanPropertyWriter 가 getter로 값을 꺼내 JsonGenerator 로 흘리고, 캐시·스트리밍 같은 설계도 되어있는 걸 살펴봤는데요. 머리로만 이해한 걸 직접 구현해보면 좋을 것 같아"><link rel="canonical" href="https://thxwelchs.github.io/jackson-deepdive-2/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="Jackson 딥다이브 - 2: Jackson 직접 구현해보기"><meta property="og:description" content="1편에서 Jackson의 구현체 흐름을 따라가 봤습니다. 직렬화는 BeanPropertyWriter 가 getter로 값을 꺼내 JsonGenerator 로 흘리고, 캐시·스트리밍 같은 설계도 되어있는 걸 살펴봤는데요. 머리로만 이해한 걸 직접 구현해보면 좋을 것 같아"><meta property="og:url" content="https://thxwelchs.github.io/jackson-deepdive-2/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/jackson-deepdive-2.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Jackson 딥다이브 - 2: Jackson 직접 구현해보기"><meta name="twitter:description" content="1편에서 Jackson의 구현체 흐름을 따라가 봤습니다. 직렬화는 BeanPropertyWriter 가 getter로 값을 꺼내 JsonGenerator 로 흘리고, 캐시·스트리밍 같은 설계도 되어있는 걸 살펴봤는데요. 머리로만 이해한 걸 직접 구현해보면 좋을 것 같아"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/jackson-deepdive-2.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>Jackson 딥다이브 - 2: Jackson 직접 구현해보기</h1> <div class="meta" data-astro-cid-fzx4jmue> 2021-11-16 · 엔지니어링  · <a class="series-badge" href="/series/" data-astro-cid-fzx4jmue>시리즈 · Jackson 딥다이브</a>  </div> <img class="cover" src="/img/covers/eng/jackson-deepdive-2.png" alt="Jackson 딥다이브 - 2: Jackson 직접 구현해보기" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <p><a href="/jackson-deepdive-1/">1편</a>에서 Jackson의 구현체 흐름을 따라가 봤습니다. 직렬화는 <code>BeanPropertyWriter</code>가 getter로 값을 꺼내 <code>JsonGenerator</code>로 흘리고, 캐시·스트리밍 같은 설계도 되어있는 걸 살펴봤는데요. 머리로만 이해한 걸 직접 구현해보면 좋을 것 같아서, 직접 구현해보고 테스트 그리고 Jackson과 속도 비교까지 해보고 싶어 정리하게 되었습니다.</p>
+<h1 id="jackson-직접-구현해보기-json-직렬화기-구현">Jackson 직접 구현해보기 (JSON 직렬화기 구현)</h1>
+<p>Jackson의 동작 원리를 이전에 살펴봤을 때, <code>BeanSerializer</code>가 하는 일을 아주 단순화하면, <strong><code>getXxx()</code>/<code>isXxx()</code>를 찾아 호출하고 그 반환값을 JSON으로 쓰는 것</strong>이기 때문에, 그 역할에 집중해 공통 동작을 추상 클래스 하나에 모아봤습니다. getter를 찾는 <code>introspect</code>와, 객체를 <code>{"키":값,...}</code>으로 쓰는 <code>writeBean</code>이 핵심입니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#F97583">public</span><span style="color:#F97583"> abstract</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> ReflectiveJsonSerializer</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    static</span><span style="color:#F97583"> final</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> Property</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">        private</span><span style="color:#F97583"> final</span><span style="color:#E1E4E8"> String name;</span></span>
+<span class="line"><span style="color:#F97583">        private</span><span style="color:#F97583"> final</span><span style="color:#E1E4E8"> Method getter;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">        Property</span><span style="color:#E1E4E8">(String </span><span style="color:#FFAB70">name</span><span style="color:#E1E4E8">, Method </span><span style="color:#FFAB70">getter</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#79B8FF">            this</span><span style="color:#E1E4E8">.name </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> name;</span></span>
+<span class="line"><span style="color:#79B8FF">            this</span><span style="color:#E1E4E8">.getter </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> getter;</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        String </span><span style="color:#B392F0">name</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">            return</span><span style="color:#E1E4E8"> name;</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        Method </span><span style="color:#B392F0">getter</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">            return</span><span style="color:#E1E4E8"> getter;</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    // 프로퍼티 목록을 "매번 찾을지 / 캐시할지"만 하위 클래스가 정한다</span></span>
+<span class="line"><span style="color:#F97583">    protected</span><span style="color:#F97583"> abstract</span><span style="color:#E1E4E8"> List&#x3C;</span><span style="color:#F97583">Property</span><span style="color:#E1E4E8">> </span><span style="color:#B392F0">propertiesOf</span><span style="color:#E1E4E8">(Class&#x3C;</span><span style="color:#F97583">?</span><span style="color:#E1E4E8">> </span><span style="color:#FFAB70">type</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    // 클래스에서 getXxx()/isXxx()를 찾아 (이름, Method) 목록으로</span></span>
+<span class="line"><span style="color:#F97583">    protected</span><span style="color:#F97583"> static</span><span style="color:#E1E4E8"> List&#x3C;</span><span style="color:#F97583">Property</span><span style="color:#E1E4E8">> </span><span style="color:#B392F0">introspect</span><span style="color:#E1E4E8">(Class&#x3C;</span><span style="color:#F97583">?</span><span style="color:#E1E4E8">> </span><span style="color:#FFAB70">type</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">        List&#x3C;</span><span style="color:#F97583">Property</span><span style="color:#E1E4E8">> properties </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#E1E4E8"> ArrayList&#x3C;>();</span></span>
+<span class="line"><span style="color:#F97583">        for</span><span style="color:#E1E4E8"> (Method method </span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> type.</span><span style="color:#B392F0">getMethods</span><span style="color:#E1E4E8">()) {</span></span>
+<span class="line"><span style="color:#F97583">            if</span><span style="color:#E1E4E8"> (method.</span><span style="color:#B392F0">getParameterCount</span><span style="color:#E1E4E8">() </span><span style="color:#F97583">!=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">continue</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">            if</span><span style="color:#E1E4E8"> (method.</span><span style="color:#B392F0">getDeclaringClass</span><span style="color:#E1E4E8">() </span><span style="color:#F97583">==</span><span style="color:#E1E4E8"> Object.class) </span><span style="color:#F97583">continue</span><span style="color:#E1E4E8">;   </span><span style="color:#6A737D">// getClass() 제외</span></span>
+<span class="line"><span style="color:#E1E4E8">            String name </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> method.</span><span style="color:#B392F0">getName</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#F97583">            if</span><span style="color:#E1E4E8"> (name.</span><span style="color:#B392F0">startsWith</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"get"</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">&#x26;&#x26;</span><span style="color:#E1E4E8"> name.</span><span style="color:#B392F0">length</span><span style="color:#E1E4E8">() </span><span style="color:#F97583">></span><span style="color:#79B8FF"> 3</span><span style="color:#F97583"> &#x26;&#x26;</span><span style="color:#E1E4E8"> method.</span><span style="color:#B392F0">getReturnType</span><span style="color:#E1E4E8">() </span><span style="color:#F97583">!=</span><span style="color:#E1E4E8"> void.class) {</span></span>
+<span class="line"><span style="color:#E1E4E8">                properties.</span><span style="color:#B392F0">add</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">new</span><span style="color:#B392F0"> Property</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">decapitalize</span><span style="color:#E1E4E8">(name.</span><span style="color:#B392F0">substring</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">3</span><span style="color:#E1E4E8">)), method));</span></span>
+<span class="line"><span style="color:#E1E4E8">            } </span><span style="color:#F97583">else</span><span style="color:#F97583"> if</span><span style="color:#E1E4E8"> (name.</span><span style="color:#B392F0">startsWith</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"is"</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">&#x26;&#x26;</span><span style="color:#E1E4E8"> method.</span><span style="color:#B392F0">getReturnType</span><span style="color:#E1E4E8">() </span><span style="color:#F97583">==</span><span style="color:#E1E4E8"> boolean.class) {</span></span>
+<span class="line"><span style="color:#E1E4E8">                properties.</span><span style="color:#B392F0">add</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">new</span><span style="color:#B392F0"> Property</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">decapitalize</span><span style="color:#E1E4E8">(name.</span><span style="color:#B392F0">substring</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">)), method));  </span><span style="color:#6A737D">// boolean은 is</span></span>
+<span class="line"><span style="color:#E1E4E8">            }</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> properties;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    // 객체를 {"키":값,...} 로 (writeValue는 null/문자열/숫자/컬렉션/중첩객체로 분기)</span></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#F97583"> void</span><span style="color:#B392F0"> writeBean</span><span style="color:#E1E4E8">(Object </span><span style="color:#FFAB70">bean</span><span style="color:#E1E4E8">, StringBuilder </span><span style="color:#FFAB70">out</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">throws</span><span style="color:#E1E4E8"> Exception {</span></span>
+<span class="line"><span style="color:#E1E4E8">        out.</span><span style="color:#B392F0">append</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'{'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#F97583">        boolean</span><span style="color:#E1E4E8"> first </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> true</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">        for</span><span style="color:#E1E4E8"> (Property p </span><span style="color:#F97583">:</span><span style="color:#B392F0"> propertiesOf</span><span style="color:#E1E4E8">(bean.</span><span style="color:#B392F0">getClass</span><span style="color:#E1E4E8">())) {</span></span>
+<span class="line"><span style="color:#E1E4E8">            Object value </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> p.</span><span style="color:#B392F0">getter</span><span style="color:#E1E4E8">().</span><span style="color:#B392F0">invoke</span><span style="color:#E1E4E8">(bean);</span></span>
+<span class="line"><span style="color:#F97583">            if</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">first) out.</span><span style="color:#B392F0">append</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">','</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">            first </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> false</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#B392F0">            writeString</span><span style="color:#E1E4E8">(p.</span><span style="color:#B392F0">name</span><span style="color:#E1E4E8">(), out);</span></span>
+<span class="line"><span style="color:#E1E4E8">            out.</span><span style="color:#B392F0">append</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">':'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#B392F0">            writeValue</span><span style="color:#E1E4E8">(value, out);</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">        out.</span><span style="color:#B392F0">append</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'}'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#6A737D">    // serialize(...), writeValue(...), writeString(...) 등은 생략</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>그리고 효율성 비교를 위해 구현체를 둘로 나눴습니다. <strong>리플렉션 정보를 캐시하지 않는 구현체와, 캐시하는 구현체.</strong> 차이는 <code>propertiesOf</code> 하나뿐인데, 캐시하지 않는 쪽은 직렬화할 때마다 <code>introspect</code>로 getter를 다시 찾게 되고, 캐시하는 구현체는 클래스별 목록을 한 번 찾고 재사용합니다(Jackson의 직렬화기 캐시처럼).</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#6A737D">// 캐시하지 않는 구현: 매 호출마다 다시 찾는다</span></span>
+<span class="line"><span style="color:#F97583">public</span><span style="color:#F97583"> final</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> NonCachedJsonSerializer</span><span style="color:#F97583"> extends</span><span style="color:#B392F0"> ReflectiveJsonSerializer</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">Override</span></span>
+<span class="line"><span style="color:#F97583">    protected</span><span style="color:#E1E4E8"> List&#x3C;</span><span style="color:#F97583">Property</span><span style="color:#E1E4E8">> </span><span style="color:#B392F0">propertiesOf</span><span style="color:#E1E4E8">(Class&#x3C;</span><span style="color:#F97583">?</span><span style="color:#E1E4E8">> </span><span style="color:#FFAB70">type</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#B392F0"> introspect</span><span style="color:#E1E4E8">(type);</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// 캐시 구현: 클래스별 목록을 한 번만 찾는다</span></span>
+<span class="line"><span style="color:#F97583">public</span><span style="color:#F97583"> final</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> CachedJsonSerializer</span><span style="color:#F97583"> extends</span><span style="color:#B392F0"> ReflectiveJsonSerializer</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#F97583"> final</span><span style="color:#E1E4E8"> Map&#x3C;Class&#x3C;</span><span style="color:#F97583">?</span><span style="color:#E1E4E8">>, List&#x3C;</span><span style="color:#F97583">Property</span><span style="color:#E1E4E8">>> cache </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#E1E4E8"> ConcurrentHashMap&#x3C;>();</span></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">Override</span></span>
+<span class="line"><span style="color:#F97583">    protected</span><span style="color:#E1E4E8"> List&#x3C;</span><span style="color:#F97583">Property</span><span style="color:#E1E4E8">> </span><span style="color:#B392F0">propertiesOf</span><span style="color:#E1E4E8">(Class&#x3C;</span><span style="color:#F97583">?</span><span style="color:#E1E4E8">> </span><span style="color:#FFAB70">type</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> cache.</span><span style="color:#B392F0">computeIfAbsent</span><span style="color:#E1E4E8">(type, ReflectiveJsonSerializer</span><span style="color:#F97583">::</span><span style="color:#E1E4E8">introspect);</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>지금 당장은 객체를 JSON으로 직렬화하는 기능만 있으면 됐기에, Jackson처럼 고도화하진 않고 단순화해서 구현했습니다. 실제로 두 구현으로 같은 객체를 직렬화해보면, 캐시 여부와 무관하게 같은 JSON이 나옵니다. 테스트로 각각 확인해보았습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#6A737D">// 키는 알파벳 순으로 고정. 두 구현은 캐시 여부만 다르고 출력은 동일하다</span></span>
+<span class="line"><span style="color:#F97583">private</span><span style="color:#F97583"> static</span><span style="color:#F97583"> final</span><span style="color:#E1E4E8"> String EXPECTED_JSON </span><span style="color:#F97583">=</span></span>
+<span class="line"><span style="color:#9ECBFF">        "{</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">active</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">:true,"</span><span style="color:#F97583"> +</span></span>
+<span class="line"><span style="color:#9ECBFF">        "</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">address</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">:{</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">city</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">:</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">Seoul</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">,</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">zipCode</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">:</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">04524</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">},"</span><span style="color:#F97583"> +</span></span>
+<span class="line"><span style="color:#9ECBFF">        "</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">age</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">:33,"</span><span style="color:#F97583"> +</span></span>
+<span class="line"><span style="color:#9ECBFF">        "</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">email</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">:</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">kim@example.com</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">,"</span><span style="color:#F97583"> +</span></span>
+<span class="line"><span style="color:#9ECBFF">        "</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">id</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">:7,"</span><span style="color:#F97583"> +</span></span>
+<span class="line"><span style="color:#9ECBFF">        "</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">name</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">:</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">kim</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">,"</span><span style="color:#F97583"> +</span></span>
+<span class="line"><span style="color:#9ECBFF">        "</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">roles</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">:[</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">ADMIN</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">,</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">USER</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">]}"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">@</span><span style="color:#F97583">Test</span></span>
+<span class="line"><span style="color:#F97583">void</span><span style="color:#E1E4E8"> 캐시하지</span><span style="color:#B392F0">_않는_구현이_예상_JSON_문자열을_그대로_만든다</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#E1E4E8">    String json </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> NonCachedJsonSerializer</span><span style="color:#E1E4E8">().</span><span style="color:#B392F0">serialize</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">sample</span><span style="color:#E1E4E8">());</span></span>
+<span class="line"><span style="color:#E1E4E8">    System.out.</span><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"NonCachedJsonSerializer => "</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> json);</span></span>
+<span class="line"><span style="color:#B392F0">    assertThat</span><span style="color:#E1E4E8">(json).</span><span style="color:#B392F0">isEqualTo</span><span style="color:#E1E4E8">(EXPECTED_JSON);</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">@</span><span style="color:#F97583">Test</span></span>
+<span class="line"><span style="color:#F97583">void</span><span style="color:#E1E4E8"> 캐시하는</span><span style="color:#B392F0">_구현이_예상_JSON_문자열을_그대로_만든다</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#E1E4E8">    String json </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> CachedJsonSerializer</span><span style="color:#E1E4E8">().</span><span style="color:#B392F0">serialize</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">sample</span><span style="color:#E1E4E8">());</span></span>
+<span class="line"><span style="color:#E1E4E8">    System.out.</span><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"CachedJsonSerializer    => "</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> json);</span></span>
+<span class="line"><span style="color:#B392F0">    assertThat</span><span style="color:#E1E4E8">(json).</span><span style="color:#B392F0">isEqualTo</span><span style="color:#E1E4E8">(EXPECTED_JSON);</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>찍어보면 출력은 이렇습니다(두 구현 동일).</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">"active"</span><span style="color:#E1E4E8">:</span><span style="color:#79B8FF">true</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">"address"</span><span style="color:#E1E4E8">:{</span><span style="color:#79B8FF">"city"</span><span style="color:#E1E4E8">:</span><span style="color:#9ECBFF">"Seoul"</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">"zipCode"</span><span style="color:#E1E4E8">:</span><span style="color:#9ECBFF">"04524"</span><span style="color:#E1E4E8">},</span><span style="color:#79B8FF">"age"</span><span style="color:#E1E4E8">:</span><span style="color:#79B8FF">33</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">"email"</span><span style="color:#E1E4E8">:</span><span style="color:#9ECBFF">"kim@example.com"</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">"id"</span><span style="color:#E1E4E8">:</span><span style="color:#79B8FF">7</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">"name"</span><span style="color:#E1E4E8">:</span><span style="color:#9ECBFF">"kim"</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">"roles"</span><span style="color:#E1E4E8">:[</span><span style="color:#9ECBFF">"ADMIN"</span><span style="color:#E1E4E8">,</span><span style="color:#9ECBFF">"USER"</span><span style="color:#E1E4E8">]}</span></span></code></pre>
+<p>키를 알파벳 순으로 고정했을 뿐, Jackson 출력과 내용은 동일했음(둘의 출력을 다시 <code>Map</code>으로 파싱해 비교했습니다).</p>
+<h1 id="벤치마킹-jackson-vs-자체-구현">벤치마킹, Jackson vs 자체 구현</h1>
+<p>그럼 성능은 어떨까요? 궁금해서 측정해봤습니다. <a href="https://github.com/openjdk/jmh">JMH</a>로 쟀고, 측정 과정은 이렇습니다.</p>
+<ul>
+<li>대상: <code>Sample</code>(필드 7개 + 중첩 객체 + 리스트) <strong>1만 건이 담긴 <code>List</code>를 통째로 직렬화</strong>.</li>
+<li>모드: 평균 시간(<code>AverageTime</code>), 단위 µs/op. 워밍업 2회, 측정 3회, 포크 1.</li>
+<li>환경: JDK 17, Jackson 2.12.5.</li>
+</ul>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#E1E4E8">@</span><span style="color:#F97583">BenchmarkMode</span><span style="color:#E1E4E8">(Mode.AverageTime)</span></span>
+<span class="line"><span style="color:#E1E4E8">@</span><span style="color:#F97583">OutputTimeUnit</span><span style="color:#E1E4E8">(TimeUnit.MICROSECONDS)</span></span>
+<span class="line"><span style="color:#E1E4E8">@</span><span style="color:#F97583">State</span><span style="color:#E1E4E8">(Scope.Thread)</span></span>
+<span class="line"><span style="color:#F97583">public</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> SerializationBenchmark</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#F97583"> static</span><span style="color:#F97583"> final</span><span style="color:#F97583"> int</span><span style="color:#E1E4E8"> SIZE </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 10_000</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#E1E4E8"> List&#x3C;</span><span style="color:#F97583">Sample</span><span style="color:#E1E4E8">> samples;</span></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#E1E4E8"> ObjectMapper jackson;</span></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#E1E4E8"> NonCachedJsonSerializer nonCached;</span></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#E1E4E8"> CachedJsonSerializer cached;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">Setup</span></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#F97583"> void</span><span style="color:#B392F0"> setUp</span><span style="color:#E1E4E8">() </span><span style="color:#F97583">throws</span><span style="color:#E1E4E8"> Exception {</span></span>
+<span class="line"><span style="color:#E1E4E8">        samples </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#E1E4E8"> ArrayList&#x3C;>(SIZE);</span></span>
+<span class="line"><span style="color:#F97583">        for</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">; i </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> SIZE; i</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">            samples.</span><span style="color:#B392F0">add</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">new</span><span style="color:#B392F0"> Sample</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#E1E4E8">                    i, </span><span style="color:#9ECBFF">"user"</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> i, </span><span style="color:#9ECBFF">"user"</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">+</span><span style="color:#9ECBFF"> "@example.com"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">                    (i </span><span style="color:#F97583">&#x26;</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">==</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">20</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> (i </span><span style="color:#F97583">%</span><span style="color:#79B8FF"> 50</span><span style="color:#E1E4E8">),</span></span>
+<span class="line"><span style="color:#E1E4E8">                    List.</span><span style="color:#B392F0">of</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"ROLE_"</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> (i </span><span style="color:#F97583">%</span><span style="color:#79B8FF"> 7</span><span style="color:#E1E4E8">), </span><span style="color:#9ECBFF">"GROUP_"</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> (i </span><span style="color:#F97583">%</span><span style="color:#79B8FF"> 13</span><span style="color:#E1E4E8">)),</span></span>
+<span class="line"><span style="color:#F97583">                    new</span><span style="color:#B392F0"> Address</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"city"</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> (i </span><span style="color:#F97583">%</span><span style="color:#79B8FF"> 100</span><span style="color:#E1E4E8">), String.</span><span style="color:#B392F0">format</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"%05d"</span><span style="color:#E1E4E8">, i </span><span style="color:#F97583">%</span><span style="color:#79B8FF"> 100000</span><span style="color:#E1E4E8">))));</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">        jackson </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> ObjectMapper</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">        nonCached </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> NonCachedJsonSerializer</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">        cached </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> CachedJsonSerializer</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">        jackson.</span><span style="color:#B392F0">writeValueAsString</span><span style="color:#E1E4E8">(samples);   </span><span style="color:#6A737D">// 캐시·직렬화기 워밍업</span></span>
+<span class="line"><span style="color:#E1E4E8">        cached.</span><span style="color:#B392F0">serialize</span><span style="color:#E1E4E8">(samples);</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">Benchmark</span></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#E1E4E8"> String </span><span style="color:#B392F0">jackson</span><span style="color:#E1E4E8">() </span><span style="color:#F97583">throws</span><span style="color:#E1E4E8"> Exception {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> jackson.</span><span style="color:#B392F0">writeValueAsString</span><span style="color:#E1E4E8">(samples);</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">Benchmark</span></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#E1E4E8"> String </span><span style="color:#B392F0">nonCached</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> nonCached.</span><span style="color:#B392F0">serialize</span><span style="color:#E1E4E8">(samples);</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">Benchmark</span></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#E1E4E8"> String </span><span style="color:#B392F0">cached</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> cached.</span><span style="color:#B392F0">serialize</span><span style="color:#E1E4E8">(samples);</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>워밍업·측정 횟수 같은 실행 옵션은 <code>build.gradle</code>의 <code>jmh { }</code>에 뒀습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="groovy"><code><span class="line"><span style="color:#E1E4E8">jmh {</span></span>
+<span class="line"><span style="color:#E1E4E8">    warmupIterations </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 2</span></span>
+<span class="line"><span style="color:#E1E4E8">    iterations </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 3</span></span>
+<span class="line"><span style="color:#E1E4E8">    fork </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 1</span></span>
+<span class="line"><span style="color:#E1E4E8">    benchmarkMode </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> [</span><span style="color:#9ECBFF">'avgt'</span><span style="color:#E1E4E8">]   </span><span style="color:#6A737D">// 호출 1회 평균 시간</span></span>
+<span class="line"><span style="color:#E1E4E8">    timeUnit </span><span style="color:#F97583">=</span><span style="color:#9ECBFF"> 'us'</span><span style="color:#6A737D">            // 대량(1만 건)이라 마이크로초 단위</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>결과는 이렇게 나왔습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>Benchmark                         Mode  Cnt     Score     Error  Units</span></span>
+<span class="line"><span>SerializationBenchmark.jackson    avgt    3  2856.586 ± 191.089  us/op</span></span>
+<span class="line"><span>SerializationBenchmark.cached     avgt    3  5063.837 ± 305.844  us/op</span></span>
+<span class="line"><span>SerializationBenchmark.nonCached  avgt    3  9081.485 ± 852.146  us/op</span></span></code></pre>
+<p>읽어보면, <strong>캐시하지 않는 구현(<code>nonCached</code>)은 Jackson보다 3배쯤 느렸습니다.</strong> 매 객체마다 getter를 다시 찾으니 당연한 결과였음. 그런데 <strong>프로퍼티만 캐시해도(<code>cached</code>) 1.8배 차이까지 좁혀졌습니다.</strong> “리플렉션이 느리다”기보다 “리플렉션을 매번 반복하는 게 느리다”에 가까웠던 거였습니다.</p>
+<p>그럼에도 Jackson이 여전히 더 빠른 건, 아마 앞에서 본 설계들이 겹겹이 깔려 있어서인 것 같습니다. 벤치마크 관점에서 다시 짚으면 이렇습니다.</p>
+<ul>
+<li><strong>스트리밍 코어</strong>: 토큰을 바이트·문자에 바로 써냅니다. 중간에 큰 문자열을 모았다 뱉지 않아 메모리 이동이 적습니다.</li>
+<li><strong>버퍼 재활용</strong>: 출력 버퍼(<code>byte[]</code>/<code>char[]</code>)를 스레드별로 돌려써서, 1만 건을 도는 동안 새 배열을 거의 할당하지 않습니다. GC 부담이 줄어듦.</li>
+<li><strong>타입별 전용 직렬화기</strong>: <code>String</code>·<code>long</code>·<code>boolean</code>을 각자 전용 경로로 바로 써냅니다. 저의 구현은 <code>writeValue</code>에서 매번 <code>instanceof</code>로 타입을 분기하는데, 그 비용이 없는 셈.</li>
+</ul>
+<p>저의 구현은 그냥 <code>StringBuilder</code>에 json 문자열을 이어붙이는 수준이라, 그래서 차이가 발생하는 것 같았습니다. 😅</p>
+<h1 id="정리">정리</h1>
+<p>직접 만들어보니, 리플렉션 직렬화기는 “리플렉션이 느리다”기보다 “매번 반복하는 게 느리다”에 가까웠음. 프로퍼티만 캐시해도 Jackson과의 격차가 3배에서 1.8배로 좁혀졌고, 그럼에도 남는 차이는 스트리밍 코어·버퍼 재활용·타입별 전용 직렬화기 같은 설계가 겹겹이 받치고 있어서였음. <a href="/jackson-deepdive-1/">1편</a>에서 글로 읽은 설계가 왜 거기 있는지를 숫자로 확인한 셈이었음. 다음 편에서는 이 구조를 바탕으로 내보내는 응답 객체와 받는 요청 객체를 어떻게 설계하는지로 넘어갑니다.</p>
+<h1 id="참고">참고</h1>
+<blockquote>
+<p><a href="https://github.com/FasterXML/jackson-databind/wiki">Jackson Databind: Documentation</a>
+<a href="https://fasterxml.github.io/jackson-databind/javadoc/2.12/">Jackson 2.12 javadoc (databind)</a>
+<a href="https://fasterxml.github.io/jackson-core/javadoc/2.12/">Jackson 2.12 javadoc (core)</a></p>
+</blockquote> </div> <section class="series-foot" data-astro-cid-fzx4jmue> <p class="sf-h" data-astro-cid-fzx4jmue> <span class="sf-label" data-astro-cid-fzx4jmue>시리즈</span> <a href="/series/" data-astro-cid-fzx4jmue>Jackson 딥다이브</a> <span class="sf-count" data-astro-cid-fzx4jmue>전 4편</span> </p> <ol class="sf-list" data-astro-cid-fzx4jmue> <li data-astro-cid-fzx4jmue> <a href="/jackson-deepdive-1/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>01</span> <span class="sf-text" data-astro-cid-fzx4jmue>구현체 동작원리 살펴보기</span> <span class="sf-tag" data-astro-cid-fzx4jmue>이전</span>   </a> </li><li class="cur" data-astro-cid-fzx4jmue> <a href="/jackson-deepdive-2/" aria-current="page" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>02</span> <span class="sf-text" data-astro-cid-fzx4jmue>Jackson 직접 구현해보기</span>  <span class="sf-tag cur" data-astro-cid-fzx4jmue>현재 글</span>  </a> </li><li data-astro-cid-fzx4jmue> <a href="/jackson-deepdive-3/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>03</span> <span class="sf-text" data-astro-cid-fzx4jmue>응답·요청 객체 설계</span>   <span class="sf-tag" data-astro-cid-fzx4jmue>다음</span> </a> </li><li data-astro-cid-fzx4jmue> <a href="/jackson-deepdive-4/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>04</span> <span class="sf-text" data-astro-cid-fzx4jmue>설정·어노테이션·함정</span>    </a> </li> </ol> </section> <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#jackson-직접-구현해보기-json-직렬화기-구현" data-astro-cid-fzx4jmue>Jackson 직접 구현해보기 (JSON 직렬화기 구현)</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#벤치마킹-jackson-vs-자체-구현" data-astro-cid-fzx4jmue>벤치마킹, Jackson vs 자체 구현</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#정리" data-astro-cid-fzx4jmue>정리</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/jackson-deepdive-2/";
+const pageId = "jackson-deepdive-2";
+const pageTitle = "Jackson 딥다이브 - 2: Jackson 직접 구현해보기";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

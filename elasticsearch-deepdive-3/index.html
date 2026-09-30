@@ -1,0 +1,137 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ElasticSearch 딥다이브 - 3: Query DSL과 스코어링</title><meta name="description" content="2편에서 역색인이 만들어지는 과정을 봤습니다. 이제 그 위에서 검색을 해볼 차례인데요. 이번 편은 ES의 검색 언어인 Query DSL에서 제일 자주 쓰는 것들, match와 term의 차이, bool 쿼리, 그리고 결과 순서를 정하는 스코어링(BM25)을 봅니다. m"><link rel="canonical" href="https://thxwelchs.github.io/elasticsearch-deepdive-3/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="ElasticSearch 딥다이브 - 3: Query DSL과 스코어링"><meta property="og:description" content="2편에서 역색인이 만들어지는 과정을 봤습니다. 이제 그 위에서 검색을 해볼 차례인데요. 이번 편은 ES의 검색 언어인 Query DSL에서 제일 자주 쓰는 것들, match와 term의 차이, bool 쿼리, 그리고 결과 순서를 정하는 스코어링(BM25)을 봅니다. m"><meta property="og:url" content="https://thxwelchs.github.io/elasticsearch-deepdive-3/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/elasticsearch-deepdive-3.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="ElasticSearch 딥다이브 - 3: Query DSL과 스코어링"><meta name="twitter:description" content="2편에서 역색인이 만들어지는 과정을 봤습니다. 이제 그 위에서 검색을 해볼 차례인데요. 이번 편은 ES의 검색 언어인 Query DSL에서 제일 자주 쓰는 것들, match와 term의 차이, bool 쿼리, 그리고 결과 순서를 정하는 스코어링(BM25)을 봅니다. m"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/elasticsearch-deepdive-3.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>ElasticSearch 딥다이브 - 3: Query DSL과 스코어링</h1> <div class="meta" data-astro-cid-fzx4jmue> 2022-09-17 · 엔지니어링  · <a class="series-badge" href="/series/" data-astro-cid-fzx4jmue>시리즈 · ElasticSearch 딥다이브</a>  </div> <img class="cover" src="/img/covers/eng/elasticsearch-deepdive-3.png" alt="ElasticSearch 딥다이브 - 3: Query DSL과 스코어링" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <p><a href="/elasticsearch-deepdive-2/">2편</a>에서 역색인이 만들어지는 과정을 봤습니다. 이제 그 위에서 검색을 해볼 차례인데요. 이번 편은 ES의 검색 언어인 Query DSL에서 제일 자주 쓰는 것들, match와 term의 차이, bool 쿼리, 그리고 결과 순서를 정하는 스코어링(BM25)을 봅니다.</p>
+<h1 id="match와-term-분석하느냐-마느냐">match와 term, 분석하느냐 마느냐</h1>
+<p>검색하다 제일 먼저 이해가 어려웠던 부분이 match와 term의 차이였습니다. 둘 다 “이 필드에서 이 값을 찾아줘”인데 동작이 미묘하게 다릅니다.</p>
+<ul>
+<li><code>match</code>: 검색어도 분석기에 태운 뒤 검색합니다. 그래서 전문 검색에 씁니다.</li>
+<li><code>term</code>: 검색어를 분석하지 않고 있는 그대로 term과 정확히 비교합니다. keyword·숫자·날짜 같은 정확일치에 씁니다.</li>
+</ul>
+<p>이 차이를 모르면 자주 헷갈리는 함정이 있습니다. text 필드에 term을 쓰는 경우입니다. <code>"title": "Quick Brown"</code>을 표준 분석기로 색인하면 역색인엔 소문자 <code>quick</code>, <code>brown</code>이 들어가 있습니다. 그런데 <code>term</code>으로 <code>"Quick"</code>을 찾으면, term은 분석을 안 하니 대문자 그대로 <code>Quick</code>을 찾고, 역색인엔 소문자 <code>quick</code>만 있어서 안 잡힙니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">GET /articles/_search</span></span>
+<span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "query"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "term"</span><span style="color:#E1E4E8">: { </span><span style="color:#79B8FF">"title"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Quick"</span><span style="color:#E1E4E8"> }</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>분명 있는 단어인데 왜 0건이 나올까요? 색인된 term은 소문자인데 term 쿼리는 분석을 안 하기 때문입니다. 그래서 text 필드를 정확히 매칭할 일이 있으면 보통 멀티 필드의 <code>title.keyword</code>(1편)에 term을 걸거나, 전문 검색이면 match를 씁니다. 정리하면 분석된 text엔 match, 분석 안 한 keyword엔 term이 짝이었습니다.</p>
+<h1 id="복합-조건은-bool로-엮는다">복합 조건은 bool로 엮는다</h1>
+<p>조건이 하나면 위처럼 끝이지만, 실무 검색은 보통 여러 개를 겹쳐 씁니다. 이걸 엮는 게 bool 쿼리인데, 네 가지 절(clause)로 묶습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">GET /products/_search</span></span>
+<span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "query"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "bool"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">      "must"</span><span style="color:#E1E4E8">:     [ { </span><span style="color:#79B8FF">"match"</span><span style="color:#E1E4E8">: { </span><span style="color:#79B8FF">"name"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"셔츠"</span><span style="color:#E1E4E8"> } } ],</span></span>
+<span class="line"><span style="color:#79B8FF">      "should"</span><span style="color:#E1E4E8">:   [ { </span><span style="color:#79B8FF">"match"</span><span style="color:#E1E4E8">: { </span><span style="color:#79B8FF">"name"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"면"</span><span style="color:#E1E4E8"> } } ],</span></span>
+<span class="line"><span style="color:#79B8FF">      "must_not"</span><span style="color:#E1E4E8">: [ { </span><span style="color:#79B8FF">"term"</span><span style="color:#E1E4E8">:  { </span><span style="color:#79B8FF">"status"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"sold_out"</span><span style="color:#E1E4E8"> } } ],</span></span>
+<span class="line"><span style="color:#79B8FF">      "filter"</span><span style="color:#E1E4E8">:   [ { </span><span style="color:#79B8FF">"range"</span><span style="color:#E1E4E8">: { </span><span style="color:#79B8FF">"price"</span><span style="color:#E1E4E8">: { </span><span style="color:#79B8FF">"lte"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">30000</span><span style="color:#E1E4E8"> } } } ]</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>각 절의 역할이 처음엔 안 외워졌는데, 점수에 영향을 주는지로 묶으니 그제야 정리가 됐습니다.</p>
+<ul>
+<li><code>must</code>: 반드시 만족해야 하고, 점수에 반영됩니다(AND).</li>
+<li><code>should</code>: 만족하면 점수가 올라갑니다. 선택 조건(OR에 가까움).</li>
+<li><code>must_not</code>: 만족하면 제외됩니다. 점수에 영향 없음.</li>
+<li><code>filter</code>: 반드시 만족해야 하지만 점수에는 영향이 없습니다.</li>
+</ul>
+<p>여기서 한 가지. must와 filter는 둘 다 “반드시”인데, 그럼 뭐가 다를까요? filter는 점수 계산을 안 하고 결과를 캐시할 수 있어 더 가볍습니다. 그래서 “연관성 점수가 필요한 조건”은 must, “그냥 거르기만 하면 되는 조건”(가격 범위, 카테고리, 상태값)은 filter에 두는 게 성능상 유리하기 때문에, 저는 정확일치 조건들은 거의 filter로 보내는 편입니다.</p>
+<p><code>should</code>에도 함정이 하나 있었습니다. <code>must</code>나 <code>filter</code>가 같이 있으면 <code>should</code>는 “맞으면 점수 가산” 정도라 하나도 안 맞아도 결과가 나오는데, <code>should</code>만 단독으로 쓰면 그중 최소 하나는 만족해야 합니다(<code>minimum_should_match</code>의 기본값이 상황에 따라 갈리는 거죠). 이걸 모르고 should를 사용하면 헷갈릴 수 있는 부분이었습니다.</p>
+<h1 id="점수는-어떻게-매겨지나-bm25">점수는 어떻게 매겨지나, BM25</h1>
+<p>match로 검색하면 결과에 <code>_score</code>가 붙어 내려옵니다. 그럼 이 점수는 무슨 기준으로 정해질까요? 이 점수 순으로 정렬도 이루어지게 되는데, ES는 5.0부터 BM25를 기본 유사도로 활용하게 됩니다(그 전엔 TF-IDF였음). 이름은 거창하지만 잘 살펴보면 다음과 같습니다.</p>
+<ul>
+<li>문서에 검색어가 많이 나올수록 점수가 오릅니다. 이게 term frequency인데, 무한정 오르진 않고 완만해집니다.</li>
+<li>그 단어가 전체 문서에서 드물수록 점수가 큽니다. 흔한 단어는 변별력이 없으니까요. 이것을 인버스 도큐먼트 프리퀀시(inverse document frequency)라고 부릅니다.</li>
+<li>문서가 너무 길면 약간 깎습니다. 긴 글은 단어가 많이 나오는 게 당연하니까요.</li>
+</ul>
+<p>기본 파라미터는 <code>k1 = 1.2</code>, <code>b = 0.75</code>였습니다. k1은 term frequency가 점수에 기여하는 상한 느낌이고, b는 문서 길이 보정을 얼마나 줄지를 정합니다. 보통은 기본값으로 충분한 듯했고, 점수가 의도와 다를 때나 수정이 필요합니다.</p>
+<p>점수가 왜 이렇게 나왔는지 궁금할 때, <code>explain</code>이라는 걸 활용하면 실행 계획을 통해 계산 과정을 그대로 살펴볼 수 있었습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">GET /articles/_search</span></span>
+<span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "explain"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">true</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "query"</span><span style="color:#E1E4E8">: { </span><span style="color:#79B8FF">"match"</span><span style="color:#E1E4E8">: { </span><span style="color:#79B8FF">"body"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"사과"</span><span style="color:#E1E4E8"> } }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>term frequency, idf, 길이 보정이 각각 얼마였는지 분해해서 보여줍니다. “이 문서가 왜 위에 떴지”, “왜 저 문서보다 점수가 낮지” 같은 의문이 들 때 <code>explain</code>을 활용해 실행 계획을 보는 것도 하나의 방법일 듯합니다.</p>
+<h1 id="term은-0건-match는-1건">term은 0건, match는 1건</h1>
+<p>앞에서 말한 term-match 차이, 진짜 그렇게 갈릴까요? 8.1.2에 직접 넣어봤습니다. <code>title</code>을 text로 색인하고(<code>"Quick Brown"</code>), 대문자 그대로 term으로 찾을 때와 소문자로 match할 때를 각각 요청해서 결과를 보면,</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span># term: 분석 안 함 (대문자 Quick 그대로 찾음)</span></span>
+<span class="line"><span>GET /articles/_search  { "query": { "term":  { "title": "Quick" } } }</span></span>
+<span class="line"><span># match: 검색어도 분석됨 (quick 으로 매칭)</span></span>
+<span class="line"><span>GET /articles/_search  { "query": { "match": { "title": "quick" } } }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>[term  title=Quick]  hits.total = 0                       (역색인엔 소문자 quick뿐, term은 분석을 안 함)</span></span>
+<span class="line"><span>[match title=quick]  hits.total = 1   _score = 0.2876821  (검색어도 분석돼 매칭됨)</span></span></code></pre>
+<p>term은 정말로 0건으로 검색되지 않는 것을 볼 수 있습니다. match로 잡힌 문서엔 <code>_score</code>가 붙어 내려오는데, 위에서 말한 BM25 점수가 이 경우엔 <code>0.2876821</code>로 찍혔습니다. 공식으로만 보던 게 실제 숫자 하나로 잡히니 한결 손에 잡혔습니다.</p>
+<h1 id="정리">정리</h1>
+<p>match는 검색어를 분석해 전문 검색에, term은 분석 없이 정확일치에 씁니다. text에 term을 걸면 분석 불일치로 안 잡히니 주의해야 했음. 복합 조건은 bool로 엮되, 점수가 필요 없는 거르기는 filter로 보내 가볍게 했습니다. 순서는 BM25가 term frequency·idf·문서 길이로 매기고, <code>explain</code>으로 그 계산을 직접 확인할 수 있었습니다. 검색이 기대와 다르게 나올 땐 아마 이 셋 중 하나가 어긋난 경우가 많지 싶습니다.</p>
+<h1 id="참고">참고</h1>
+<blockquote>
+<p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/8.1/query-dsl.html">Elasticsearch Reference: Query DSL</a>
+<a href="https://www.elastic.co/guide/en/elasticsearch/reference/8.1/query-dsl-bool-query.html">Elasticsearch Reference: Boolean query</a></p>
+</blockquote> </div> <section class="series-foot" data-astro-cid-fzx4jmue> <p class="sf-h" data-astro-cid-fzx4jmue> <span class="sf-label" data-astro-cid-fzx4jmue>시리즈</span> <a href="/series/" data-astro-cid-fzx4jmue>ElasticSearch 딥다이브</a> <span class="sf-count" data-astro-cid-fzx4jmue>전 6편</span> </p> <ol class="sf-list" data-astro-cid-fzx4jmue> <li data-astro-cid-fzx4jmue> <a href="/elasticsearch-deepdive-1/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>01</span> <span class="sf-text" data-astro-cid-fzx4jmue>문서 모델과 매핑</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/elasticsearch-deepdive-2/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>02</span> <span class="sf-text" data-astro-cid-fzx4jmue>역색인과 텍스트 분석</span> <span class="sf-tag" data-astro-cid-fzx4jmue>이전</span>   </a> </li><li class="cur" data-astro-cid-fzx4jmue> <a href="/elasticsearch-deepdive-3/" aria-current="page" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>03</span> <span class="sf-text" data-astro-cid-fzx4jmue>Query DSL과 스코어링</span>  <span class="sf-tag cur" data-astro-cid-fzx4jmue>현재 글</span>  </a> </li><li data-astro-cid-fzx4jmue> <a href="/elasticsearch-deepdive-4/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>04</span> <span class="sf-text" data-astro-cid-fzx4jmue>저장 구조와 매핑 파라미터</span>   <span class="sf-tag" data-astro-cid-fzx4jmue>다음</span> </a> </li><li data-astro-cid-fzx4jmue> <a href="/elasticsearch-deepdive-5/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>05</span> <span class="sf-text" data-astro-cid-fzx4jmue>분산 아키텍처와 실무 적용</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/elasticsearch-deepdive-6/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>06</span> <span class="sf-text" data-astro-cid-fzx4jmue>역색인을 Java로 직접 만들어보기</span>    </a> </li> </ol> </section> <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#match와-term-분석하느냐-마느냐" data-astro-cid-fzx4jmue>match와 term, 분석하느냐 마느냐</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#복합-조건은-bool로-엮는다" data-astro-cid-fzx4jmue>복합 조건은 bool로 엮는다</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#점수는-어떻게-매겨지나-bm25" data-astro-cid-fzx4jmue>점수는 어떻게 매겨지나, BM25</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#term은-0건-match는-1건" data-astro-cid-fzx4jmue>term은 0건, match는 1건</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#정리" data-astro-cid-fzx4jmue>정리</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/elasticsearch-deepdive-3/";
+const pageId = "elasticsearch-deepdive-3";
+const pageTitle = "ElasticSearch 딥다이브 - 3: Query DSL과 스코어링";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

@@ -1,0 +1,190 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>백준 2251 물통</title><meta name="description" content="문제 용량이 각각 A , B , C 인 물통 셋이 있다. 처음엔 C 만 가득 차 있고 A , B 는 비어 있다. 한 물통에서 다른 물통으로, 받는 쪽이 가득 차거나 주는 쪽이 빌 때까지 물을 부을 수 있다. 첫 번째 물통( A )이 비어 있을 때 세 번째 물통( C )"><link rel="canonical" href="https://thxwelchs.github.io/boj-2251-water-jugs/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="백준 2251 물통"><meta property="og:description" content="문제 용량이 각각 A , B , C 인 물통 셋이 있다. 처음엔 C 만 가득 차 있고 A , B 는 비어 있다. 한 물통에서 다른 물통으로, 받는 쪽이 가득 차거나 주는 쪽이 빌 때까지 물을 부을 수 있다. 첫 번째 물통( A )이 비어 있을 때 세 번째 물통( C )"><meta property="og:url" content="https://thxwelchs.github.io/boj-2251-water-jugs/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="백준 2251 물통"><meta name="twitter:description" content="문제 용량이 각각 A , B , C 인 물통 셋이 있다. 처음엔 C 만 가득 차 있고 A , B 는 비어 있다. 한 물통에서 다른 물통으로, 받는 쪽이 가득 차거나 주는 쪽이 빌 때까지 물을 부을 수 있다. 첫 번째 물통( A )이 비어 있을 때 세 번째 물통( C )"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>백준 2251 물통</h1> <div class="meta" data-astro-cid-fzx4jmue> 2021-12-29 · PS  </div> <img class="cover" src="/img/covers/ps-algorithm.jpg" alt="백준 2251 물통" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <h1 id="문제">문제</h1>
+<p>용량이 각각 <code>A</code>, <code>B</code>, <code>C</code>인 물통 셋이 있다. 처음엔 <code>C</code>만 가득 차 있고 <code>A</code>, <code>B</code>는 비어 있다. 한 물통에서 다른 물통으로, <strong>받는 쪽이 가득 차거나 주는 쪽이 빌 때까지</strong> 물을 부을 수 있다. <strong>첫 번째 물통(<code>A</code>)이 비어 있을 때 세 번째 물통(<code>C</code>)에 담겨 있을 수 있는 물의 양</strong>을 모두 구하면 된다.</p>
+<ul>
+<li><strong>입력</strong>: <code>A B C</code>(세 물통의 용량).</li>
+<li><strong>출력</strong>: <code>A</code>가 비었을 때 <code>C</code>에 가능한 물의 양을 오름차순으로 공백 구분 출력.</li>
+<li><strong>제한</strong>: 각 용량 ≤ 200.</li>
+</ul>
+<h1 id="접근">접근</h1>
+<p>세 물통의 물의 양 <code>(a, b, c)</code> 묶음을 하나의 <strong>상태</strong>로 본다. 한 상태에서 물을 한 번 부으면 다른 상태로 옮겨가니, 상태들을 노드로 두면 그래프 탐색(BFS) 문제가 된다.</p>
+<p>부을 수 있는 경우는 6가지다: <code>A→B, A→C, B→A, B→C, C→A, C→B</code>. 각 부음은 “받는 쪽 가득 차거나 주는 쪽 빌 때까지”라 결과 상태가 딱 정해진다. 방문 배열 <code>vis[a][b][c]</code>로 같은 상태를 두 번 안 보게 한다.</p>
+<p>BFS로 도달 가능한 모든 상태를 훑으면서, <strong><code>a == 0</code>인 상태를 만날 때마다 그때의 <code>c</code>를 답 목록에 모은다.</strong> 마지막에 정렬·중복 제거해서 출력하면 끝.</p>
+<h1 id="풀이">풀이</h1>
+<blockquote>
+<p>전체 코드: <a href="https://github.com/thxwelchs/algorithm/blob/master/%EB%B0%B1%EC%A4%80/2251.cpp">thxwelchs/algorithm</a></p>
+</blockquote>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="cpp"><code><span class="line"><span style="color:#F97583">#include</span><span style="color:#9ECBFF"> &#x3C;bits/stdc++.h></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">using</span><span style="color:#F97583"> namespace</span><span style="color:#B392F0"> std</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">typedef</span><span style="color:#E1E4E8"> tuple</span><span style="color:#F97583">&#x3C;int</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int></span><span style="color:#E1E4E8"> tiii;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#E1E4E8"> A, B, C;</span></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#E1E4E8"> vis[</span><span style="color:#79B8FF">201</span><span style="color:#E1E4E8">][</span><span style="color:#79B8FF">201</span><span style="color:#E1E4E8">][</span><span style="color:#79B8FF">201</span><span style="color:#E1E4E8">];</span></span>
+<span class="line"><span style="color:#E1E4E8">vector</span><span style="color:#F97583">&#x3C;int></span><span style="color:#E1E4E8"> ans;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// A -> B</span></span>
+<span class="line"><span style="color:#6A737D">// B -> A</span></span>
+<span class="line"><span style="color:#6A737D">// A -> C</span></span>
+<span class="line"><span style="color:#6A737D">// C -> A</span></span>
+<span class="line"><span style="color:#6A737D">// B -> C</span></span>
+<span class="line"><span style="color:#6A737D">// C -> B</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">pair</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#F97583">int</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#E1E4E8">> </span><span style="color:#B392F0">fill_water</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#FFAB70"> fromMax</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> toMax</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> from</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> to</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#F97583">   if</span><span style="color:#E1E4E8"> (from </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> to </span><span style="color:#F97583">></span><span style="color:#E1E4E8"> toMax)</span></span>
+<span class="line"><span style="color:#E1E4E8">   {</span></span>
+<span class="line"><span style="color:#F97583">      return</span><span style="color:#B392F0"> make_pair</span><span style="color:#E1E4E8">(from </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> to </span><span style="color:#F97583">-</span><span style="color:#E1E4E8"> toMax, toMax);</span></span>
+<span class="line"><span style="color:#E1E4E8">   }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">   return</span><span style="color:#B392F0"> make_pair</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, from </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> to);</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">void</span><span style="color:#B392F0"> bfs</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#E1E4E8">   queue</span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8">tiii</span><span style="color:#F97583">></span><span style="color:#E1E4E8"> q;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">   q.</span><span style="color:#B392F0">emplace</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, C);</span></span>
+<span class="line"><span style="color:#E1E4E8">   vis[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">][</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">][C] </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">   while</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">q.</span><span style="color:#B392F0">empty</span><span style="color:#E1E4E8">())</span></span>
+<span class="line"><span style="color:#E1E4E8">   {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">      tiii t </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> q.</span><span style="color:#B392F0">front</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">      q.</span><span style="color:#B392F0">pop</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">      auto</span><span style="color:#E1E4E8"> [a, b, c] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> t;</span><span style="color:#6A737D"> // structured binding</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">      if</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">a)</span></span>
+<span class="line"><span style="color:#E1E4E8">      {</span></span>
+<span class="line"><span style="color:#E1E4E8">         ans.</span><span style="color:#B392F0">push_back</span><span style="color:#E1E4E8">(c);</span></span>
+<span class="line"><span style="color:#E1E4E8">      }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">      pair</span><span style="color:#F97583">&#x3C;int</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int></span><span style="color:#E1E4E8"> atob </span><span style="color:#F97583">=</span><span style="color:#B392F0"> fill_water</span><span style="color:#E1E4E8">(A, B, a, b);</span></span>
+<span class="line"><span style="color:#F97583">      if</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">vis[atob.first][atob.second][c])</span></span>
+<span class="line"><span style="color:#E1E4E8">      {</span></span>
+<span class="line"><span style="color:#E1E4E8">         q.</span><span style="color:#B392F0">emplace</span><span style="color:#E1E4E8">(atob.first, atob.second, c);</span></span>
+<span class="line"><span style="color:#E1E4E8">         vis[atob.first][atob.second][c] </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">      }</span></span>
+<span class="line"><span style="color:#E1E4E8">      pair</span><span style="color:#F97583">&#x3C;int</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int></span><span style="color:#E1E4E8"> btoa </span><span style="color:#F97583">=</span><span style="color:#B392F0"> fill_water</span><span style="color:#E1E4E8">(B, A, b, a);</span></span>
+<span class="line"><span style="color:#F97583">      if</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">vis[btoa.second][btoa.first][c])</span></span>
+<span class="line"><span style="color:#E1E4E8">      {</span></span>
+<span class="line"><span style="color:#E1E4E8">         q.</span><span style="color:#B392F0">emplace</span><span style="color:#E1E4E8">(btoa.second, btoa.first, c);</span></span>
+<span class="line"><span style="color:#E1E4E8">         vis[btoa.second][btoa.first][c] </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">      }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">      pair</span><span style="color:#F97583">&#x3C;int</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int></span><span style="color:#E1E4E8"> atoc </span><span style="color:#F97583">=</span><span style="color:#B392F0"> fill_water</span><span style="color:#E1E4E8">(A, C, a, c);</span></span>
+<span class="line"><span style="color:#F97583">      if</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">vis[atoc.first][b][atoc.second])</span></span>
+<span class="line"><span style="color:#E1E4E8">      {</span></span>
+<span class="line"><span style="color:#E1E4E8">         q.</span><span style="color:#B392F0">emplace</span><span style="color:#E1E4E8">(atoc.first, b, atoc.second);</span></span>
+<span class="line"><span style="color:#E1E4E8">         vis[atoc.first][b][atoc.second] </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">      }</span></span>
+<span class="line"><span style="color:#E1E4E8">      pair</span><span style="color:#F97583">&#x3C;int</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int></span><span style="color:#E1E4E8"> ctoa </span><span style="color:#F97583">=</span><span style="color:#B392F0"> fill_water</span><span style="color:#E1E4E8">(C, A, c, a);</span></span>
+<span class="line"><span style="color:#F97583">      if</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">vis[ctoa.second][b][ctoa.first])</span></span>
+<span class="line"><span style="color:#E1E4E8">      {</span></span>
+<span class="line"><span style="color:#E1E4E8">         q.</span><span style="color:#B392F0">emplace</span><span style="color:#E1E4E8">(ctoa.second, b, ctoa.first);</span></span>
+<span class="line"><span style="color:#E1E4E8">         vis[ctoa.second][b][ctoa.first] </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">      }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">      pair</span><span style="color:#F97583">&#x3C;int</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int></span><span style="color:#E1E4E8"> btoc </span><span style="color:#F97583">=</span><span style="color:#B392F0"> fill_water</span><span style="color:#E1E4E8">(B, C, b, c);</span></span>
+<span class="line"><span style="color:#F97583">      if</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">vis[a][btoc.first][btoc.second])</span></span>
+<span class="line"><span style="color:#E1E4E8">      {</span></span>
+<span class="line"><span style="color:#E1E4E8">         vis[a][btoc.first][btoc.second] </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">         q.</span><span style="color:#B392F0">emplace</span><span style="color:#E1E4E8">(a, btoc.first, btoc.second);</span></span>
+<span class="line"><span style="color:#E1E4E8">      }</span></span>
+<span class="line"><span style="color:#E1E4E8">      pair</span><span style="color:#F97583">&#x3C;int</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int></span><span style="color:#E1E4E8"> ctob </span><span style="color:#F97583">=</span><span style="color:#B392F0"> fill_water</span><span style="color:#E1E4E8">(C, B, c, b);</span></span>
+<span class="line"><span style="color:#F97583">      if</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">vis[a][ctob.second][ctob.first])</span></span>
+<span class="line"><span style="color:#E1E4E8">      {</span></span>
+<span class="line"><span style="color:#E1E4E8">         vis[a][ctob.second][ctob.first] </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">         q.</span><span style="color:#B392F0">emplace</span><span style="color:#E1E4E8">(a, ctob.second, ctob.first);</span></span>
+<span class="line"><span style="color:#E1E4E8">      }</span></span>
+<span class="line"><span style="color:#E1E4E8">   }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">   sort</span><span style="color:#E1E4E8">(ans.</span><span style="color:#B392F0">begin</span><span style="color:#E1E4E8">(), ans.</span><span style="color:#B392F0">end</span><span style="color:#E1E4E8">());</span></span>
+<span class="line"><span style="color:#E1E4E8">   ans.</span><span style="color:#B392F0">erase</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">unique</span><span style="color:#E1E4E8">(ans.</span><span style="color:#B392F0">begin</span><span style="color:#E1E4E8">(), ans.</span><span style="color:#B392F0">end</span><span style="color:#E1E4E8">()), ans.</span><span style="color:#B392F0">end</span><span style="color:#E1E4E8">());</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">   for</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> n : ans)</span></span>
+<span class="line"><span style="color:#E1E4E8">   {</span></span>
+<span class="line"><span style="color:#E1E4E8">      cout </span><span style="color:#F97583">&#x3C;&#x3C;</span><span style="color:#E1E4E8"> n </span><span style="color:#F97583">&#x3C;&#x3C;</span><span style="color:#9ECBFF"> ' '</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">   }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#B392F0"> main</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#E1E4E8">   cin.</span><span style="color:#B392F0">tie</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">NULL</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">   cout.</span><span style="color:#B392F0">tie</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">NULL</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">   cin </span><span style="color:#F97583">>></span><span style="color:#E1E4E8"> A </span><span style="color:#F97583">>></span><span style="color:#E1E4E8"> B </span><span style="color:#F97583">>></span><span style="color:#E1E4E8"> C;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">   bfs</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">   return</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#문제" data-astro-cid-fzx4jmue>문제</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#접근" data-astro-cid-fzx4jmue>접근</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#풀이" data-astro-cid-fzx4jmue>풀이</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/boj-2251-water-jugs/";
+const pageId = "boj-2251-water-jugs";
+const pageTitle = "백준 2251 물통";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

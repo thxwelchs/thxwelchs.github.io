@@ -1,0 +1,138 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>React debugging 하기</title><meta name="description" content="안녕하세요 이번에는 React로 프론트엔드 개발할 때 Visual Studio Code + Debugger for Chrome 를 활용한 디버깅 하는 방법에 대해 알아보겠습니다. 이미 디버거를 잘 활용하고 계셨던 분이라면 굳이 이 포스팅을 보실 필요는 없으실 것 같습니"><link rel="canonical" href="https://thxwelchs.github.io/react-debug/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="React debugging 하기"><meta property="og:description" content="안녕하세요 이번에는 React로 프론트엔드 개발할 때 Visual Studio Code + Debugger for Chrome 를 활용한 디버깅 하는 방법에 대해 알아보겠습니다. 이미 디버거를 잘 활용하고 계셨던 분이라면 굳이 이 포스팅을 보실 필요는 없으실 것 같습니"><meta property="og:url" content="https://thxwelchs.github.io/react-debug/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/react-debug.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="React debugging 하기"><meta name="twitter:description" content="안녕하세요 이번에는 React로 프론트엔드 개발할 때 Visual Studio Code + Debugger for Chrome 를 활용한 디버깅 하는 방법에 대해 알아보겠습니다. 이미 디버거를 잘 활용하고 계셨던 분이라면 굳이 이 포스팅을 보실 필요는 없으실 것 같습니"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/react-debug.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container">  <div class="layout" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>React debugging 하기</h1> <div class="meta" data-astro-cid-fzx4jmue> 2020-02-11 · 엔지니어링  </div> <img class="cover" src="/img/covers/eng/react-debug.png" alt="React debugging 하기" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <p>안녕하세요 이번에는 React로 프론트엔드 개발할 때 Visual Studio Code + Debugger for Chrome 를 활용한 디버깅 하는 방법에 대해 알아보겠습니다.</p>
+<p><strong>이미 디버거를 잘 활용하고 계셨던 분이라면 굳이 이 포스팅을 보실 필요는 없으실 것 같습니다.</strong></p>
+<p><strong>디버깅</strong>은 코드에 브레이크포인트를 지정하여 프로그램 실행을 정지하고, 콜스택 등의 메모리에 저장된 값을 살펴보며, 실행을 재개하거나, 코드를 단계적으로 실행하는 등의 동작을 할 수 있게 해줍니다.</p>
+<p>저는 백엔드 개발을 할 때에는 주로 java 혹은 kotlin 언어를 다루기 때문에 IntelliJ를 많이 활용해서 debugger 로 디버깅을 했었지만</p>
+<p>정작 프론트엔드개발을 할 때에는 debugger를 활용한 디버깅은 하지 않았던 것 같습니다…</p>
+<p><img src="/img/react-debugging-Untitled.png" alt="img/react-deubgging-Untitled.png"></p>
+<p><br>
+어쨌든 디버거를 활용 안했던 지난 날을 지워버리고 지금부터라도 활용하는 방법을 알아보겠습니다.</p>
+<p>먼저 vscode의 extension을 하나 설치하셔야 하는데요</p>
+<p>vscode 확장 마켓플레이스에 가셔서 Debugger for Chrome을 검색 후 설치해주시면 됩니다.</p>
+<p><img src="/img/react-debugging-Code_qWC8oPm5wZ.png" alt="React%20Debugging/Code_qWC8oPm5wZ.png"></p>
+<p>이 확장프로그램은 특정 포트의 특정 경로에 로드된 JS 코드에 debugger를 listen 시킬 수 있습니다.</p>
+<p>설치를 하셨다면, 디버깅할 프론트엔드 프로젝트 루트 경로에 다음과 같은 파일명을 만들고 내용을 작성합니다.</p>
+<p><img src="/img/react-debugging-Untitled1.png" alt="React%20Debugging/Untitled%201.png"></p>
+<p>.vscode/launch.json</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">    "version"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"0.2.0"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "configurations"</span><span style="color:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#E1E4E8">        {</span></span>
+<span class="line"><span style="color:#79B8FF">            "type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"chrome"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">            "request"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"launch"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">            "name"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"chrome debugger"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">            "url"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"http://localhost:3000"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">            "webRoot"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"${workspaceFolder}/src"</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">    ]</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>url에 있는 port는 본인의 프론트엔드 개발 모드로 실행되는 port를 입력해주시면 됩니다. 저는 React 기본 포트인 <strong>3000</strong>으로 설정해주었습니다.</p>
+<p>이제 모든 설정은 끝났고 breakpoint 를 걸어 디버깅을 하는 테스트를 해보겠습니다.</p>
+<p>먼저 React app 을 <code>npm</code> 혹은 <code>yarn</code>으로 실행하여 줍니다.</p>
+<p>코드는 보시다시피 CRA 로 생성된 리액트 초기 코드인데요 테스트를 위해 임의의 변수를 할당 하고 콘솔에 출력하는 코드를 작성한 뒤 콘솔 출력하는 부분에 브레이크포인트를 걸었습니다.</p>
+<p>브레이크포인트는 코드라인넘버 왼쪽에 보이는 틈사이에 커서를 가져다대면 일반적인 테마에서는 빨간 점으로 표시됩니다. 여기서 그냥 왼쪽 클릭을 하게되면 해당 라인에 브레이크 포인트를 걸 수 있습니다. ( 조건 브레이크포인트 등 브레이크포인트를 걸 수 있는 방법은 좀 더 다양합니다. 기회가 되면 다음 포스팅 때 작성해보겠습니다. )</p>
+<p><img src="/img/react-debugging-Untitled2.png" alt="React%20Debugging/Untitled%202.png"></p>
+<p>그 다음 debugger를 실행시키기 위해 단축키 <code>F5</code> 혹은 vscode 좌측 탭에 보이는 Run and Debug 탭에서 start debugging 버튼을 클릭하셔도 됩니다.</p>
+<p>그러면 다음 이미지와 같은 디버거 액션 버튼들이 있는 탭이 화면 중간 상단에 뜨면서 디버거가 실행될 겁니다.</p>
+<p><img src="/img/react-debugging-Untitled3.png" alt="React%20Debugging/Untitled%203.png"></p>
+<p>Debug action은 다양한데 좌측부터 차례대로 다음 설명과 같습니다.</p>
+<ul>
+<li><span style="color:skyblue;">continue</span> <br>
+다음 breakpoint로 이동, 다음 breakpoint가 없을 시 디버깅 종료</li>
+<li><span style="color:skyblue;">step over</span> <br>
+현재 break 된 파일에서 다음 라인으로 이동</li>
+<li><span style="color:skyblue;">step into</span> <br>
+break된 라인에서 실행되고 있는 내부 함수로 이동</li>
+<li><span style="color:skyblue;">step out</span> <br>
+break라인에서 호출한 곳으로 이동합니다.</li>
+<li><span style="color:skyblue;">restart </span> <br>
+debugger 재실행</li>
+<li><span style="color:skyblue;">stop</span> <br>
+debugger 종료</li>
+</ul>
+<p>Debugger로 실행이 정상적으로 되었다면 브레이크포인트가 존재하므로 프로그램이 해당 부분을 실행할 때 멈추게 될텐데요 디버그 local 변수 탭에 보면 다음과 같이 브레이크포인트 바로 위에서 할당한 message 변수의 값이 할당된 것을 확인해 볼 수 있습니다.</p>
+<p><img src="/img/react-debugging-Code_eHGjJoQiPd.png" alt="React%20Debugging/Code_eHGjJoQiPd.png"></p>
+<p><br>
+그렇다면 조금 코드를 바꿔서 step into와 step over를 활용한 디버깅을 해보겠습니다.</p>
+<p>변수 <code>message</code> 를 함수의 리턴값으로 할당되게 코드를 조금 변경한 뒤 브레이크포인트를 그대로 <code>message</code> 변수 할당 라인에 찍고 디버거를 실행해 보겠습니다.</p>
+<p>보시다시피 코드는 함수가 하나 추가되었고 <code>message</code> 는 함수의 반환 값으로 할당되게 되었는데요</p>
+<p>현재 브레이크포인트에서는 message는 아직 할당되지 않았으니 당연히 <code>undefined</code> 입니다.</p>
+<p><br>
+<img src="/img/react-debugging-Code_0XwbwVZYpG.png" alt="React%20Debugging/Code_0XwbwVZYpG.png"></p>
+<p>위에서 언급했던 debug action 중 step into action을 활용하면 해당라인의 함수로 들어갈 수 있으니 <code>이건함수다</code> 함수로 들어갈 수 있겠죠? step into 해보겠습니다.</p>
+<p><br>
+<img src="/img/react-debugging-Code_MRqAN6UkNk.png" alt="React%20Debugging/Code_MRqAN6UkNk.png"></p>
+<p>위 와 같이 브레이크포인트를 찍지도 않았는데 함수안의 return문 라인을 디버깅 하는중입니다.</p>
+<p>왼쪽 local 변수값을 살펴보면 매개변수로 넘어온 hello world! 라는 값이 잘 할당되었네요. 여기서 step over을 해보겠습니다. step over는 브레이크 포인트를 찍지 않았어도 다음 라인을 계속해서 디버깅 할 수 있습니다. 여기서는 크게 의미가 없으니 <code>console.log</code> 로 출력하고 있는 13번 라인까지 step over해서 이동해보도록 하겠습니다.</p>
+<p><img src="/img/react-debugging-Code_BvKVUmR5DU.png" alt="React%20Debugging/Code_BvKVUmR5DU.png"></p>
+<p><br>
+위 와 같이 <code>console.log</code> 하는 라인에서의 <code>message</code> 변수의 값은 정상적으로 함수를 거쳐 <code>hello world! for chrome ~</code> 이라는 문자열 값으로 할당된 것을 확인 할 수 있습니다.</p>
+<p>이로써 매우 간단한 예를 들어 디버깅을 해보았지만 프로그램의 복잡도가 증가 할 수록 디버깅의 중요성은 매우 높아집니다.</p>
+<p>앞으로 디버거를 더 많이 활용하여 프론트엔드 사이드에서도 코드 디버깅시간을 단축시켜줄 수 있을 것 같습니다</p> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article>  </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/react-debug/";
+const pageId = "react-debug";
+const pageTitle = "React debugging 하기";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

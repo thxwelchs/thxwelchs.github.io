@@ -1,0 +1,233 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>내 redis가 해킹당했다고? 심지어 local인데?</title><meta name="description" content="사건의 발단 어느날.. redis와 관련된 기능을 개발해야 할 일이 있어 redis를 local에서 docker 컨테이너로 실행 후 테스트를 해보고 있었습니다. 기능은 아주 간단해서 어떤 특정한 상황 때 hash 자료구조로 redis에 key value를 넣으면 되는 "><link rel="canonical" href="https://thxwelchs.github.io/%EB%82%B4redis%EA%B0%80%ED%95%B4%ED%82%B9%EB%8B%B9%ED%96%88%EB%8B%A4%EA%B3%A0%EC%8B%AC%EC%A7%80%EC%96%B4local%EC%9D%B8%EB%8D%B0/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="내 redis가 해킹당했다고? 심지어 local인데?"><meta property="og:description" content="사건의 발단 어느날.. redis와 관련된 기능을 개발해야 할 일이 있어 redis를 local에서 docker 컨테이너로 실행 후 테스트를 해보고 있었습니다. 기능은 아주 간단해서 어떤 특정한 상황 때 hash 자료구조로 redis에 key value를 넣으면 되는 "><meta property="og:url" content="https://thxwelchs.github.io/%EB%82%B4redis%EA%B0%80%ED%95%B4%ED%82%B9%EB%8B%B9%ED%96%88%EB%8B%A4%EA%B3%A0%EC%8B%AC%EC%A7%80%EC%96%B4local%EC%9D%B8%EB%8D%B0/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/%EB%82%B4redis%EA%B0%80%ED%95%B4%ED%82%B9%EB%8B%B9%ED%96%88%EB%8B%A4%EA%B3%A0%EC%8B%AC%EC%A7%80%EC%96%B4local%EC%9D%B8%EB%8D%B0.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="내 redis가 해킹당했다고? 심지어 local인데?"><meta name="twitter:description" content="사건의 발단 어느날.. redis와 관련된 기능을 개발해야 할 일이 있어 redis를 local에서 docker 컨테이너로 실행 후 테스트를 해보고 있었습니다. 기능은 아주 간단해서 어떤 특정한 상황 때 hash 자료구조로 redis에 key value를 넣으면 되는 "><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/%EB%82%B4redis%EA%B0%80%ED%95%B4%ED%82%B9%EB%8B%B9%ED%96%88%EB%8B%A4%EA%B3%A0%EC%8B%AC%EC%A7%80%EC%96%B4local%EC%9D%B8%EB%8D%B0.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>내 redis가 해킹당했다고? 심지어 local인데?</h1> <div class="meta" data-astro-cid-fzx4jmue> 2021-08-29 · 엔지니어링  </div> <img class="cover" src="/img/covers/eng/내redis가해킹당했다고심지어local인데.png" alt="내 redis가 해킹당했다고? 심지어 local인데?" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <h1 id="사건의-발단">사건의 발단</h1>
+<p>어느날.. redis와 관련된 기능을 개발해야 할 일이 있어 redis를 local에서 docker 컨테이너로 실행 후 테스트를 해보고 있었습니다.</p>
+<p>기능은 아주 간단해서 어떤 특정한 상황 때 hash 자료구조로 redis에 key value를 넣으면 되는 것이었는데, 특정한 시간이 지나면 자동으로 해당 key들이 지워질 수 있게 key에 TTL을 지정해주기로 했습니다.</p>
+<p>그래서 TTL을 5분정도로 주고 5분이 지나고 제대로 삭제가 되었는지 확인 해보기로 했습니다.</p>
+<br>
+<br>
+<h1 id="redis-설치-실행">redis 설치, 실행</h1>
+<p>먼저 redis를 로컬에 설치하기 위해 직접 redis-server를 설치해서 실행해도 되지만, 저는 환경의 이식성이나 편리함을 위해 docker를 사용하기로 했습니다.</p>
+<p>개발환경에서 컨테이너를 지속적으로 띄웠다 내렸다 할 것이기 때문에 다음과 같이 <code>bitnami/redis</code> 이미지를 사용하는 <code>docker-compose.yml</code>를 작성했습니다.</p>
+<blockquote>
+<p>여러 redis docker image가 있겠지만 저는 bitnami에서 배포하는 이미지를 선호합니다. bitnami는 최신 버그 수정 및 기능에 대해 빠른 피드백과 반영이 이루어지기 때문에 그렇습니다.</p>
+</blockquote>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#85E89D">redis</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    image</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'bitnami/redis:latest'</span></span>
+<span class="line"><span style="color:#85E89D">    environment</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">ALLOW_EMPTY_PASSWORD=yes</span><span style="color:#6A737D"> # 비밀번호를 생략하고 redis에 접근가능하게 하는 옵션</span></span>
+<span class="line"><span style="color:#85E89D">    ports</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">'6379:6379'</span></span></code></pre>
+<p>docker-compose 를 실행해주고 redis-cli로 접속해보면?</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">docker-compose</span><span style="color:#9ECBFF"> up</span><span style="color:#79B8FF"> -d</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">redis-cli</span></span></code></pre>
+<p><img src="/img/redis-hacking/Untitled.png" alt="Untitled"></p>
+<p>짜잔 이렇게 간단하게 로컬환경에 레디스를 설치해보고 접속까지 너무 짧은순간에 완성되었습니다.</p>
+<p><em>(redis에 직접 접근하기 위해서는 redis-cli 혹은 redis client tool 을 사용해야 하는데, 이 부분은 별도의 설치가 필요하니 각자 OS환경에 맞는 설치가 사전에 필요합니다.)</em></p>
+<br>
+<br>
+<h1 id="테스트">테스트</h1>
+<h3 id="hash-키-저장">hash 키 저장</h3>
+<p>다음과 같이 입력하면 hello라는 key에 있는 world라는 필드에 hellowrold라는 문자열을 value로 가지게하는 해쉬 자료구조를 저장하게됩니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">hset</span><span style="color:#9ECBFF"> hello</span><span style="color:#9ECBFF"> world</span><span style="color:#9ECBFF"> helloworld</span></span></code></pre>
+<h3 id="hash-잘-저장되었는지-확인-순서대로">hash 잘 저장되었는지 확인 순서대로</h3>
+<ol>
+<li>hash key 확인</li>
+<li>hash key 어떤 필드들이 있는지 확인</li>
+<li>hash field에 어떤 value가 저장되었는지 확인</li>
+</ol>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">keys</span><span style="color:#79B8FF"> *</span></span>
+<span class="line"><span style="color:#B392F0">hkeys</span><span style="color:#9ECBFF"> hello</span></span>
+<span class="line"><span style="color:#B392F0">hget</span><span style="color:#9ECBFF"> hello</span><span style="color:#9ECBFF"> world</span></span></code></pre>
+<p>![Untitled](/img/redis-hacking/Untitled 1.png)</p>
+<h3 id="hash-키에-expire-time-지정">hash 키에 expire time 지정</h3>
+<p>TTL 동작여부를 테스트 하기 위해 hash key에 expire 명령을 통해 TTL을 지정해줍니다.</p>
+<p>다음과 같이 명령하면 hello라는 키에는 300초의 ttl을 지정해 줄 수 있습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">expire</span><span style="color:#9ECBFF"> hello</span><span style="color:#79B8FF"> 300</span></span></code></pre>
+<p>ttl을 지정해주고 다음과 같이 남아있는 ttl이 있다면? ttl을 반환하게 됩니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">ttl</span><span style="color:#9ECBFF"> hello</span></span></code></pre>
+<ul>
+<li>ttl이 남아있으면 해당 값을 반환</li>
+<li>expire time이 설정되어있지 않았으면 <code>-1</code> 반환</li>
+<li>key가 삭제되었으면 <code>-2</code> 반환</li>
+</ul>
+<p>저는 5분(300초) 로 지정했고 4초가 지나서 다음과 같이 반환되었습니다.</p>
+<p>![Untitled](/img/redis-hacking/Untitled 2.png)</p>
+<br>
+<br>
+<h1 id="사라져-버린-key">사라져 버린 key</h1>
+<p>그리곤 약 1분정도 지났을까요? expire time이 얼마나 남았나 확인을 해보니..</p>
+<p>![Untitled](/img/redis-hacking/Untitled 3.png)</p>
+<br>
+<p>…?</p>
+<p><code>-2</code>가 반환되었습니다..</p>
+<p>위에서 말씀드렸다시피 <code>-2</code>는 key가 삭제되었음을 의미하는데요 어찌된 일일까요?</p>
+<br>
+<br>
+<h1 id="알-수-없는-key">알 수 없는 key</h1>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">keys</span><span style="color:#79B8FF"> *</span></span></code></pre>
+<p>key가 정말 삭제되었는지 의심이 되어 key 전체목록을 봐보기로 했습니다.</p>
+<p>![Untitled](/img/redis-hacking/Untitled 4.png)</p>
+<p>정작 있어야 할 <code>hello</code> key는 없고 아까는 존재하지 않았던 backup1 ~ 4 key가 생겼네요?</p>
+<p>혹시 뭔가.. 잠깐 컨테이너가 내렸다 올라온건가? 내가 받은 <code>bitnami/redis</code> 도커이미지가 잘못되었나? 원래 redis에서는 일정 주기마다 백업을 하는 기본전략이 있나? 라는 생각에 redis 공식문서와 bitnami/redis github issues를 뒤져봤지만 해당 내용에 대해서는 찾을 수 없었습니다.</p>
+<p>이후로 반복적으로 더 테스트해보았고 다음과 같은 결과를 도출해냈습니다.</p>
+<ul>
+<li>짧은 시간(1분 이내)이든 긴시간이든 랜덤하게 key가 갑자기 모두 삭제됌 (ttl 적용 여부와 관계없이)</li>
+</ul>
+<br>
+<br>
+<h1 id="redis-모니터링-해보기">redis 모니터링 해보기</h1>
+<p>그래서 key를 입력한 뒤 갑자기 삭제되기까지 대체 무슨 일들이 일어나는지 더 상세하게 살펴보기 위해 redis를 모니터링 해보기로 했습니다.</p>
+<p>모니터링은 다음과 같이 할 수 있습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">redis-cli</span><span style="color:#9ECBFF"> monitor</span></span></code></pre>
+<p>위 명령을 통해 redis에 어떤 명령들이 내려졌는지 로그를 확인 할 수 있습니다.</p>
+<p>약 5~7분 정도의 모니터링을 진행하고 있었을 때 였을까요? 갑자기 이상한.. 로그가 올라왔습니다.</p>
+<p>![Untitled](/img/redis-hacking/Untitled 5.png)</p>
+<p>해당 로그를 분석해보자면 <code>flushall</code> 명령으로 모든 key를 지워버리고 <code>backup1~4</code> key에 알 수 없는 스크립트 실행문을 저장합니다.</p>
+<p>위 명령이 랜덤하게 제 로컬 redis에서 계속해서 실행되고 있어, 제가 저장했던 key가 모두 삭제되고 알 수 없는 <code>backup1~4</code> key들만 남아있게 된 것이었습니다. oh my god</p>
+<p>해당 keyword로 구글링 해본 결과 redis 기본포트 <code>6379</code> 가 열려있고 인증정보 없이 접근할 수 있는 환경 일 때</p>
+<p>크롤러봇이 해당되는 redis에 접근하여 모든 키를 지우고 스크립트를 심는거였습니다. 심지어 만약 제 redis docker image가 저의 루트 권한을 획득 할 수 있었다면 아마도 제 로컬은 더 심각한 해킹을 당하게 되었을 것입니다.</p>
+<br>
+<br>
+<h1 id="해결-방법">해결 방법</h1>
+<p>위 문제를 어떻게 해결 할 수 있을까요?</p>
+<p>문제가 발생하는 원인을 다시 파악해보자면</p>
+<ul>
+<li>redis 서버가 기본포트 <code>6379</code>로 열려있음</li>
+<li>인증없이 접근이 가능함</li>
+</ul>
+<p>위 두가지를 만족 할 때 이러한 현상이 일어난다고 볼 수 있습니다.</p>
+<p>그렇다면 우리는 다음과같이 위의 두가지 조건을 만족하지 않게하면 될텐데요</p>
+<ol>
+<li>redis 서버가 기본포트 <code>6379</code>가 아닌 다른 포트를 사용함</li>
+<li>인증을 필수로 redis 서버에 접근할 수 있게함</li>
+</ol>
+<p>1번째 방법은 실은 그렇게 좋은 방법은 아닌 것 같습니다. 시스템에서 대체적으로 많이 알려져있는 포트는 가급적이면 변경하지 않고 사용하는 것이 좋습니다.</p>
+<p>저는 2번 방법이 조금 더 합리적인 해결방법이라고 생각되어 redis 서버에 접근하려면 필수로 인증을 하게끔 설정했습니다.</p>
+<br>
+<br>
+<h1 id="redis-패스워드-설정">redis 패스워드 설정</h1>
+<p>redis에는 패스워드를 설정하는 방법이 있습니다.</p>
+<ul>
+<li><code>requirepass</code> option을 통한 패스워드 설정</li>
+<li><code>Redis ACL system</code>을 이용한 username, password 설정(Redis 6.0 버전 이상을 사용하는 경우에만 해당)</li>
+</ul>
+<p>자세한 사항은 <a href="https://redis.io/commands/auth">공식문서 Auth</a>에서 확인</p>
+<p>저는 <code>bitnami/redis:lates</code> 이미지가 6.0 이상을 사용하고 있기에 ACL system을 사용하기로 했습니다.</p>
+<br>
+<br>
+<h2 id="requirepass-설정">requirepass 설정</h2>
+<p>ACL system을 사용한다고 하더라도 requirepass 옵션을 설정해주어야 레디스의 인증절차가 활성화되는데요,</p>
+<p>일반적으로 docker가 아닌 local에 직접 redis를 설치하셨다면 <code>/etc/redis/6379.conf</code> 파일에서 requirepass라고 쓰여져있는 라인을 주석을 풀고 설정하실 패스워드를 입력하시면 됩니다.</p>
+<p>저는 docker image로 실행하고 있기에 간단하게 도커이미지에 환경변수를 넘기는것만으로 requirepass가 설정 할 수 있습니다. (이런것 또한 도커를 사용하는 장점이라고 생각합니다.)</p>
+<p>기존의 <code>ALLOW_EMPTY_PASSWORD</code> 옵션을 비활성화 하고, <code>REDIS_PASSWORD</code> 값을 입력해줍니다.</p>
+<p>(참고로 REDIS_PASSWORD 값이 없고 ALLOW_EMPTY_PASSWORD도 없다면 에러가 나면서 redis container는 실행되지 못하게 됩니다.)</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#85E89D">redis</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    image</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'bitnami/redis:latest'</span></span>
+<span class="line"><span style="color:#85E89D">    environment</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">REDIS_PASSWORD=설정할패스워드</span></span>
+<span class="line"><span style="color:#6A737D">#      - ALLOW_EMPTY_PASSWORD=yes</span></span>
+<span class="line"><span style="color:#85E89D">    ports</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">'6379:6379'</span></span></code></pre>
+<p>기존의 컨테이너를 내렸다가 새로운 옵션으로 다시 실행합니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">docker-compose</span><span style="color:#9ECBFF"> down</span><span style="color:#E1E4E8"> &#x26;&#x26; </span><span style="color:#B392F0">docker-compose</span><span style="color:#9ECBFF"> up</span><span style="color:#79B8FF"> -d</span></span></code></pre>
+<p>이제는 redis-cli에 접속해 명령을 내리려고 하면 <code>NOAUTH Authentication required</code> 라는 에러메세지와 함께 명령이 수행되지 않는것을 확인 할 수 있습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">redis-cli</span></span>
+<span class="line"><span style="color:#B392F0">keys</span><span style="color:#79B8FF"> *</span></span></code></pre>
+<p>![Untitled](/img/redis-hacking/Untitled 6.png)</p>
+<br>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">auth</span><span style="color:#9ECBFF"> 설정한패스워드</span></span></code></pre>
+<p>![Untitled](/img/redis-hacking/Untitled 7.png)</p>
+<p>설정했던 패스워드로 auth 인증을 해주면 이제 더이상 명령을 할 때 에러메세지가 나오지 않고 명령이 정상적으로 수행됩니다.</p>
+<br>
+<br>
+<h2 id="acl-설정">ACL 설정</h2>
+<p>위 requirepass만으로도 실은 필수 인증정보입력이 활성화되었지만 저는 이왕 하는거 acl system까지 사용해보기로 했습니다.</p>
+<p>acl은 특정 키, 특정 커맨드에 대한 권한제어까지 가능하기 때문에 더 디테일한 인증과 인가를 부여 할 수 있습니다.</p>
+<h3 id="user-만들기">User 만들기</h3>
+<p>다음과 같이 user를 생성하게 되면</p>
+<p>모든 키, 모든 명령에 대해 권한을 가지고 비밀번호가 pass12345인 user2 username을 가진 user를 생성하게됩니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">ACL</span><span style="color:#9ECBFF"> SETUSER</span><span style="color:#9ECBFF"> user2</span><span style="color:#9ECBFF"> on</span><span style="color:#F97583"> ></span><span style="color:#9ECBFF">pass12345</span><span style="color:#9ECBFF"> allkeys</span><span style="color:#9ECBFF"> allcommands</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">ACL</span><span style="color:#9ECBFF"> list</span></span></code></pre>
+<h3 id="생성한-user로-인증하고-명령">생성한 User로 인증하고 명령</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">auth</span><span style="color:#9ECBFF"> user2</span><span style="color:#9ECBFF"> pass12345</span></span>
+<span class="line"><span style="color:#B392F0">keys</span><span style="color:#79B8FF"> *</span></span></code></pre>
+<h3 id="redis-모니터링">redis 모니터링</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">redis-cli</span><span style="color:#79B8FF"> --user</span><span style="color:#9ECBFF"> user2</span><span style="color:#79B8FF"> --pass</span><span style="color:#9ECBFF"> pass12345</span><span style="color:#9ECBFF"> monitor</span></span></code></pre>
+<br>
+<br>
+<h1 id="결론">결론</h1>
+<p>위 해결방법에 따라 redis에 인증시스템을 활성해주고 나니 더이상 key가 이유없이 삭제되거나 이상한 스크립트가 삽입된 key가 생성되거나 하는 현상은 사라졌습니다.</p>
+<p>실은 상용, 베타, stage 환경의 레디스 서버 인스턴스라면 당연히 기본적으로 인증시스템을 활성화해주어서 이러한 현상은 일어나지 않았겠지만, 일반적으로 로컬에서 실행하는 레디스 서버를 굳이 인증을 신경써야하나? 라는 생각에서 비롯된 상황인 것 같았습니다.</p>
+<p>앞으로는 비록 로컬에서 실행하는 환경일지라도 더욱 보안에 신경써야 할 것 같습니다.</p>
+<h1 id="참고">참고</h1>
+<blockquote>
+<p><a href="https://redis.io/commands/auth">https://redis.io/commands/auth</a>
+<a href="http://redisgate.kr/redis/server/acl.php">http://redisgate.kr/redis/server/acl.php</a></p>
+</blockquote> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#사건의-발단" data-astro-cid-fzx4jmue>사건의 발단</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#redis-설치-실행" data-astro-cid-fzx4jmue>redis 설치, 실행</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#테스트" data-astro-cid-fzx4jmue>테스트</a> </li><li class="lv2" data-astro-cid-fzx4jmue> <a href="#hash-키-저장" data-astro-cid-fzx4jmue>hash 키 저장</a> </li><li class="lv2" data-astro-cid-fzx4jmue> <a href="#hash-잘-저장되었는지-확인-순서대로" data-astro-cid-fzx4jmue>hash 잘 저장되었는지 확인 순서대로</a> </li><li class="lv2" data-astro-cid-fzx4jmue> <a href="#hash-키에-expire-time-지정" data-astro-cid-fzx4jmue>hash 키에 expire time 지정</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#사라져-버린-key" data-astro-cid-fzx4jmue>사라져 버린 key</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#알-수-없는-key" data-astro-cid-fzx4jmue>알 수 없는 key</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#redis-모니터링-해보기" data-astro-cid-fzx4jmue>redis 모니터링 해보기</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#해결-방법" data-astro-cid-fzx4jmue>해결 방법</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#redis-패스워드-설정" data-astro-cid-fzx4jmue>redis 패스워드 설정</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#requirepass-설정" data-astro-cid-fzx4jmue>requirepass 설정</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#acl-설정" data-astro-cid-fzx4jmue>ACL 설정</a> </li><li class="lv2" data-astro-cid-fzx4jmue> <a href="#user-만들기" data-astro-cid-fzx4jmue>User 만들기</a> </li><li class="lv2" data-astro-cid-fzx4jmue> <a href="#생성한-user로-인증하고-명령" data-astro-cid-fzx4jmue>생성한 User로 인증하고 명령</a> </li><li class="lv2" data-astro-cid-fzx4jmue> <a href="#redis-모니터링" data-astro-cid-fzx4jmue>redis 모니터링</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#결론" data-astro-cid-fzx4jmue>결론</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/%EB%82%B4redis%EA%B0%80%ED%95%B4%ED%82%B9%EB%8B%B9%ED%96%88%EB%8B%A4%EA%B3%A0%EC%8B%AC%EC%A7%80%EC%96%B4local%EC%9D%B8%EB%8D%B0/";
+const pageId = "내redis가해킹당했다고심지어local인데";
+const pageTitle = "내 redis가 해킹당했다고? 심지어 local인데?";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

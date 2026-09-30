@@ -1,0 +1,129 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>리액티브 스트림즈 9편 - 가상 스레드와 리액티브의 미래</title><meta name="description" content="벌써.. 리액티브 스트림즈를 1편 작성한 지 시간이 꽤 흐른 것 같습니다.. 한편 한편 정성스럽게 작성했다고 생각했는데 보시는 분들은 어떻게 보셨을지 모르겠습니다 ㅎㅎ 🙈 실은 이 시리즈를 모두 작성하고 이걸 인프런 같은 강의 플랫폼에 강의를 내보려고 이것저것 준비를"><link rel="canonical" href="https://thxwelchs.github.io/reactive-streams-9/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="리액티브 스트림즈 9편 - 가상 스레드와 리액티브의 미래"><meta property="og:description" content="벌써.. 리액티브 스트림즈를 1편 작성한 지 시간이 꽤 흐른 것 같습니다.. 한편 한편 정성스럽게 작성했다고 생각했는데 보시는 분들은 어떻게 보셨을지 모르겠습니다 ㅎㅎ 🙈 실은 이 시리즈를 모두 작성하고 이걸 인프런 같은 강의 플랫폼에 강의를 내보려고 이것저것 준비를"><meta property="og:url" content="https://thxwelchs.github.io/reactive-streams-9/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/reactive-streams-9.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="리액티브 스트림즈 9편 - 가상 스레드와 리액티브의 미래"><meta name="twitter:description" content="벌써.. 리액티브 스트림즈를 1편 작성한 지 시간이 꽤 흐른 것 같습니다.. 한편 한편 정성스럽게 작성했다고 생각했는데 보시는 분들은 어떻게 보셨을지 모르겠습니다 ㅎㅎ 🙈 실은 이 시리즈를 모두 작성하고 이걸 인프런 같은 강의 플랫폼에 강의를 내보려고 이것저것 준비를"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/reactive-streams-9.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>리액티브 스트림즈 9편 - 가상 스레드와 리액티브의 미래</h1> <div class="meta" data-astro-cid-fzx4jmue> 2024-01-14 · 엔지니어링  · <a class="series-badge" href="/series/" data-astro-cid-fzx4jmue>시리즈 · 리액티브 스트림즈</a>  </div> <img class="cover" src="/img/covers/eng/reactive-streams-9.png" alt="리액티브 스트림즈 9편 - 가상 스레드와 리액티브의 미래" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <p>벌써.. 리액티브 스트림즈를 1편 작성한 지 시간이 꽤 흐른 것 같습니다.. 한편 한편 정성스럽게 작성했다고 생각했는데 보시는 분들은 어떻게 보셨을지 모르겠습니다 ㅎㅎ 🙈</p>
+<p>실은 이 시리즈를 모두 작성하고 이걸 인프런 같은 강의 플랫폼에 강의를 내보려고 이것저것 준비를 해보고 있었는데.. 가상 스레드(Virtual Threads)라는 친구가 나와서 조금 망설여졌습니다. 이 포스팅에서 다루겠지만 가상 스레드가 제대로 자리 잡히면 리액티브 스트림즈, 아니 WebFlux의 실효성이 많이 옅어질 것 같다고 느꼈기 때문입니다. 그럼에도 불구하고 WebFlux가 아닌 리액티브 스트림즈가 주는 가치는 단순히 비동기 그 이상의 가치가 있다고 누누이! 제가 1편부터 강조해온 만큼, 가상 스레드와 리액티브의 미래는 앞으로 어떻게 될지? 감히 한번 예상해보는 글이라고 봐주시면 좋을 것 같습니다.</p>
+<h1 id="가상-스레드가-바꾼-전제">가상 스레드가 바꾼 전제</h1>
+<p>리액티브가 출발한 가장 큰 동기는 <a href="/reactive-streams-1/">1편</a>에서 본 “블로킹이 비싸다”였습니다. 요청마다 OS 스레드를 붙이면 I/O 대기 동안 그 비싼 스레드가 놀면서 자리만 차지하니까요.</p>
+<p>가상 스레드(Java 21에서 정식 도입)는 이 전제를 흔듭니다. 가상 스레드는 OS 스레드가 아니라 JVM이 관리하는 아주 가벼운 스레드라, 수만 개를 만들어도 부담이 적습니다. 블로킹 호출을 만나면 그 가상 스레드는 바탕의 캐리어 스레드에서 잠깐 내려왔다가(unmount), 응답이 오면 다시 올라탑니다. 즉 블로킹을 해도 OS 스레드가 묶이지 않습니다.</p>
+<p><img src="/img/reactive-streams-9/vthreads-vs-reactive-v2.png" alt="가상 스레드는 수많은 가벼운 스레드를 소수 캐리어 위에 얹어 블로킹 코드를 그대로 활용할 수 있고, 리액티브는 이벤트 루프 위에서 흐름 제어와 스트림 합성 영역을 여전히 담당하는 비교"></p>
+<p>이게 왜 중요하냐면, 그동안 “블로킹 비용을 피하려고” 감수했던 리액티브의 러닝 커브와 디버깅 난이도를, 평범한 동기 코드 스타일로도 상당 부분 우회할 수 있게 되기 때문입니다. 익숙한 블로킹 코드를 그대로 쓰면서도 높은 동시성을 얻는 길이 열린 셈입니다.</p>
+<p>만약 다음과 같은 블로킹 호출 코드를 가정해서 살펴보겠습니다. “0.1초 걸리는 블로킹 호출 10개를 동시에” 처리하는 작업입니다. 먼저 가상 스레드입니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#F97583">long</span><span style="color:#E1E4E8"> start </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> System.</span><span style="color:#B392F0">currentTimeMillis</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">try</span><span style="color:#E1E4E8"> (ExecutorService executor </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Executors.</span><span style="color:#B392F0">newVirtualThreadPerTaskExecutor</span><span style="color:#E1E4E8">()) {</span></span>
+<span class="line"><span style="color:#E1E4E8">    List&#x3C;Future&#x3C;</span><span style="color:#F97583">Integer</span><span style="color:#E1E4E8">>> futures </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> IntStream.</span><span style="color:#B392F0">rangeClosed</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">            .</span><span style="color:#B392F0">mapToObj</span><span style="color:#E1E4E8">(i </span><span style="color:#F97583">-></span><span style="color:#E1E4E8"> executor.</span><span style="color:#B392F0">submit</span><span style="color:#E1E4E8">(() </span><span style="color:#F97583">-></span><span style="color:#B392F0"> blockingCall</span><span style="color:#E1E4E8">(i)))  </span><span style="color:#6A737D">// 가상 스레드 하나씩</span></span>
+<span class="line"><span style="color:#E1E4E8">            .</span><span style="color:#B392F0">toList</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> (Future&#x3C;</span><span style="color:#F97583">Integer</span><span style="color:#E1E4E8">> future </span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> futures) {</span></span>
+<span class="line"><span style="color:#E1E4E8">        future.</span><span style="color:#B392F0">get</span><span style="color:#E1E4E8">();   </span><span style="color:#6A737D">// 블로킹으로 결과를 기다린다 (평소 쓰던 코드 그대로)</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">System.out.</span><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"걸린 시간: "</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> (System.</span><span style="color:#B392F0">currentTimeMillis</span><span style="color:#E1E4E8">() </span><span style="color:#F97583">-</span><span style="color:#E1E4E8"> start) </span><span style="color:#F97583">+</span><span style="color:#9ECBFF"> "ms"</span><span style="color:#E1E4E8">);</span></span></code></pre>
+<p><code>blockingCall</code>은 그냥 <code>Thread.sleep(100)</code> 하는 평범한 블로킹 메소드입니다. <code>submit</code> 하고 <code>future.get()</code>으로 기다리는, 자바 개발자라면 늘상 사용하는 멀티스레드 활용 방식입니다. 스레드만 가상 스레드로 바꿨을 뿐인데 10개가 동시에 돌아 이렇게 0.1초대에 끝납니다. 같은 코드를 일반 스레드 풀로 돌렸다면 풀 크기만큼만 동시에 처리됐을 겁니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>걸린 시간: 115ms</span></span></code></pre>
+<p>같은 일을 리액티브로 짜면 이렇습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#F97583">long</span><span style="color:#E1E4E8"> start </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> System.</span><span style="color:#B392F0">currentTimeMillis</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">Flux.</span><span style="color:#B392F0">range</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    .</span><span style="color:#B392F0">flatMap</span><span style="color:#E1E4E8">(i </span><span style="color:#F97583">-></span><span style="color:#E1E4E8"> Mono.</span><span style="color:#B392F0">fromCallable</span><span style="color:#E1E4E8">(() </span><span style="color:#F97583">-></span><span style="color:#B392F0"> blockingCall</span><span style="color:#E1E4E8">(i))</span></span>
+<span class="line"><span style="color:#E1E4E8">            .</span><span style="color:#B392F0">subscribeOn</span><span style="color:#E1E4E8">(Schedulers.</span><span style="color:#B392F0">boundedElastic</span><span style="color:#E1E4E8">()))</span></span>
+<span class="line"><span style="color:#E1E4E8">    .</span><span style="color:#B392F0">blockLast</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">System.out.</span><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"걸린 시간: "</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> (System.</span><span style="color:#B392F0">currentTimeMillis</span><span style="color:#E1E4E8">() </span><span style="color:#F97583">-</span><span style="color:#E1E4E8"> start) </span><span style="color:#F97583">+</span><span style="color:#9ECBFF"> "ms"</span><span style="color:#E1E4E8">);</span></span></code></pre>
+<p>이쪽도 동시에 처리돼 비슷하게 0.1초대로 끝납니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>걸린 시간: 179ms</span></span></code></pre>
+<p>둘 다 순차로 하면 1초(0.1초 × 10)가 걸릴 일을 동시에 처리해 0.1초대로 끝냈습니다. 리액티브가 조금 더 나온 건 Reactor와 스케줄러를 처음 띄우는 오버헤드 때문이지, 본질적인 속도 차이는 아닙니다. 여기서 핵심은 속도가 아니라 코드 모양입니다. 가상 스레드 쪽은 <code>submit</code>/<code>get</code>이라는 익숙한 블로킹 스타일 그대로인 반면, 리액티브 쪽은 <code>flatMap</code>과 <code>subscribeOn</code>이라는 리액티브 프로그래밍적인 사고방식을 요구합니다. “그냥 동시에 여러 개의 블로킹 코드를 호출하고 싶을 뿐”이라면, 이제 가상 스레드로 훨씬 단순하게 갈 수 있게 된 겁니다.</p>
+<h1 id="그럼-리액티브는-사라질까">그럼 리액티브는 사라질까?</h1>
+<p>그런데 정말 그럴까요? 여기서 성급하게 “리액티브 끝났다”로 가면 안 됩니다. 가상 스레드가 지운 건 정확히 “블로킹의 비용”이지, 리액티브가 하던 모든 일이 아니기 때문입니다.</p>
+<p>리액티브에는 가상 스레드가 대신해주지 않는 영역이 남습니다.</p>
+<ul>
+<li>백프레셔(흐름 제어): 빠른 생산자와 느린 소비자를 화해시키는 <a href="/reactive-streams-4/">4편</a>의 그 메커니즘. 가상 스레드는 스레드를 저렴하게 이용할 수 있게 하고, 기존 블로킹 코드와 같이 활용할 수 있을 뿐, 흐름의 양을 소비자가 조절하는 문제는 풀어주지 않습니다.</li>
+<li>스트림 합성과 연산자: 여러 비동기 흐름을 <code>merge</code>·<code>zip</code>·<code>flatMap</code>으로 엮고 변환하는 선언적 표현. 이건 여전히 리액티브가 더 자연스럽습니다.</li>
+<li>무한히 흐르는 데이터(이벤트 스트림, 실시간 구독)처럼 애초에 “값 하나”가 아니라 “흐름”인 도메인.</li>
+</ul>
+<p>그래서 제 잠정적인 결론은 “대체”가 아니라 “역할 분담”에 가깝습니다. 평범한 요청-응답 위주의 서비스라면, 가상 스레드로 단순하게 가는 편이 앞으로 점점 더 합리적입니다. 반대로 백프레셔가 중요한 스트리밍이나 복잡한 비동기 합성이 핵심이라면, 리액티브의 가치는 여전히 남을 것이라 생각합니다.</p>
+<h1 id="남겨두는-질문">남겨두는 질문</h1>
+<p>그럼 이 경계가 영원할까요? 물론 이건 2024년 초 시점의 제 생각이고, 가상 스레드가 더 무르익으면 경계가 또 달라질 수 있습니다. 가상 스레드에도 아직 다듬어지는 부분(예: 특정 상황에서 캐리어 스레드가 고정되는 피닝(pinning) 같은 이슈)이 있어서, 단정하기엔 이른 것 같습니다.</p>
+<blockquote>
+<p>가상 스레드 피닝: <a href="https://openjdk.org/jeps/444">JEP 444: Virtual Threads</a> · <a href="https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html">Oracle: Virtual Threads (Java 21)</a></p>
+</blockquote>
+<p>가상 스레드 자체는 워낙 큰 주제라, 동작 원리와 피닝, 적용 시 주의점은 따로 한 편으로 다뤄보려 합니다. 저는 개인적으로 이전에 <a href="/kotlin-coroutine-3/">코루틴</a>을 학습한 적이 있는데, 가상 스레드에서도 비슷하게 생각할 구석이 많았던 것 같습니다.</p>
+<h1 id="시리즈를-마치며">시리즈를 마치며</h1>
+<p>이렇게 아홉 편에 걸쳐 리액티브 스트림즈를 정리해봤습니다. 리액티브는 “값이 흘러오면 반응한다”는 발상에서 출발해, 명세와 백프레셔, 구현체와 Reactor, 웹 스택(WebFlux), 그리고 전 구간 논블로킹일 때 빛을 발한다는 것까지 이어졌습니다. 마지막에 가상 스레드가 그 전제를 어떻게 흔들어놓는지 한번 보았고, 리액티브의 쓸모를 “동시성 효율”에서 “흐름 제어와 스트림 합성”으로 다시 정의하게 됐습니다.</p>
+<p>솔직히 이 시리즈를 준비하는 건 생각보다 훨씬 어려웠습니다. 개념 하나를 제대로 짚으려고 직접 구현해보고 테스트하고, 틀린 부분을 다시 고치기를 여러 번 반복했습니다. 그런데 그 과정에서 오히려 깨닫는 게 많았습니다. 막연히 “비동기니까 좋다”고 넘겼던 것들이 왜 그렇게 설계됐고 어디서 값어치가 나는지, 조금은 저의 언어로 말할 수 있게 된 것 같습니다.</p>
+<p>결국 리액티브도 만능이 아니라 트레이드오프였습니다. 무엇이 더 우월하냐가 아니라, 우리 도메인이 백프레셔와 스트리밍을 정말 필요로 하는가. 이 질문 하나를 남기며 긴 시리즈를 마칩니다. 여기까지 읽어주셔서 감사합니다.</p>
+<h1 id="참고">참고</h1>
+<blockquote>
+<ul>
+<li>김중철 역, <em>실전! 스프링 5를 활용한 리액티브 프로그래밍</em> (원서: <em>Hands-On Reactive Programming in Spring 5</em>)</li>
+<li><a href="https://openjdk.org/jeps/444">JEP 444: Virtual Threads</a></li>
+</ul>
+</blockquote> </div> <section class="series-foot" data-astro-cid-fzx4jmue> <p class="sf-h" data-astro-cid-fzx4jmue> <span class="sf-label" data-astro-cid-fzx4jmue>시리즈</span> <a href="/series/" data-astro-cid-fzx4jmue>리액티브 스트림즈</a> <span class="sf-count" data-astro-cid-fzx4jmue>전 9편</span> </p> <ol class="sf-list" data-astro-cid-fzx4jmue> <li data-astro-cid-fzx4jmue> <a href="/reactive-streams-1/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>01</span> <span class="sf-text" data-astro-cid-fzx4jmue>리액티브란 무엇인가, 옵저버 패턴에서 백프레셔로</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-2/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>02</span> <span class="sf-text" data-astro-cid-fzx4jmue>명세와 백프레셔, 네 개의 인터페이스</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-3/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>03</span> <span class="sf-text" data-astro-cid-fzx4jmue>직접 만들어보기, pull에서 push까지</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-4/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>04</span> <span class="sf-text" data-astro-cid-fzx4jmue>백프레셔, 흐름을 누가 통제하는가</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-5/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>05</span> <span class="sf-text" data-astro-cid-fzx4jmue>구현체들 둘러보기</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-6/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>06</span> <span class="sf-text" data-astro-cid-fzx4jmue>Project Reactor 입문, Flux와 Mono</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-7/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>07</span> <span class="sf-text" data-astro-cid-fzx4jmue>Spring WebFlux와 논블로킹 스택</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-8/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>08</span> <span class="sf-text" data-astro-cid-fzx4jmue>끝까지 논블로킹, 그리고 한계</span> <span class="sf-tag" data-astro-cid-fzx4jmue>이전</span>   </a> </li><li class="cur" data-astro-cid-fzx4jmue> <a href="/reactive-streams-9/" aria-current="page" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>09</span> <span class="sf-text" data-astro-cid-fzx4jmue>가상 스레드와 리액티브의 미래</span>  <span class="sf-tag cur" data-astro-cid-fzx4jmue>현재 글</span>  </a> </li> </ol> </section> <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#가상-스레드가-바꾼-전제" data-astro-cid-fzx4jmue>가상 스레드가 바꾼 전제</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#그럼-리액티브는-사라질까" data-astro-cid-fzx4jmue>그럼 리액티브는 사라질까?</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#남겨두는-질문" data-astro-cid-fzx4jmue>남겨두는 질문</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#시리즈를-마치며" data-astro-cid-fzx4jmue>시리즈를 마치며</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/reactive-streams-9/";
+const pageId = "reactive-streams-9";
+const pageTitle = "리액티브 스트림즈 9편 - 가상 스레드와 리액티브의 미래";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

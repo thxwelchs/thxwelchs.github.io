@@ -1,0 +1,184 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ElasticSearch 딥다이브 - 5: 분산 아키텍처와 실무 적용</title><meta name="description" content="4편까지 한 노드 안에서 문서가 어떻게 매핑되고 저장되는지를 봤습니다. 마지막 편은 시야를 클러스터로 넓혀보겠습니다. 인덱스가 여러 노드에 어떻게 흩어지고 복제되는지, 분산이라 생기는 일관성 문제, 그리고 Spring Boot 연동과 대용량 색인 같은 실무적인 내용으로"><link rel="canonical" href="https://thxwelchs.github.io/elasticsearch-deepdive-5/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="ElasticSearch 딥다이브 - 5: 분산 아키텍처와 실무 적용"><meta property="og:description" content="4편까지 한 노드 안에서 문서가 어떻게 매핑되고 저장되는지를 봤습니다. 마지막 편은 시야를 클러스터로 넓혀보겠습니다. 인덱스가 여러 노드에 어떻게 흩어지고 복제되는지, 분산이라 생기는 일관성 문제, 그리고 Spring Boot 연동과 대용량 색인 같은 실무적인 내용으로"><meta property="og:url" content="https://thxwelchs.github.io/elasticsearch-deepdive-5/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/elasticsearch-deepdive-5.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="ElasticSearch 딥다이브 - 5: 분산 아키텍처와 실무 적용"><meta name="twitter:description" content="4편까지 한 노드 안에서 문서가 어떻게 매핑되고 저장되는지를 봤습니다. 마지막 편은 시야를 클러스터로 넓혀보겠습니다. 인덱스가 여러 노드에 어떻게 흩어지고 복제되는지, 분산이라 생기는 일관성 문제, 그리고 Spring Boot 연동과 대용량 색인 같은 실무적인 내용으로"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/elasticsearch-deepdive-5.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>ElasticSearch 딥다이브 - 5: 분산 아키텍처와 실무 적용</h1> <div class="meta" data-astro-cid-fzx4jmue> 2022-12-17 · 엔지니어링  · <a class="series-badge" href="/series/" data-astro-cid-fzx4jmue>시리즈 · ElasticSearch 딥다이브</a>  </div> <img class="cover" src="/img/covers/eng/elasticsearch-deepdive-5.png" alt="ElasticSearch 딥다이브 - 5: 분산 아키텍처와 실무 적용" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <p><a href="/elasticsearch-deepdive-4/">4편</a>까지 한 노드 안에서 문서가 어떻게 매핑되고 저장되는지를 봤습니다. 마지막 편은 시야를 클러스터로 넓혀보겠습니다. 인덱스가 여러 노드에 어떻게 흩어지고 복제되는지, 분산이라 생기는 일관성 문제, 그리고 Spring Boot 연동과 대용량 색인 같은 실무적인 내용으로 시리즈를 마무리합니다.</p>
+<h1 id="클러스터-노드-샤드">클러스터, 노드, 샤드</h1>
+<p>ES는 여러 노드(node)가 모여 하나의 클러스터(cluster)를 이룹니다. 인덱스는 통째로 한 노드에 있는 게 아니라, 만들 때 정한 개수만큼 샤드(shard)로 쪼개져 노드들에 흩어지고, 각 샤드는 복제본을 둘 수 있습니다.</p>
+<ul>
+<li><code>number_of_shards</code>: 프라이머리 샤드 개수. 원본 데이터가 이만큼 쪼개집니다.</li>
+<li><code>number_of_replicas</code>: 프라이머리마다 둘 복제본(레플리카) 개수.</li>
+</ul>
+<p><img src="/img/elasticsearch-deepdive-5/shards-replicas-v1.png" alt="인덱스가 샤드로 쪼개져 여러 노드에 흩어지고, 각 프라이머리의 레플리카는 다른 노드에 배치되는 구조"></p>
+<p>중요한 규칙 하나. 프라이머리와 그 레플리카는 절대 같은 노드에 안 올라갑니다. 노드 하나가 죽어도 데이터가 살아있게 하려는 게 목적이니까요! 레플리카는 고가용성(HA)뿐 아니라 읽기 분산도 맡습니다. 검색은 프라이머리든 레플리카든 처리할 수 있어서, 레플리카를 늘리면 읽기 처리량이 올라갑니다.</p>
+<p>하지만 이 규칙 때문에 발생하는 문제가 있습니다. 노드가 1대인데 레플리카를 두면, 그 레플리카를 올릴 다른 노드가 없어 unassigned로 남고 클러스터 상태가 노란불(yellow)이 되거든요. 단일 노드로 띄웠을 때 상태가 자꾸 yellow였던 게 이 때문이었습니다.</p>
+<h1 id="문서는-어느-샤드로-가나-라우팅">문서는 어느 샤드로 가나, 라우팅</h1>
+<p>문서를 넣으면 ES가 대상 프라이머리 샤드를 골라야 합니다. 어떻게 고를까요? 공식은 의외로 단순합니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>shard = hash(_routing) % number_of_primary_shards</span></span></code></pre>
+<p><img src="/img/elasticsearch-deepdive-5/routing-v1.png" alt="문서의 _id를 Murmur3로 해시한 뒤 샤드 수로 나눈 나머지로 대상 샤드를 고르는 라우팅 흐름"></p>
+<p>기본적으로 <code>_routing</code>은 문서의 <code>_id</code>이고, 해시는 Murmur3라는 것을 사용합니다. 같은 id는 늘 같은 샤드로 가니 조회·수정도 그 샤드만 보면 됩니다. 여기서 알게 된 사실 하나. 프라이머리 샤드 개수는 한 번 정하면 못 바꿉니다. 위 공식의 분모가 바뀌면 같은 문서가 다른 샤드로 계산돼 기존 데이터를 못 찾으니까요. 그래서 프라이머리 수를 바꾸려면 새 인덱스를 만들어 reindex해야 했습니다(레플리카 개수는 공식과 무관해 운영 중에도 조절됐음).</p>
+<p>쓰기작업도 이 전제에서 동작합니다. 요청을 받은 노드가 라우팅으로 대상 프라이머리를 계산해 넘기고, 프라이머리에 먼저 쓴 뒤 레플리카로 복제합니다. 검색은 반대로, 어느 샤드에 뭐가 있는지 모르니 모든 샤드에 뿌려 각자 찾은 걸 합치는 식이었습니다.</p>
+<h2 id="murmur3란">Murmur3란?</h2>
+<p>라우팅에 쓰이는 Murmur3는 암호화용이 아닌 일반 해시 함수입니다. 빠르고 결과가 고르게 퍼지는 게 특징이라, 데이터를 여러 버킷(여기선 샤드)에 균등하게 나눠 담을 때 잘 맞습니다. ES 라우팅 말고도 Cassandra의 파티셔닝, Guava 같은 라이브러리에서도 흔히 쓰입니다.</p>
+<h1 id="분산이라-생기는-일관성-문제">분산이라 생기는 일관성 문제</h1>
+<p>분산이다 보니 RDBMS 트랜잭션 같은 강한 일관성을 기대하면 안 됐습니다. ES는 최근 들어온 문서의 검색에 대해 준실시간(near-real-time)으로 반영해주기 때문에, 방금 넣은 문서는 보통 1초쯤 뒤에야 검색 결과로 받을 수 있습니다. 레플리카가 프라이머리를 살짝 뒤따르기 때문에 어느 복제본이 응답하느냐에 따라 아주 잠깐 결과가 다를 수도 있습니다.</p>
+<p><img src="/img/elasticsearch-deepdive-5/near-realtime-v1.png" alt="색인 요청이 인메모리 버퍼에 담겼다가 refresh(기본 약 1초) 후 세그먼트가 되어야 검색에 잡히는 준실시간 흐름"></p>
+<p>한마디로, 저장한 문서가 바로 검색 결과에 반영되지 않을 수 있습니다.</p>
+<h2 id="네트워크-파티션이란">네트워크 파티션이란?</h2>
+<p>네트워크 파티션은 노드가 죽은 게 아니라, 노드 사이 네트워크가 끊겨 멀쩡히 살아있는 노드들이 서로 통신 못 하는 둘 이상의 그룹으로 갈라지는 상황입니다. 예를 들어 노드 5대 클러스터에서 회선 장애로 <code>[A, B, C]</code> ↔ <code>[D, E]</code>가 끊기면, 양쪽 다 살아있는데 서로를 죽은 걸로 오해합니다. 이때 양쪽이 각자 쓰기를 받아버리면 데이터가 두 갈래로 갈라지는데, 이게 스플릿 브레인(split-brain)입니다.</p>
+<p>네트워크 파티션 문제가 발생하면 어떻게 될까요? 이 상황은 더 조심스러웠습니다. ES는 클러스터 상태를 합의(coordination)로 관리하는데, 7.0부터의 방식은 과반(quorum)을 확보한 쪽만 클러스터를 유지하고 소수 쪽은 쓰기를 받지 않습니다. 양쪽이 따로 동작해 데이터가 둘로 갈려 따로 노는 스플릿 브레인을 막으려는 설계였음. 그래서 partition이 나면 한쪽은 일시적으로 쓰기가 막힐 수 있는데, 일관성을 위해 가용성을 일부 양보하는 선택인 셈이라고 이해했습니다. 쓰기 안정성을 높이려면 <code>wait_for_active_shards</code>로 “몇 개 복제본이 살아 있을 때만 쓰기를 받겠다”를 조절할 수도 있습니다.</p>
+<h1 id="spring-boot에서-연동하기">Spring Boot에서 연동하기</h1>
+<p>실제 애플리케이션에서 ES를 연동하려면 ES를 서버로서 호출해야 하는데, 여기서 클라이언트 버전을 주의해야 합니다. 기존 High Level REST Client(HLRC)는 7.15(2021년 9월)에 deprecated됐고, 같은 7.15에 새 Java API Client가 처음 나왔습니다. HLRC는 7.17에서 기능이 동결됐다가 8.0(2022년 2월)에서 완전히 제거됐고, 그 뒤로는 Java API Client(<code>co.elastic.clients</code>)가 공식 표준입니다. 그래서 8.x를 쓴다면 Java API Client로 가야 합니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#6A737D">// 옛 High Level REST Client (ES 7.x용, 8.x에서 제거됨)</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> org.elasticsearch.client.RestHighLevelClient;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> org.elasticsearch.client.RequestOptions;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> org.elasticsearch.action.search.SearchRequest;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> org.elasticsearch.action.search.SearchResponse;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> org.elasticsearch.index.query.QueryBuilders;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> org.elasticsearch.search.builder.SearchSourceBuilder;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">SearchRequest req </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> SearchRequest</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"products"</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">req.</span><span style="color:#B392F0">source</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">new</span><span style="color:#B392F0"> SearchSourceBuilder</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"><span style="color:#E1E4E8">        .</span><span style="color:#B392F0">query</span><span style="color:#E1E4E8">(QueryBuilders.</span><span style="color:#B392F0">matchQuery</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"name"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"셔츠"</span><span style="color:#E1E4E8">)));</span></span>
+<span class="line"><span style="color:#E1E4E8">SearchResponse res </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> client.</span><span style="color:#B392F0">search</span><span style="color:#E1E4E8">(req, RequestOptions.DEFAULT);</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#6A737D">// 새 Java API Client (ES 8.x)</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> co.elastic.clients.elasticsearch.ElasticsearchClient;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> co.elastic.clients.elasticsearch.core.SearchResponse;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">SearchResponse&#x3C;</span><span style="color:#F97583">Product</span><span style="color:#E1E4E8">> res </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> client.</span><span style="color:#B392F0">search</span><span style="color:#E1E4E8">(s </span><span style="color:#F97583">-></span><span style="color:#E1E4E8"> s</span></span>
+<span class="line"><span style="color:#E1E4E8">        .</span><span style="color:#B392F0">index</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"products"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">        .</span><span style="color:#B392F0">query</span><span style="color:#E1E4E8">(q </span><span style="color:#F97583">-></span><span style="color:#E1E4E8"> q.</span><span style="color:#B392F0">match</span><span style="color:#E1E4E8">(m </span><span style="color:#F97583">-></span><span style="color:#E1E4E8"> m.</span><span style="color:#B392F0">field</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"name"</span><span style="color:#E1E4E8">).</span><span style="color:#B392F0">query</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"셔츠"</span><span style="color:#E1E4E8">))),</span></span>
+<span class="line"><span style="color:#E1E4E8">    Product.class);</span></span></code></pre>
+<p>스프링 환경이라면 Spring Data Elasticsearch를 활용하여 스프링 생태계의 라이브러리를 그대로 활용할 수 있는 선택지도 있습니다. 저는 쿼리를 디테일하게 직접 제어하는 쪽이 편해서 Java API Client를 그대로 썼습니다. 어느 쪽이든 신경 써야 할 건 예외 처리였습니다. 네트워크 단절·타임아웃·버전 불일치 같은 게 그대로 올라오기 때문에, 검색 실패가 전체 요청을 죽이지 않게 감싸고 폴백을 두는 식으로 막아야 했습니다.</p>
+<h1 id="대량-색인은-bulk로-무중단-교체는-별칭으로">대량 색인은 Bulk로, 무중단 교체는 별칭으로</h1>
+<p>문서를 하나씩 <code>PUT</code> 하면 매 요청마다 왕복 비용이 듭니다. 그래서 대량 색인은 여러 작업을 한 요청에 묶는 Bulk API로 처리합니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">POST /_bulk</span></span>
+<span class="line"><span style="color:#E1E4E8">{ </span><span style="color:#79B8FF">"index"</span><span style="color:#E1E4E8">: { </span><span style="color:#79B8FF">"_index"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"products"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">"_id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"1"</span><span style="color:#E1E4E8"> } }</span></span>
+<span class="line"><span style="color:#E1E4E8">{ </span><span style="color:#79B8FF">"name"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"사과"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">"price"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1000</span><span style="color:#E1E4E8"> }</span></span>
+<span class="line"><span style="color:#E1E4E8">{ </span><span style="color:#79B8FF">"index"</span><span style="color:#E1E4E8">: { </span><span style="color:#79B8FF">"_index"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"products"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">"_id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"2"</span><span style="color:#E1E4E8"> } }</span></span>
+<span class="line"><span style="color:#E1E4E8">{ </span><span style="color:#79B8FF">"name"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"바나나"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">"price"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1500</span><span style="color:#E1E4E8"> }</span></span></code></pre>
+<p><img src="/img/elasticsearch-deepdive-5/bulk-v1.png" alt="문서를 하나씩 PUT하면 왕복이 N번이지만, _bulk로 묶으면 한 번의 요청으로 처리되는 비교"></p>
+<p>튜닝 포인트가 몇개 있었습니다. 그럼 한 번에 얼마나 묶어 보내는 게 좋을까요? 배치 크기는 무작정 키우는 게 아니라 적당한 크기(보통 수 MB)가 좋았고, 대량 적재 동안엔 <code>refresh_interval</code>을 잠깐 늘리거나 꺼서 작은 세그먼트가 자꾸 생기는 걸 줄일 수 있습니다. 레플리카를 일시적으로 0으로 뒀다 적재 후 복원하면 복제 비용을 아껴 훨씬 빨랐습니다. 끝나고 설정을 되돌리는 걸 잊으면 안 되는 것도 포인트 중 하나입니다.</p>
+<p>매핑을 바꿔야 하는데 운영 중이라면? 앞서 봤듯 기존 필드 타입은 못 바꾸니 새 인덱스로 옮겨야(reindex) 하는데, 서비스가 안 끊기게 해주는 게 인덱스 별칭(alias)입니다. 핵심은 애플리케이션이 실제 인덱스 이름이 아니라 별칭을 바라보게 해두는 겁니다. 그러면 뒤에서 인덱스를 바꿔치기해도 애플리케이션은 모릅니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">POST /_aliases</span></span>
+<span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "actions"</span><span style="color:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#E1E4E8">    { </span><span style="color:#79B8FF">"remove"</span><span style="color:#E1E4E8">: { </span><span style="color:#79B8FF">"index"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"products_v1"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">"alias"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"products"</span><span style="color:#E1E4E8"> } },</span></span>
+<span class="line"><span style="color:#E1E4E8">    { </span><span style="color:#79B8FF">"add"</span><span style="color:#E1E4E8">:    { </span><span style="color:#79B8FF">"index"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"products_v2"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">"alias"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"products"</span><span style="color:#E1E4E8"> } }</span></span>
+<span class="line"><span style="color:#E1E4E8">  ]</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>새 매핑으로 <code>products_v2</code>를 만들고 <code>_reindex</code>로 데이터를 옮긴 뒤, 위처럼 별칭을 한 번에 갈아끼웁니다. <code>_aliases</code> 교체는 원자적으로 처리되기 때문에 별칭이 잠깐도 비는 순간 없이 넘어가게 됩니다. 덕분에 무중단으로 매핑을 바꿀 수 있습니다. 처음부터 별칭을 깔고 시작하니 나중에 reindex가 한결 수월했던 것 같습니다.</p>
+<p><img src="/img/elasticsearch-deepdive-5/alias-swap-v1.png" alt="앱은 별칭 products만 바라보고, 뒤에서 별칭을 v1에서 v2로 원자적으로 바꿔치기하는 무중단 교체 구조"></p>
+<h1 id="es-클러스터-분산-환경-체험해보기">ES 클러스터 분산 환경 체험해보기</h1>
+<p>분산구조는 결국 노드가 여러 대로 구성되어 있을 때 의미가 있습니다. 그래서 8.1.2 노드 셋을 docker-compose로 세팅하여 로컬 환경에 구성해보았습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#85E89D">services</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">  es01</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    image</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">docker.elastic.co/elasticsearch/elasticsearch:8.1.2</span></span>
+<span class="line"><span style="color:#85E89D">    environment</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">node.name=es01</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">cluster.name=es-docker-cluster</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">discovery.seed_hosts=es02,es03</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">cluster.initial_master_nodes=es01,es02,es03</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">xpack.security.enabled=false</span></span>
+<span class="line"><span style="color:#85E89D">    ports</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#9ECBFF">"9200:9200"</span></span>
+<span class="line"><span style="color:#6A737D">  # es02, es03도 node.name과 seed_hosts만 바꿔 동일하게 정의</span></span></code></pre>
+<p>노드 3개가 모인 뒤(<code>es01</code>이 마스터로 선출됨), 프라이머리 3 + 레플리카 1로 인덱스를 만들고 샤드가 어디에 붙었는지 봤습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>GET /_cat/shards/products</span></span>
+<span class="line"><span>index    shard prirep state   node</span></span>
+<span class="line"><span>products 0     p      STARTED es03</span></span>
+<span class="line"><span>products 0     r      STARTED es01</span></span>
+<span class="line"><span>products 1     p      STARTED es01</span></span>
+<span class="line"><span>products 1     r      STARTED es02</span></span>
+<span class="line"><span>products 2     p      STARTED es02</span></span>
+<span class="line"><span>products 2     r      STARTED es03</span></span></code></pre>
+<p>프라이머리 3 + 레플리카 3 = 6개가 세 노드에 흩어졌고 헬스는 green이었습니다. 눈으로 바로 확인되는 규칙 하나. 0번은 프라이머리가 es03, 레플리카가 es01입니다. 프라이머리와 그 레플리카가 같은 노드에 안 올라간다는 게 그대로 보였습니다.</p>
+<p>라우팅도 확인했습니다. <code>_search_shards</code>로 문서가 어느 샤드로 가는지 보면,</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>apple  -> shard 1</span></span>
+<span class="line"><span>banana -> shard 0</span></span></code></pre>
+<p><code>hash(_id) % 3</code>이 실제로 문서를 샤드에 흩뿌리고 있었습니다. 마지막으로 무중단 reindex를 테스트해보기 위해 alias를 활용했습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>1) products_v2 새로 만들고  POST /_reindex (products_v1 → products_v2)</span></span>
+<span class="line"><span>2) POST /_aliases 로 products_live 를 v1 → v2 로 한 번에 교체 (원자적)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>교체 전:  products_live -> products_v1</span></span>
+<span class="line"><span>교체 후:  products_live -> products_v2</span></span></code></pre>
+<h1 id="시리즈-정리">시리즈 정리</h1>
+<p>다섯 편에 걸쳐 ES를 기초부터 따라가 봤습니다.</p>
+<ul>
+<li>1편 문서 모델과 매핑: JSON 문서·비정규화, 동적 매핑의 위험, text/keyword/nested/멀티필드.</li>
+<li>2편 역색인과 분석: 역색인 구조, 분석기 3단계, Nori.</li>
+<li>3편 Query DSL과 스코어링: match/term, bool, BM25.</li>
+<li>4편 저장 구조: <code>_source</code>/<code>store</code>와, <code>index</code>/<code>doc_values</code>/<code>enabled</code>가 따로 노는 자료구조.</li>
+<li>5편 분산·실무: 샤딩·라우팅, 일관성, Spring Boot, Bulk, 별칭 무중단 교체.</li>
+</ul>
+<p>돌아보니 ES를 어렵게 느꼈던 건 매핑 파라미터가 “어떤 자료구조를 만들고 안 만들지”를 정한다는 걸 몰라서였던 것 같습니다. 역색인·doc_values·_source가 따로 논다는 한 가지만 쥐고 있어도 매핑을 잡을 때 왜 이렇게 동작하는지가 꽤 보이는 듯했음. 내부 구조를 의식하며 공부하니 ES가 한결 재밌어졌습니다.</p>
+<p>여기까지가 ES를 “쓰는 사람” 입장에서의 정리였습니다.</p>
+<h1 id="참고">참고</h1>
+<blockquote>
+<p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/8.1/docs-replication.html">Elasticsearch Reference: Reading and writing documents</a>
+<a href="https://www.elastic.co/guide/en/elasticsearch/client/java-api-client/8.1/index.html">Elasticsearch Java API Client</a></p>
+</blockquote> </div> <section class="series-foot" data-astro-cid-fzx4jmue> <p class="sf-h" data-astro-cid-fzx4jmue> <span class="sf-label" data-astro-cid-fzx4jmue>시리즈</span> <a href="/series/" data-astro-cid-fzx4jmue>ElasticSearch 딥다이브</a> <span class="sf-count" data-astro-cid-fzx4jmue>전 6편</span> </p> <ol class="sf-list" data-astro-cid-fzx4jmue> <li data-astro-cid-fzx4jmue> <a href="/elasticsearch-deepdive-1/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>01</span> <span class="sf-text" data-astro-cid-fzx4jmue>문서 모델과 매핑</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/elasticsearch-deepdive-2/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>02</span> <span class="sf-text" data-astro-cid-fzx4jmue>역색인과 텍스트 분석</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/elasticsearch-deepdive-3/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>03</span> <span class="sf-text" data-astro-cid-fzx4jmue>Query DSL과 스코어링</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/elasticsearch-deepdive-4/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>04</span> <span class="sf-text" data-astro-cid-fzx4jmue>저장 구조와 매핑 파라미터</span> <span class="sf-tag" data-astro-cid-fzx4jmue>이전</span>   </a> </li><li class="cur" data-astro-cid-fzx4jmue> <a href="/elasticsearch-deepdive-5/" aria-current="page" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>05</span> <span class="sf-text" data-astro-cid-fzx4jmue>분산 아키텍처와 실무 적용</span>  <span class="sf-tag cur" data-astro-cid-fzx4jmue>현재 글</span>  </a> </li><li data-astro-cid-fzx4jmue> <a href="/elasticsearch-deepdive-6/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>06</span> <span class="sf-text" data-astro-cid-fzx4jmue>역색인을 Java로 직접 만들어보기</span>   <span class="sf-tag" data-astro-cid-fzx4jmue>다음</span> </a> </li> </ol> </section> <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#클러스터-노드-샤드" data-astro-cid-fzx4jmue>클러스터, 노드, 샤드</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#문서는-어느-샤드로-가나-라우팅" data-astro-cid-fzx4jmue>문서는 어느 샤드로 가나, 라우팅</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#murmur3란" data-astro-cid-fzx4jmue>Murmur3란?</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#분산이라-생기는-일관성-문제" data-astro-cid-fzx4jmue>분산이라 생기는 일관성 문제</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#네트워크-파티션이란" data-astro-cid-fzx4jmue>네트워크 파티션이란?</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#spring-boot에서-연동하기" data-astro-cid-fzx4jmue>Spring Boot에서 연동하기</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#대량-색인은-bulk로-무중단-교체는-별칭으로" data-astro-cid-fzx4jmue>대량 색인은 Bulk로, 무중단 교체는 별칭으로</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#es-클러스터-분산-환경-체험해보기" data-astro-cid-fzx4jmue>ES 클러스터 분산 환경 체험해보기</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#시리즈-정리" data-astro-cid-fzx4jmue>시리즈 정리</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/elasticsearch-deepdive-5/";
+const pageId = "elasticsearch-deepdive-5";
+const pageTitle = "ElasticSearch 딥다이브 - 5: 분산 아키텍처와 실무 적용";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

@@ -1,0 +1,167 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ES2020</title><meta name="description" content="2020년이 되면서 javascript 표준 규격인 ECMA script 에도 몇가지 추가된 사항들이 생겼습니다! \ 어떤 것들이 있는지 한번 살펴보겠습니다. <br/ 널 병합 연산자 (Nullish coalescing operator) 널 병합 연산자란 왼쪽에 대입되"><link rel="canonical" href="https://thxwelchs.github.io/ES2020/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="ES2020"><meta property="og:description" content="2020년이 되면서 javascript 표준 규격인 ECMA script 에도 몇가지 추가된 사항들이 생겼습니다! \ 어떤 것들이 있는지 한번 살펴보겠습니다. <br/ 널 병합 연산자 (Nullish coalescing operator) 널 병합 연산자란 왼쪽에 대입되"><meta property="og:url" content="https://thxwelchs.github.io/ES2020/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/ES2020.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="ES2020"><meta name="twitter:description" content="2020년이 되면서 javascript 표준 규격인 ECMA script 에도 몇가지 추가된 사항들이 생겼습니다! \ 어떤 것들이 있는지 한번 살펴보겠습니다. <br/ 널 병합 연산자 (Nullish coalescing operator) 널 병합 연산자란 왼쪽에 대입되"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/ES2020.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>ES2020</h1> <div class="meta" data-astro-cid-fzx4jmue> 2020-02-29 · 엔지니어링  </div> <img class="cover" src="/img/covers/eng/ES2020.png" alt="ES2020" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <p>2020년이 되면서 javascript 표준 규격인 ECMA script 에도 몇가지 추가된 사항들이 생겼습니다!
+<br>
+어떤 것들이 있는지 한번 살펴보겠습니다.</p>
+<br>
+<h1 id="널-병합-연산자-nullish-coalescing-operator">널 병합 연산자 (Nullish coalescing operator)</h1>
+<p>널 병합 연산자란 왼쪽에 대입되어 있는 피연산자 값이 <code>null</code> 이거나 <code>undefined</code> 일 때 오른쪽에 대입되어있는 피연산자 값이 반환되게 하는 연산자입니다.</p>
+<p>이 널 병합 연산자가 제공되기 전의 ES버전에서라면 아마도 논리연산자 OR <code>||</code> 를 통해 기본 값을 설정하거나, <code>삼항연산자</code> 혹은 <code>if else</code>문을 통한 null 처리를 하셨을 겁니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> iamNull</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> null</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> iamUndefined</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> undefined</span></span>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> hello</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> iamNull </span><span style="color:#F97583">||</span><span style="color:#9ECBFF"> 'world'</span><span style="color:#E1E4E8">; </span><span style="color:#6A737D">// OR 연산자로 기본값 처리</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> hello2</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> iamNull </span><span style="color:#F97583">?</span><span style="color:#E1E4E8"> iamNull </span><span style="color:#F97583">:</span><span style="color:#9ECBFF"> 'world'</span><span style="color:#6A737D"> // 삼항연산자로 기본값 처리</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">let</span><span style="color:#E1E4E8"> hello3 </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> iamNull </span><span style="color:#6A737D">// if문으로 null 일때 기본 값 처리</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">hello3) {</span></span>
+<span class="line"><span style="color:#E1E4E8">    hello3 </span><span style="color:#F97583">=</span><span style="color:#9ECBFF"> 'world'</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>위 예시코드에서는 큰 문제가 하나 있는데요. 그것은 <code>iamNull</code>, <code>iamUndefined</code> 의 값이 <code>0</code> 이거나 <code>''</code> 과 같은 값일 때도 <code>false</code> 로 강제 변환되기 때문에  반드시 nullish 한 값 일 때만 처리하고 싶은 경우는 주의 하여야 합니다.</p>
+<p>그런데 ES2020에서부터 제공되어지는 <strong>널 병합 연산자</strong>를 사용하면 반드시 <code>null</code>, <code>undefined</code>인 값 의 default 값 처리를 할 수 있습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> hello</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> 0</span><span style="color:#F97583"> ??</span><span style="color:#9ECBFF"> 'world'</span></span>
+<span class="line"><span style="color:#6A737D">// hello: 0 </span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> hello2</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> ''</span><span style="color:#F97583"> ??</span><span style="color:#9ECBFF"> 'world'</span></span>
+<span class="line"><span style="color:#6A737D">// hello2: ''</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> hello3</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> null</span><span style="color:#F97583"> ??</span><span style="color:#9ECBFF"> 'world'</span></span>
+<span class="line"><span style="color:#6A737D">// hello3: 'world'</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> hello4</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> undefined</span><span style="color:#F97583"> ??</span><span style="color:#9ECBFF"> 'world'</span></span>
+<span class="line"><span style="color:#6A737D">// hello4: 'world'</span></span></code></pre>
+<h1 id="선택적-체이닝-optional-chaining">선택적 체이닝 (Optional chaining)</h1>
+<p>또한 이제는 알려지지 않은 속성 값에 대해 null safe한 object의 체이닝도 할 수 있습니다.</p>
+<p>예를들면 이런 것 입니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> a</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">    b: {</span></span>
+<span class="line"><span style="color:#E1E4E8">        c: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">	</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// Uncaught TypeError: Cannot read property 'c' of undefined</span></span>
+<span class="line"><span style="color:#6A737D">// a밑에 d가 undefined이므로 c 속성을 읽으려고 하면 에러 발생</span></span>
+<span class="line"><span style="color:#E1E4E8">console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(a.d.c)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// 그래서 보통 이러한 처리를 &#x26;&#x26; 연산자로 처리하기도 했음</span></span>
+<span class="line"><span style="color:#E1E4E8">console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(a.d </span><span style="color:#F97583">&#x26;&#x26;</span><span style="color:#E1E4E8"> a.d.c)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// 그러나 널 병합 연산자로 더욱 깔끔하게 처리</span></span>
+<span class="line"><span style="color:#E1E4E8">console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(a.d?.c)</span></span>
+<span class="line"><span style="color:#6A737D">// 결과: undefined</span></span></code></pre>
+<br>
+<br>
+<h1 id="promiseallsettled--안정적으로-모든-promise-작업-처리하기">Promise.allSettled ( 안정적으로 모든 promise 작업 처리하기 )</h1>
+<p>순차적이지 않은 비동기적인 작업을 수행 할 때 <code>Promise</code> 패턴을 통해 콜백 지옥을 해소시키고, 여러개의 <code>Promise</code>를 처리 할 땐 <code>Promise.all</code> 함수를 통해</p>
+<p>처리하셨을겁니다.</p>
+<p>그런데 <code>Promise.all</code> 의 큰 단점은 처리 할 여러개의 <code>Promise</code> 중 하나라도 <code>reject</code> 되는 작업이 있다면, 나머지 성공되는 작업들의 결과 값을 처리 할 수 없다는 것인데요, 이것 또한 예시로 보겠습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> promise1</span><span style="color:#F97583"> =</span><span style="color:#F97583"> new</span><span style="color:#79B8FF"> Promise</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">resolve</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">reject</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#B392F0"> setTimeout</span><span style="color:#E1E4E8">(resolve, </span><span style="color:#79B8FF">100</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">'성공 1'</span><span style="color:#E1E4E8">))</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> promise2</span><span style="color:#F97583"> =</span><span style="color:#F97583"> new</span><span style="color:#79B8FF"> Promise</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">resolve</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">reject</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#B392F0"> setTimeout</span><span style="color:#E1E4E8">(reject, </span><span style="color:#79B8FF">100</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">'실패!!!'</span><span style="color:#E1E4E8">))</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> promise3</span><span style="color:#F97583"> =</span><span style="color:#F97583"> new</span><span style="color:#79B8FF"> Promise</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">resolve</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">reject</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#B392F0"> setTimeout</span><span style="color:#E1E4E8">(resolve, </span><span style="color:#79B8FF">100</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">'성공 3'</span><span style="color:#E1E4E8">))</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> promise4</span><span style="color:#F97583"> =</span><span style="color:#F97583"> new</span><span style="color:#79B8FF"> Promise</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">resolve</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">reject</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#B392F0"> setTimeout</span><span style="color:#E1E4E8">(resolve, </span><span style="color:#79B8FF">100</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">'성공 4'</span><span style="color:#E1E4E8">))</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> promises</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> [promise1, promise2, promise3, promise4]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">/* Promise.all */</span></span>
+<span class="line"><span style="color:#79B8FF">Promise</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">all</span><span style="color:#E1E4E8">(promises)</span></span>
+<span class="line"><span style="color:#E1E4E8">.</span><span style="color:#B392F0">then</span><span style="color:#E1E4E8">( </span><span style="color:#FFAB70">results</span><span style="color:#F97583"> =></span><span style="color:#E1E4E8"> { </span></span>
+<span class="line"><span style="color:#E1E4E8">    console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(results)</span></span>
+<span class="line"><span style="color:#E1E4E8">})</span></span>
+<span class="line"><span style="color:#E1E4E8">.</span><span style="color:#B392F0">catch</span><span style="color:#E1E4E8">( </span><span style="color:#FFAB70">err</span><span style="color:#F97583"> =></span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#6A737D">    // 2번째 프로미스가 reject 되므로 catch 함수로 들어오게 됌</span></span>
+<span class="line"><span style="color:#6A737D">    // 그럼 나머지 1,3,4는..?</span></span>
+<span class="line"><span style="color:#E1E4E8">    console.</span><span style="color:#B392F0">error</span><span style="color:#E1E4E8">(err)</span></span>
+<span class="line"><span style="color:#E1E4E8">})</span></span>
+<span class="line"><span style="color:#6A737D">// 결과: 실패!!!</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">/* Promise.allSettled*/</span></span>
+<span class="line"><span style="color:#79B8FF">Promise</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">allSettled</span><span style="color:#E1E4E8">(promises)</span></span>
+<span class="line"><span style="color:#E1E4E8">.</span><span style="color:#B392F0">then</span><span style="color:#E1E4E8">( </span><span style="color:#FFAB70">results</span><span style="color:#F97583"> =></span><span style="color:#E1E4E8"> { </span></span>
+<span class="line"><span style="color:#E1E4E8">    console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(results)</span></span>
+<span class="line"><span style="color:#E1E4E8">})</span></span>
+<span class="line"><span style="color:#E1E4E8">.</span><span style="color:#B392F0">catch</span><span style="color:#E1E4E8">( </span><span style="color:#FFAB70">err</span><span style="color:#F97583"> =></span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">    console.</span><span style="color:#B392F0">error</span><span style="color:#E1E4E8">(err)</span></span>
+<span class="line"><span style="color:#E1E4E8">})</span></span></code></pre>
+<p>Promise.allSettled로 처리한 결과</p>
+<p><img src="/img/ES2020/Untitled.png" alt="ES2020/Untitled.png"></p>
+<p>위와 같이 처리된 결과의 상태와, 값 그리고 실패하였을 경우에는 그에 대한 값이 reason 프로퍼티로 들어오게 되어, 비동기의 성공한 결과뿐 아니라 실패한 결과와 같이 처리 할 수 있게 됩니다.</p>
+<br>
+<br>
+<h1 id="globalthis">globalThis</h1>
+<p>globalThis는 Javascript의 최상위 객체인 global 객체에 access 하기 위해 ES2020에서 추가된 방식입니다.</p>
+<p>최상위 객체라면 브라우저에서는 window 객체를 의미하고,</p>
+<p>Node.js 에서는 global 객체를 의미합니다.</p>
+<p>이러하듯, 자바스크립트가 실행되는 런타임 환경이 달라지면 global 객체에 접근하는 방식이 달라져 불편하기 때문에 이제는 globalThis 라는 객체를 사용하여  어떤 런타임에서든 동일하게 접근 할 수 있습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#E1E4E8">globalThis.</span><span style="color:#B392F0">Array</span><span style="color:#E1E4E8">() </span><span style="color:#6A737D">// window.Array() 와 같음</span></span>
+<span class="line"><span style="color:#E1E4E8">globalThis.</span><span style="color:#B392F0">alert</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'Hi!'</span><span style="color:#E1E4E8">) </span><span style="color:#6A737D">// window.alert('Hi!') 와 같음</span></span></code></pre>
+<br>
+<br>
+<h1 id="참고">참고</h1>
+<blockquote>
+<p><a href="https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator">https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator</a>
+<a href="https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled">https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled</a>
+<a href="https://dev.to/carlillo/es2020-features-in-simple-examples-1513">https://dev.to/carlillo/es2020-features-in-simple-examples-1513</a></p>
+</blockquote> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#널-병합-연산자-nullish-coalescing-operator" data-astro-cid-fzx4jmue>널 병합 연산자 (Nullish coalescing operator)</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#선택적-체이닝-optional-chaining" data-astro-cid-fzx4jmue>선택적 체이닝 (Optional chaining)</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#promiseallsettled--안정적으로-모든-promise-작업-처리하기" data-astro-cid-fzx4jmue>Promise.allSettled ( 안정적으로 모든 promise 작업 처리하기 )</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#globalthis" data-astro-cid-fzx4jmue>globalThis</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/ES2020/";
+const pageId = "ES2020";
+const pageTitle = "ES2020";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

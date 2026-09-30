@@ -1,0 +1,119 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>TCP 흐름 제어를 tcpdump로 직접 들여다보기</title><meta name="description" content="최근 네트워크 지식이 부족하다고 느껴 TCP 수준부터 다시 공부해보려고 관련 서적을 읽고 있습니다. 그중 흐름 제어(flow control) 부분을 읽다가 잘 이해되지 않는 부분이 있었는데, 직접 테스트하고 패킷을 캡처해서 분석해보면 어떨까 싶어 느린 수신자와 빠른 송"><link rel="canonical" href="https://thxwelchs.github.io/tcp-flow-control-sliding-window/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="TCP 흐름 제어를 tcpdump로 직접 들여다보기"><meta property="og:description" content="최근 네트워크 지식이 부족하다고 느껴 TCP 수준부터 다시 공부해보려고 관련 서적을 읽고 있습니다. 그중 흐름 제어(flow control) 부분을 읽다가 잘 이해되지 않는 부분이 있었는데, 직접 테스트하고 패킷을 캡처해서 분석해보면 어떨까 싶어 느린 수신자와 빠른 송"><meta property="og:url" content="https://thxwelchs.github.io/tcp-flow-control-sliding-window/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/tcp-flow-control-sliding-window.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="TCP 흐름 제어를 tcpdump로 직접 들여다보기"><meta name="twitter:description" content="최근 네트워크 지식이 부족하다고 느껴 TCP 수준부터 다시 공부해보려고 관련 서적을 읽고 있습니다. 그중 흐름 제어(flow control) 부분을 읽다가 잘 이해되지 않는 부분이 있었는데, 직접 테스트하고 패킷을 캡처해서 분석해보면 어떨까 싶어 느린 수신자와 빠른 송"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/tcp-flow-control-sliding-window.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>TCP 흐름 제어를 tcpdump로 직접 들여다보기</h1> <div class="meta" data-astro-cid-fzx4jmue> 2023-09-15 · 엔지니어링  </div> <img class="cover" src="/img/covers/eng/tcp-flow-control-sliding-window.png" alt="TCP 흐름 제어를 tcpdump로 직접 들여다보기" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <p>최근 네트워크 지식이 부족하다고 느껴 TCP 수준부터 다시 공부해보려고 관련 서적을 읽고 있습니다. 그중 흐름 제어(flow control) 부분을 읽다가 잘 이해되지 않는 부분이 있었는데, 직접 테스트하고 패킷을 캡처해서 분석해보면 어떨까 싶어 느린 수신자와 빠른 송신자를 만들어 놓고 <code>tcpdump</code>로 잡아봤습니다. 그 과정에서 공부한 내용을 공유합니다.</p>
+<h1 id="흐름-제어란-무엇인가">흐름 제어란 무엇인가</h1>
+<p>흐름 제어는 한 줄로 줄이면 받는 쪽이 감당할 수 있는 만큼만 보내게 하는 것입니다. 송신자가 아무리 빨라도 수신자가 못 받으면 소용없으니까요.</p>
+<p>대화로 그려보면 이렇습니다.</p>
+<ul>
+<li>수신자: 저는 지금 <code>100</code>바이트까지만 받을 수 있어요.</li>
+<li>송신자: 저는 <code>200</code>까지 보낼 수 있지만, 당신이 <code>100</code>까지라니 딱 그만큼만 보낼게요.</li>
+</ul>
+<p>그럼 이 “받을 수 있는 양”을 어떻게 알릴까요? TCP는 이걸 윈도우 크기(window size)로 매 패킷에 실어 알립니다. 수신자가 자기 수신 버퍼의 여유 공간을 윈도우로 광고하고, 송신자는 그 윈도우를 넘지 않는 선에서만 보내는 식입니다.</p>
+<h1 id="윈도우-크기와-슬라이딩-윈도우">윈도우 크기와 슬라이딩 윈도우</h1>
+<p>윈도우 크기는 TCP 헤더에서 16비트 필드라, 원래는 0 ~ 65535(바이트)까지밖에 표현하지 못합니다. 요즘은 핸드셰이크 때 <code>window scale</code> 옵션으로 이 범위를 키우는데, 잠시 뒤 캡처에서 실제로 협상되는 걸 보게 됩니다.</p>
+<p>그리고 이 윈도우를 활용하는 방식이 <strong>슬라이딩 윈도우(sliding window)</strong> 입니다. 패킷을 하나 보내고 ACK를 받을 때까지 기다리는 stop-and-wait 대신, 윈도우 크기만큼은 ACK를 안 기다리고 연속으로 흘려보낸 뒤, ACK가 오는 만큼 윈도우를 앞으로 밀며 다음 데이터를 채웁니다.</p>
+<p>stop-and-wait를 쓰면 문제가 분명합니다. 패킷 하나마다 ACK를 기다리니 대역폭이 남아돌아도 회선이 노는 시간이 많고(낮은 효율), 왕복 지연만큼 전송이 길어집니다(높은 대기시간). 슬라이딩 윈도우는 여러 패킷을 한 번에 띄워 이 빈 시간을 메우면서, 동시에 그 “한 번에”의 양을 수신자 윈도우로 제한해 흐름 제어까지 같이 하는 셈입니다.</p>
+<h1 id="슬라이딩-윈도우-실험">슬라이딩 윈도우 실험</h1>
+<p>정말 윈도우가 줄어드는 게 보일까요? 말로만은 추상적이라 환경을 만들어 봤습니다. 로컬 루프백(<code>127.0.0.1:9999</code>)에 느린 수신자(수신 버퍼를 작게 잡고, 0.4초마다 512바이트씩만 읽음)와 빠른 송신자(연결되자마자 대량으로 밀어 넣음)를 두고, 그 사이를 <code>tcpdump</code>로 캡처했습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> tcpdump</span><span style="color:#79B8FF"> -i</span><span style="color:#9ECBFF"> lo0</span><span style="color:#79B8FF"> -nn</span><span style="color:#79B8FF"> -S</span><span style="color:#9ECBFF"> 'tcp port 9999'</span></span></code></pre>
+<h2 id="핸드셰이크에서-윈도우-스케일을-협상한다">핸드셰이크에서 윈도우 스케일을 협상한다</h2>
+<p>먼저 연결을 맺는 SYN / SYN-ACK입니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>127.0.0.1.52989 > 127.0.0.1.9999: Flags [S],  win 65535, options [mss 16344, wscale 6, sackOK, ...]</span></span>
+<span class="line"><span>127.0.0.1.9999 > 127.0.0.1.52989: Flags [S.], win 65535, options [mss 16344, wscale 3, sackOK, ...]</span></span></code></pre>
+<p>양쪽이 <code>wscale</code>(window scale)을 주고받는 게 보입니다. tcpdump가 핸드셰이크에서 이 옵션을 봤기 때문에, 이후 패킷의 <code>win</code> 값은 스케일을 반영한 실제 광고 윈도우(바이트)로 찍히는 듯합니다. 즉 아래 숫자들이 수신자가 “지금 이만큼 받을 수 있다”고 알리는 양인 셈입니다.</p>
+<h2 id="윈도우가-65535에서-0까지-줄어든다">윈도우가 65535에서 0까지 줄어든다</h2>
+<p>수신자가 데이터를 느리게 읽으니, 수신 버퍼가 차면서 광고하는 윈도우가 계속 줄어듭니다. 수신자(<code>9999</code>)가 보낸 ACK들의 <code>win</code>만 순서대로 추리면 이렇게 흘러갔습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>win 65535  →  win 40830  →  win 25482  →  ...  →  win 907  →  win 0</span></span></code></pre>
+<p>줄어들다 못해 <code>win 0</code>, 즉 수신자가 “지금은 한 바이트도 못 받는다”고 알리는 zero window까지 갔습니다. 이번 캡처에선 zero window 패킷이 25개 잡혔습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>127.0.0.1.9999 > 127.0.0.1.52989: Flags [.], ack ..., win 0</span></span></code></pre>
+<h2 id="윈도우가-0이면-송신자는-멈춘다">윈도우가 0이면 송신자는 멈춘다</h2>
+<p>흐름 제어가 실제로 송신을 멈추는지는 송신자 쪽 로그에서 더 분명히 드러났습니다. 송신자는 연결 직후 순식간에 약 377KB를 밀어 넣고는, 그대로 멈췄습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>send: total=  376832  t= 0.00s</span></span>
+<span class="line"><span>send: total=  385024  t= 5.20s    &#x3C;- 약 5.2초 동안 멈췄다가 재개</span></span></code></pre>
+<p><code>t=0.00s</code>에 버퍼와 수신 윈도우를 가득 채운 뒤, 약 5.2초 동안 <code>send()</code>가 블록됐습니다. 보낼 데이터가 있는데도 못 보낸 겁니다. 패킷 타임라인에서도 같은 구간에 수신자의 <code>win 0</code>가 찍혀 있었으니, 송신자가 멈춘 이유가 “내가 느려서”가 아니라 “수신자가 받을 자리가 없어서”였다는 게 맞물리는 듯합니다.</p>
+<h2 id="수신자가-비우면-윈도우가-다시-열린다">수신자가 비우면 윈도우가 다시 열린다</h2>
+<p>수신자가 0.4초마다 조금씩 읽어내며 버퍼에 자리가 생기자, 수신자는 윈도우가 다시 열렸다는 걸 알리는 패킷(window update)을 보냅니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>127.0.0.1.9999 > 127.0.0.1.52989: Flags [.], ack ..., win 32723</span></span>
+<span class="line"><span>... win 63346 ...</span></span></code></pre>
+<p><code>win</code>이 다시 커지고 나서야 송신자의 전송이 재개됐습니다. 줄었다(흐름 제어), 0이 됐다(정지), 다시 열렸다(재개)가 한 흐름으로 패킷에 그대로 남아 있었습니다.</p>
+<h1 id="남은-궁금증-하나">남은 궁금증 하나</h1>
+<p>실험하면서 든 의문이 있었습니다. 송신 측 버퍼에 윈도우 크기만큼 데이터가 아직 안 쌓였으면, 그만큼 모일 때까지 기다렸다 보낼까요? 찾아보니 그렇지는 않았습니다. TCP는 윈도우를 채우려고 기다리지 않고, 보낼 수 있는 만큼 그때그때 내보냅니다. 다만 아주 작은 조각이 잦으면 효율이 떨어지니, <a href="https://en.wikipedia.org/wiki/Nagle%27s_algorithm">Nagle 알고리즘</a>이 작은 세그먼트를 잠깐 모았다 보내는 식으로 다듬습니다. 즉 “윈도우만큼 모아 보낸다”기보다, “윈도우를 넘지 않는 선에서 있는 만큼 보내되, 너무 잘게는 안 보낸다”에 가까웠습니다.</p>
+<h1 id="정리">정리</h1>
+<ul>
+<li>흐름 제어는 수신자가 받을 수 있는 양을 윈도우로 광고하고, 송신자가 그걸 넘지 않게 보내는 메커니즘이었음. 그 윈도우를 ACK에 맞춰 밀어가며 연속 전송하는 게 슬라이딩 윈도우.</li>
+<li>직접 캡처해보니 수신자가 느릴 때 광고 윈도우가 65535에서 0까지 줄고, <code>win 0</code>인 동안 송신자가 약 5.2초 멈췄다가, window update로 윈도우가 열리자 재개됐음. 책에서 글로만 보던 zero window와 window update를 패킷으로 확인한 셈.</li>
+<li>윈도우 16비트의 한계는 핸드셰이크의 window scale 옵션으로 넓힌다는 것도 캡처에서 같이 봤음.</li>
+</ul>
+<h1 id="참고">참고</h1>
+<blockquote>
+<ul>
+<li><a href="https://www.rfc-editor.org/rfc/rfc9293">RFC 9293: Transmission Control Protocol (TCP)</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc7323">RFC 7323: TCP Extensions for High Performance (Window Scale)</a></li>
+</ul>
+</blockquote> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#흐름-제어란-무엇인가" data-astro-cid-fzx4jmue>흐름 제어란 무엇인가</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#윈도우-크기와-슬라이딩-윈도우" data-astro-cid-fzx4jmue>윈도우 크기와 슬라이딩 윈도우</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#슬라이딩-윈도우-실험" data-astro-cid-fzx4jmue>슬라이딩 윈도우 실험</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#핸드셰이크에서-윈도우-스케일을-협상한다" data-astro-cid-fzx4jmue>핸드셰이크에서 윈도우 스케일을 협상한다</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#윈도우가-65535에서-0까지-줄어든다" data-astro-cid-fzx4jmue>윈도우가 65535에서 0까지 줄어든다</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#윈도우가-0이면-송신자는-멈춘다" data-astro-cid-fzx4jmue>윈도우가 0이면 송신자는 멈춘다</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#수신자가-비우면-윈도우가-다시-열린다" data-astro-cid-fzx4jmue>수신자가 비우면 윈도우가 다시 열린다</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#남은-궁금증-하나" data-astro-cid-fzx4jmue>남은 궁금증 하나</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#정리" data-astro-cid-fzx4jmue>정리</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/tcp-flow-control-sliding-window/";
+const pageId = "tcp-flow-control-sliding-window";
+const pageTitle = "TCP 흐름 제어를 tcpdump로 직접 들여다보기";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

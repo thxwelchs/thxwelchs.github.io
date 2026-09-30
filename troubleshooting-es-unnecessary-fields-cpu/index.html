@@ -1,0 +1,104 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ES 불필요 필드 역직렬화가 API 서버 CPU 스파이크를 일으킨 사건</title><meta name="description" content="배경 ElasticSearch(ES)를 읽기 전용 조회 DB로 쓰는 Spring Boot 백엔드 애플리케이션에서 발생한 문제였습니다. ES에 비정규화된 문서를 미리 만들어 두고, API는 그 문서를 조회해 내려주는 구조였습니다. 그런데 조회 트래픽이 몰리는 특정 화면에"><link rel="canonical" href="https://thxwelchs.github.io/troubleshooting-es-unnecessary-fields-cpu/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="ES 불필요 필드 역직렬화가 API 서버 CPU 스파이크를 일으킨 사건"><meta property="og:description" content="배경 ElasticSearch(ES)를 읽기 전용 조회 DB로 쓰는 Spring Boot 백엔드 애플리케이션에서 발생한 문제였습니다. ES에 비정규화된 문서를 미리 만들어 두고, API는 그 문서를 조회해 내려주는 구조였습니다. 그런데 조회 트래픽이 몰리는 특정 화면에"><meta property="og:url" content="https://thxwelchs.github.io/troubleshooting-es-unnecessary-fields-cpu/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/troubleshooting-es-unnecessary-fields-cpu-v2.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="ES 불필요 필드 역직렬화가 API 서버 CPU 스파이크를 일으킨 사건"><meta name="twitter:description" content="배경 ElasticSearch(ES)를 읽기 전용 조회 DB로 쓰는 Spring Boot 백엔드 애플리케이션에서 발생한 문제였습니다. ES에 비정규화된 문서를 미리 만들어 두고, API는 그 문서를 조회해 내려주는 구조였습니다. 그런데 조회 트래픽이 몰리는 특정 화면에"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/troubleshooting-es-unnecessary-fields-cpu-v2.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>ES 불필요 필드 역직렬화가 API 서버 CPU 스파이크를 일으킨 사건</h1> <div class="meta" data-astro-cid-fzx4jmue> 2023-03-15 · 엔지니어링  · <a class="series-badge" href="/series/" data-astro-cid-fzx4jmue>시리즈 · 트러블슈팅</a>  </div> <img class="cover" src="/img/covers/eng/troubleshooting-es-unnecessary-fields-cpu-v2.png" alt="ES 불필요 필드 역직렬화가 API 서버 CPU 스파이크를 일으킨 사건" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <h1 id="배경">배경</h1>
+<p>ElasticSearch(ES)를 읽기 전용 조회 DB로 쓰는 Spring Boot 백엔드 애플리케이션에서 발생한 문제였습니다. ES에 비정규화된 문서를 미리 만들어 두고, API는 그 문서를 조회해 내려주는 구조였습니다. 그런데 조회 트래픽이 몰리는 특정 화면에서 <strong>API 서버의 CPU가 갑자기 치솟아</strong> 장애로 번졌습니다.</p>
+<p>처음엔 ES 쪽을 의심했습니다. 쿼리가 무거운가? 샤드가 한쪽으로 쏠렸나? 리인덱싱이 잦나? 그런데 ES 클러스터 지표는 멀쩡했고 쿼리 응답도 빨랐습니다. 이상한 건 <strong>부하가 ES가 아니라 API 서버(클라이언트) 쪽 CPU에</strong> 쏠린다는 점이었습니다. 단순히 지표를 모니터링하는 것만으로는 문제 원인을 좁히기 어려워 보였습니다.</p>
+<h1 id="해결">해결</h1>
+<h2 id="cpu-프로파일링">CPU 프로파일링</h2>
+<p>아무래도 CPU가 치솟는 형태의 문제였으니, CPU 프로파일링 도구 중 <a href="https://github.com/async-profiler/async-profiler">async-profiler</a>로 API 서버의 프로파일링을 진행했습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#B392F0">./profiler.sh</span><span style="color:#79B8FF"> -e</span><span style="color:#9ECBFF"> cpu</span><span style="color:#79B8FF"> -d</span><span style="color:#79B8FF"> 30</span><span style="color:#79B8FF"> -f</span><span style="color:#9ECBFF"> flame.html</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">pi</span><span style="color:#E1E4E8">d</span><span style="color:#F97583">></span></span></code></pre>
+<p><img src="/img/troubleshooting-es-unnecessary-fields-cpu/flamegraph-jackson-v2.png" alt="async-profiler로 뜬 API 서버 CPU 플레임 그래프. 역직렬화(ObjectMapper.readValue) 하나가 전체 CPU의 58%를 차지하고, 그 아래로 MapDeserializer·UTF8StreamJsonParser 등 Jackson 역직렬화 스택이 이어진다"></p>
+<p><em>해당 이미지는 실제 실무에서 발생한 프로파일링 기준은 아니고, 최대한 재현하여 따로 캡쳐한 이미지입니다. (회사 자료라 유출할 수는 없겠네요 😂)</em></p>
+<p>플레임 그래프에서 의외의 문제점이 보였습니다. 비즈니스 로직이 아니라 Jackson의 역직렬화·직렬화 구간이 CPU 비용을 크게 쓰고 있었습니다. 곰곰이 보니 그럴 만했던 것 같습니다. 저희 팀이 관리하던 애플리케이션은 여러 유관 시스템에서 데이터를 조합해 인덱싱한 다음, 그걸 읽기 전용으로 빠르게 내려주는 시스템이었습니다. 그렇다 보니 ES 문서에 매핑된 필드가 워낙 많았습니다(수십 개). 그러나 앞단 시스템이 실제로 활용하는 필드는 그중 몇 개뿐이었습니다. 시간이 지나며 더 이상 쓰지 않는(deprecated) 필드까지 뒤섞여 쌓인 탓이었습니다. 그런데도 ES가 돌려준 <code>_source</code>를 통째로 받아 객체로 역직렬화하고, 그걸 다시 API 응답으로 직렬화하고 있었습니다. 즉 안 쓸 필드까지 매 요청마다 객체로 풀었다가 도로 JSON으로 변환하는 일을, 트래픽 수만큼 반복했던 것이었습니다.</p>
+<p>이게 정말 필드 수에 비례하는 비용인지 확인차 순수 Jackson으로 한번 변환 비용을 테스트해봤습니다. 필드 50개짜리 문서와 5개짜리 문서를 각각 <code>Map</code>으로 역직렬화해 본 결과입니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>필드 50개(불필요까지 전부): 약 3679 ns/op   (payload 2331B)</span></span>
+<span class="line"><span>필드  5개(필요한 것만):     약  407 ns/op   (payload  226B)</span></span>
+<span class="line"><span>→ 대략 9배 차이</span></span></code></pre>
+<p>정밀한 벤치마크는 아니지만, 역직렬화 비용이 필드 수·페이로드 크기에 거의 그대로 비례한다는 건 분명했습니다. 한 건이 마이크로초 단위라도 초당 수천·수만 건이면 CPU에 그대로 쌓입니다. “안 쓰는 필드까지 변환하는” 비용이 꽤나 무시할 수 없는 수준으로 쌓이고 있던 거였습니다.</p>
+<h2 id="필요한-필드만-가져오도록-해보기">필요한 필드만 가져오도록 해보기</h2>
+<p>어렵지 않게 단순하게 생각해봤습니다. 받아서 버릴 거면 애초에 받지 않으면 되지 않을까? ES의 <code>_source</code> 필터링으로, 쿼리 단계에서 정말 필요한 필드만 가져오게 했습니다. ES로부터 데이터를 쿼리하기 위해 사용하던 <code>RestHighLevelClient</code> 기준으로는 <code>SearchSourceBuilder.fetchSource(...)</code>에 include할 필드를 넘기면 됩니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#E1E4E8">SearchSourceBuilder source </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> SearchSourceBuilder</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">source.</span><span style="color:#B392F0">query</span><span style="color:#E1E4E8">(</span><span style="color:#6A737D">/* ... */</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// 필요한 필드만 include (나머지는 ES가 아예 안 실어 보냄)</span></span>
+<span class="line"><span style="color:#E1E4E8">source.</span><span style="color:#B392F0">fetchSource</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">new</span><span style="color:#F97583"> String</span><span style="color:#E1E4E8">[]{</span><span style="color:#9ECBFF">"id"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"name"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"price"</span><span style="color:#E1E4E8">}, </span><span style="color:#79B8FF">null</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">SearchRequest request </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> SearchRequest</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"my-index"</span><span style="color:#E1E4E8">).</span><span style="color:#B392F0">source</span><span style="color:#E1E4E8">(source);</span></span>
+<span class="line"><span style="color:#E1E4E8">SearchResponse response </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> client.</span><span style="color:#B392F0">search</span><span style="color:#E1E4E8">(request, RequestOptions.DEFAULT);</span></span></code></pre>
+<p><code>fetchSource(includes, excludes)</code>로 include 목록만 지정하면, ES가 응답 <code>_source</code>에 그 필드들만 담아 보냅니다. 그러면 API 서버가 받는 페이로드부터 작아지고, 역직렬화할 양도, 다시 직렬화할 양도 같이 줄어듭니다. 적용 후 그 화면의 CPU 스파이크가 사라졌습니다. 쿼리를 바꾼 것도, 서버를 늘린 것도 아니고, “안 쓸 데이터를 안 받기”만 했을 뿐이었습니다.</p>
+<h1 id="결과">결과</h1>
+<p>결론적으로 필요한 필드만 가져오도록 API 애플리케이션을 패치했고, CPU 스파이크는 사라지고 원래 사용률 수준으로 내려와 정착했습니다.</p>
+<p>모니터링 지표만으로 원인을 단정하지 않고, 정말 그 지점이 맞는지 프로파일링으로 직접 확인하는 습관을 들이면 좋을 것 같습니다. 그리고 당연히 잘 돌아갈 거라 믿고 쓰는 라이브러리나 기술도, 사용 사례에 따라 어떤 비용을 치르는지 따져보고 트레이드오프를 감안해 써야 한다는 것도 명심! Jackson도 평소엔 멀쩡했지만 “필드 수십 개짜리 문서를 초당 수만 번”이라는 이 서비스의 패턴을 만나자 생각보다 큰 CPU 자원을 쓰고 있었으니까요. 특히 실제 기능에는 아무 영향이 없으면서 오버헤드만 되는 부분은, 안 쓰는 필드까지 굳이 변환했다 되돌리던 이번 경우처럼 눈에 잘 안 띄어서 한 번쯤 의심해봐야겠다 싶었습니다.</p>
+<h1 id="참고">참고</h1>
+<blockquote>
+<ul>
+<li><a href="https://github.com/async-profiler/async-profiler">async-profiler</a></li>
+<li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-fields.html#source-filtering">Elasticsearch: Source filtering (<code>_source</code>)</a></li>
+</ul>
+</blockquote> </div> <section class="series-foot" data-astro-cid-fzx4jmue> <p class="sf-h" data-astro-cid-fzx4jmue> <span class="sf-label" data-astro-cid-fzx4jmue>시리즈</span> <a href="/series/" data-astro-cid-fzx4jmue>트러블슈팅</a> <span class="sf-count" data-astro-cid-fzx4jmue>전 4편</span> </p> <ol class="sf-list" data-astro-cid-fzx4jmue> <li class="cur" data-astro-cid-fzx4jmue> <a href="/troubleshooting-es-unnecessary-fields-cpu/" aria-current="page" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>01</span> <span class="sf-text" data-astro-cid-fzx4jmue>ES 불필요 필드 역직렬화가 API 서버 CPU 스파이크를 일으킨 사건</span>  <span class="sf-tag cur" data-astro-cid-fzx4jmue>현재 글</span>  </a> </li><li data-astro-cid-fzx4jmue> <a href="/troubleshooting-hashmap-concurrency/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>02</span> <span class="sf-text" data-astro-cid-fzx4jmue>HashMap 동시성으로 기준정보가 꼬인 사건</span>   <span class="sf-tag" data-astro-cid-fzx4jmue>다음</span> </a> </li><li data-astro-cid-fzx4jmue> <a href="/troubleshooting-kotlin-configurationproperties/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>03</span> <span class="sf-text" data-astro-cid-fzx4jmue>통합테스트에서만 ConfigurationProperties 바인딩이 안 되던 문제</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/troubleshooting-jobscope-jobparameters/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>04</span> <span class="sf-text" data-astro-cid-fzx4jmue>JobScope 밖에서 JobParameters가 동작하지 않은 이유</span>    </a> </li> </ol> </section> <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#배경" data-astro-cid-fzx4jmue>배경</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#해결" data-astro-cid-fzx4jmue>해결</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#cpu-프로파일링" data-astro-cid-fzx4jmue>CPU 프로파일링</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#필요한-필드만-가져오도록-해보기" data-astro-cid-fzx4jmue>필요한 필드만 가져오도록 해보기</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#결과" data-astro-cid-fzx4jmue>결과</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/troubleshooting-es-unnecessary-fields-cpu/";
+const pageId = "troubleshooting-es-unnecessary-fields-cpu";
+const pageTitle = "ES 불필요 필드 역직렬화가 API 서버 CPU 스파이크를 일으킨 사건";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

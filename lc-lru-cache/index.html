@@ -1,0 +1,277 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>[간만에 스터디] LeetCode LRU Cache</title><meta name="description" content="문제 LRU Cache: capacity 만큼만 담는 캐시를 설계한다. get / put 모두 평균 O(1) 이어야 하고, 용량이 꽉 찬 상태에서 새 키를 넣으면 가장 오래 안 쓴(LRU) 항목을 버린다. - LRUCache(capacity) : 용량을 정해 초기화. "><link rel="canonical" href="https://thxwelchs.github.io/lc-lru-cache/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="[간만에 스터디] LeetCode LRU Cache"><meta property="og:description" content="문제 LRU Cache: capacity 만큼만 담는 캐시를 설계한다. get / put 모두 평균 O(1) 이어야 하고, 용량이 꽉 찬 상태에서 새 키를 넣으면 가장 오래 안 쓴(LRU) 항목을 버린다. - LRUCache(capacity) : 용량을 정해 초기화. "><meta property="og:url" content="https://thxwelchs.github.io/lc-lru-cache/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="[간만에 스터디] LeetCode LRU Cache"><meta name="twitter:description" content="문제 LRU Cache: capacity 만큼만 담는 캐시를 설계한다. get / put 모두 평균 O(1) 이어야 하고, 용량이 꽉 찬 상태에서 새 키를 넣으면 가장 오래 안 쓴(LRU) 항목을 버린다. - LRUCache(capacity) : 용량을 정해 초기화. "><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>[간만에 스터디] LeetCode LRU Cache</h1> <div class="meta" data-astro-cid-fzx4jmue> 2024-03-24 · PS  </div> <img class="cover" src="/img/covers/ps-algorithm.jpg" alt="[간만에 스터디] LeetCode LRU Cache" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <h1 id="문제">문제</h1>
+<p><a href="https://leetcode.com/problems/lru-cache/description/">LRU Cache</a>: <code>capacity</code>만큼만 담는 캐시를 설계한다. <code>get</code>/<code>put</code> 모두 평균 <strong>O(1)</strong> 이어야 하고, 용량이 꽉 찬 상태에서 새 키를 넣으면 <strong>가장 오래 안 쓴(LRU)</strong> 항목을 버린다.</p>
+<ul>
+<li><code>LRUCache(capacity)</code>: 용량을 정해 초기화.</li>
+<li><code>int get(int key)</code>: 있으면 값을 반환(그리고 최근 사용으로 갱신), 없으면 <code>-1</code>.</li>
+<li><code>void put(int key, int value)</code>: 넣거나 갱신(최근 사용으로). 용량 초과 시 LRU 제거.</li>
+<li><strong>제한</strong>: <code>1 ≤ capacity ≤ 3000</code>, <code>0 ≤ key ≤ 10^4</code>, <code>0 ≤ value ≤ 10^5</code>, 호출 최대 <code>2·10^5</code>회.</li>
+</ul>
+<h1 id="풀이-방법">풀이 방법</h1>
+<p>Doubly Linked List의 특성을 이용해서 가장 안쓴 캐시를 제거하고, 최신 캐신을 갱신한다.
+<code>put</code>, <code>get</code>의 시간복잡도는 O(1)이어야 하기 때문에, 배열을 이용한 방법은 최소 O(N)이 걸리므로
+참조형 선형 자료구조인 LinkedList를 사용해본다.</p>
+<p>Singly가 아닌 Doubly를 선택한 이유는 최근 캐시로 갱신도 가능해야 하며, 가장 오래된 캐시를 제거할수도 있어야 하기 때문에
+두개의 포인터를 가진 Doubly를 선택</p>
+<p>또한, 캐시의 최대크기 제한이 있기 때문에, 갱신해야 할 캐시가 존재하는지 여부(<code>get</code>)도 O(1)만에 수행하기 위해
+주소 직접접근이 가능한 주소를가진 배열(<code>cacheTable</code>)을 이용한다.</p>
+<h1 id="처음-시도-엣지케이스-통과-못함">처음 시도, 엣지케이스 통과 못함</h1>
+<p>약 3~4번 정도 수정에 수정을 거쳤으나 엣지케이스를 통과하지 못했던 코드. (<code>cacheTable</code>로 직접 접근 + 직접 짠 이중 연결 리스트)</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> LRUCache</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    static</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> Node</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">        public</span><span style="color:#F97583"> static</span><span style="color:#F97583"> final</span><span style="color:#E1E4E8"> Node HEAD </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> Node</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">-</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">-</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#F97583">        public</span><span style="color:#F97583"> static</span><span style="color:#F97583"> final</span><span style="color:#E1E4E8"> Node TAIL </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> Node</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">-</span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">-</span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#F97583">        int</span><span style="color:#E1E4E8"> key;</span></span>
+<span class="line"><span style="color:#F97583">        int</span><span style="color:#E1E4E8"> value;</span></span>
+<span class="line"><span style="color:#E1E4E8">        Node prev;</span></span>
+<span class="line"><span style="color:#E1E4E8">        Node next;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">        public</span><span style="color:#B392F0"> Node</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#FFAB70"> key</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> value</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#79B8FF">            this</span><span style="color:#E1E4E8">.key </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> key;</span></span>
+<span class="line"><span style="color:#79B8FF">            this</span><span style="color:#E1E4E8">.value </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> value;</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    // key: cache key</span></span>
+<span class="line"><span style="color:#6A737D">    // value: Node</span></span>
+<span class="line"><span style="color:#F97583">    Node</span><span style="color:#E1E4E8">[] cacheTable </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#F97583"> Node</span><span style="color:#E1E4E8">[</span><span style="color:#79B8FF">10001</span><span style="color:#E1E4E8">];</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    // Node, head(prev맨끝) 에 가까울수록 오래된 캐시</span></span>
+<span class="line"><span style="color:#E1E4E8">    Node cacheHead;</span></span>
+<span class="line"><span style="color:#6A737D">    // Node, tail(next맨끝) 에 가까울수록 최근 캐시</span></span>
+<span class="line"><span style="color:#E1E4E8">    Node cacheTail;</span></span>
+<span class="line"><span style="color:#F97583">    int</span><span style="color:#E1E4E8"> size;</span></span>
+<span class="line"><span style="color:#F97583">    int</span><span style="color:#E1E4E8"> capacity;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#B392F0"> LRUCache</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#FFAB70"> capacity</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#79B8FF">        this</span><span style="color:#E1E4E8">.size </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#79B8FF">        this</span><span style="color:#E1E4E8">.capacity </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> capacity;</span></span>
+<span class="line"><span style="color:#E1E4E8">        cacheHead </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Node.HEAD;</span></span>
+<span class="line"><span style="color:#E1E4E8">        cacheTail </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Node.TAIL;</span></span>
+<span class="line"><span style="color:#E1E4E8">        cacheHead.next </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> cacheTail;</span></span>
+<span class="line"><span style="color:#E1E4E8">        cacheTail.prev </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> cacheHead;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#F97583"> int</span><span style="color:#B392F0"> get</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#FFAB70"> key</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">        Node cachedNode </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> cacheTable[key];</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> (cachedNode </span><span style="color:#F97583">!=</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#B392F0">            put</span><span style="color:#E1E4E8">(key, cachedNode.value);</span></span>
+<span class="line"><span style="color:#F97583">            return</span><span style="color:#E1E4E8"> cachedNode.value;</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#F97583"> -</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#F97583"> void</span><span style="color:#B392F0"> put</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#FFAB70"> key</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> value</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#6A737D">        // 최신 캐시 업데이트</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> (cacheTable[key] </span><span style="color:#F97583">!=</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">            Node node </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> cacheTable[key];</span></span>
+<span class="line"><span style="color:#F97583">            if</span><span style="color:#E1E4E8"> (node.value </span><span style="color:#F97583">!=</span><span style="color:#E1E4E8"> value) {</span></span>
+<span class="line"><span style="color:#6A737D">                // 가장 안쓴 캐시 제거</span></span>
+<span class="line"><span style="color:#6A737D">                // head &#x3C;-> node.prev &#x3C;-> node &#x3C;-> node.next &#x3C;-> tail</span></span>
+<span class="line"><span style="color:#E1E4E8">                node.prev.next </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> node.next;</span></span>
+<span class="line"><span style="color:#E1E4E8">                node.next.prev </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> node.prev;</span></span>
+<span class="line"><span style="color:#E1E4E8">                cacheTable[key] </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">                // head &#x3C;-> node.prev &#x3C;-> node &#x3C;-> node.next &#x3C;-> tail</span></span>
+<span class="line"><span style="color:#E1E4E8">                Node newNode </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> Node</span><span style="color:#E1E4E8">(key, value);</span></span>
+<span class="line"><span style="color:#E1E4E8">                cacheTail.prev.next </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> newNode;</span></span>
+<span class="line"><span style="color:#E1E4E8">                newNode.prev </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> cacheTail.prev;</span></span>
+<span class="line"><span style="color:#E1E4E8">                newNode.next </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> cacheTail;</span></span>
+<span class="line"><span style="color:#E1E4E8">                cacheTable[key] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> newNode;</span></span>
+<span class="line"><span style="color:#F97583">                return</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">            }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">            node.prev.next </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> node.next;</span></span>
+<span class="line"><span style="color:#E1E4E8">            node.next.prev </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> node.prev;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">            cacheTail.prev.next </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> node;</span></span>
+<span class="line"><span style="color:#E1E4E8">            node.prev </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> cacheTail.prev;</span></span>
+<span class="line"><span style="color:#E1E4E8">            node.next </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> cacheTail;</span></span>
+<span class="line"><span style="color:#E1E4E8">            cacheTail.prev </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> node;</span></span>
+<span class="line"><span style="color:#F97583">            return</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">        // 최신 캐시 추가</span></span>
+<span class="line"><span style="color:#E1E4E8">        Node newNode </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> Node</span><span style="color:#E1E4E8">(key, value);</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> (size </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> capacity) {</span></span>
+<span class="line"><span style="color:#6A737D">            // head &#x3C;-> newNode &#x3C;-> tail</span></span>
+<span class="line"><span style="color:#E1E4E8">            cacheTail.prev.next </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> newNode;</span></span>
+<span class="line"><span style="color:#E1E4E8">            newNode.prev </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> cacheTail.prev;</span></span>
+<span class="line"><span style="color:#E1E4E8">            newNode.next </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> cacheTail;</span></span>
+<span class="line"><span style="color:#E1E4E8">            cacheTail.prev </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> newNode;</span></span>
+<span class="line"><span style="color:#E1E4E8">            size</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#6A737D">        // 가장 안쓴 캐시 제거 &#x26; 최신 캐시로 갱신</span></span>
+<span class="line"><span style="color:#F97583">        else</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#6A737D">            // 가장 안쓴 캐시 제거</span></span>
+<span class="line"><span style="color:#6A737D">            // head &#x3C;-> oldCache &#x3C;-> oldCache.next &#x3C;-> tail</span></span>
+<span class="line"><span style="color:#E1E4E8">            Node oldCache </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> cacheHead.next;</span></span>
+<span class="line"><span style="color:#E1E4E8">            oldCache.next.prev </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> cacheHead;</span></span>
+<span class="line"><span style="color:#E1E4E8">            cacheHead.next </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> oldCache.next;</span></span>
+<span class="line"><span style="color:#E1E4E8">            cacheTable[oldCache.key] </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">            // head &#x3C;-> node.prev &#x3C;-> node &#x3C;-> node.next &#x3C;-> tail</span></span>
+<span class="line"><span style="color:#E1E4E8">            cacheTail.prev.next </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> newNode;</span></span>
+<span class="line"><span style="color:#E1E4E8">            newNode.prev </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> cacheTail.prev;</span></span>
+<span class="line"><span style="color:#E1E4E8">            newNode.next </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> cacheTail;</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">        cacheTable[key] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> newNode;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#F97583"> void</span><span style="color:#B392F0"> printCache</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#E1E4E8">        Node node </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> cacheHead;</span></span>
+<span class="line"><span style="color:#E1E4E8">        System.out.</span><span style="color:#B392F0">print</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"head -> "</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#F97583">        while</span><span style="color:#E1E4E8"> (node </span><span style="color:#F97583">!=</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">            System.out.</span><span style="color:#B392F0">print</span><span style="color:#E1E4E8">(node.key </span><span style="color:#F97583">+</span><span style="color:#9ECBFF"> "-> "</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">            node </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> node.next;</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">        System.out.</span><span style="color:#B392F0">print</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"tail"</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">        System.out.</span><span style="color:#B392F0">println</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h1 id="해결한-코드">해결한 코드</h1>
+<p><code>HashMap</code> + 이중 연결 리스트를, <code>addToHead</code> / <code>removeNode</code> / <code>removeTail</code> 헬퍼로 분리해 깔끔하게 다시 짠 버전. 포인터 연결을 헬퍼 한 곳에서만 다루니 실수가 사라졌다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> Node</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    int</span><span style="color:#E1E4E8"> key;</span></span>
+<span class="line"><span style="color:#F97583">    int</span><span style="color:#E1E4E8"> value;</span></span>
+<span class="line"><span style="color:#E1E4E8">    Node prev;</span></span>
+<span class="line"><span style="color:#E1E4E8">    Node next;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">    Node</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#FFAB70"> key</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> value</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#79B8FF">        this</span><span style="color:#E1E4E8">.key </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> key;</span></span>
+<span class="line"><span style="color:#79B8FF">        this</span><span style="color:#E1E4E8">.value </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> value;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> LRUCache</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    int</span><span style="color:#E1E4E8"> capacity;</span></span>
+<span class="line"><span style="color:#E1E4E8">    HashMap&#x3C;</span><span style="color:#F97583">Integer</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">Node</span><span style="color:#E1E4E8">> map;</span></span>
+<span class="line"><span style="color:#E1E4E8">    Node head;</span></span>
+<span class="line"><span style="color:#E1E4E8">    Node tail;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">    LRUCache</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#FFAB70"> capacity</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#79B8FF">        this</span><span style="color:#E1E4E8">.capacity </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> capacity;</span></span>
+<span class="line"><span style="color:#E1E4E8">        map </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#E1E4E8"> HashMap&#x3C;>();</span></span>
+<span class="line"><span style="color:#E1E4E8">        head </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> Node</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">        tail </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> Node</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">        head.next </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> tail;</span></span>
+<span class="line"><span style="color:#E1E4E8">        tail.prev </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> head;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#F97583"> int</span><span style="color:#B392F0"> get</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#FFAB70"> key</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> (map.</span><span style="color:#B392F0">containsKey</span><span style="color:#E1E4E8">(key)) {</span></span>
+<span class="line"><span style="color:#E1E4E8">            Node node </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> map.</span><span style="color:#B392F0">get</span><span style="color:#E1E4E8">(key);</span></span>
+<span class="line"><span style="color:#B392F0">            removeNode</span><span style="color:#E1E4E8">(node);</span></span>
+<span class="line"><span style="color:#B392F0">            addToHead</span><span style="color:#E1E4E8">(node);</span></span>
+<span class="line"><span style="color:#F97583">            return</span><span style="color:#E1E4E8"> node.value;</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#F97583"> -</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#F97583"> void</span><span style="color:#B392F0"> put</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#FFAB70"> key</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> value</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> (map.</span><span style="color:#B392F0">containsKey</span><span style="color:#E1E4E8">(key)) {</span></span>
+<span class="line"><span style="color:#E1E4E8">            Node node </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> map.</span><span style="color:#B392F0">get</span><span style="color:#E1E4E8">(key);</span></span>
+<span class="line"><span style="color:#B392F0">            removeNode</span><span style="color:#E1E4E8">(node);</span></span>
+<span class="line"><span style="color:#B392F0">            addToHead</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">new</span><span style="color:#B392F0"> Node</span><span style="color:#E1E4E8">(key, value));</span></span>
+<span class="line"><span style="color:#E1E4E8">        } </span><span style="color:#F97583">else</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">            if</span><span style="color:#E1E4E8"> (map.</span><span style="color:#B392F0">size</span><span style="color:#E1E4E8">() </span><span style="color:#F97583">==</span><span style="color:#E1E4E8"> capacity) {</span></span>
+<span class="line"><span style="color:#E1E4E8">                Node node </span><span style="color:#F97583">=</span><span style="color:#B392F0"> removeTail</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">                map.</span><span style="color:#B392F0">remove</span><span style="color:#E1E4E8">(node.key);</span></span>
+<span class="line"><span style="color:#E1E4E8">            }</span></span>
+<span class="line"><span style="color:#B392F0">            addToHead</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">new</span><span style="color:#B392F0"> Node</span><span style="color:#E1E4E8">(key, value));</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#F97583"> void</span><span style="color:#B392F0"> addToHead</span><span style="color:#E1E4E8">(Node </span><span style="color:#FFAB70">node</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">        Node next </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> head.next;</span></span>
+<span class="line"><span style="color:#E1E4E8">        node.prev </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> head;</span></span>
+<span class="line"><span style="color:#E1E4E8">        node.next </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> next;</span></span>
+<span class="line"><span style="color:#E1E4E8">        head.next </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> node;</span></span>
+<span class="line"><span style="color:#E1E4E8">        next.prev </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> node;</span></span>
+<span class="line"><span style="color:#E1E4E8">        map.</span><span style="color:#B392F0">put</span><span style="color:#E1E4E8">(node.key, node);</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#F97583"> void</span><span style="color:#B392F0"> removeNode</span><span style="color:#E1E4E8">(Node </span><span style="color:#FFAB70">node</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">        Node prev </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> node.prev;</span></span>
+<span class="line"><span style="color:#E1E4E8">        Node next </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> node.next;</span></span>
+<span class="line"><span style="color:#E1E4E8">        prev.next </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> next;</span></span>
+<span class="line"><span style="color:#E1E4E8">        next.prev </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> prev;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#E1E4E8"> Node </span><span style="color:#B392F0">removeTail</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#E1E4E8">        Node node </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> tail.prev;</span></span>
+<span class="line"><span style="color:#B392F0">        removeNode</span><span style="color:#E1E4E8">(node);</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> node;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<blockquote>
+<p>전체 풀이 기록: <a href="https://github.com/initi8ors/algorithm2024/blob/main/001week/lru-cache_lth.md">initi8ors/algorithm2024</a></p>
+</blockquote> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#문제" data-astro-cid-fzx4jmue>문제</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#풀이-방법" data-astro-cid-fzx4jmue>풀이 방법</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#처음-시도-엣지케이스-통과-못함" data-astro-cid-fzx4jmue>처음 시도, 엣지케이스 통과 못함</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#해결한-코드" data-astro-cid-fzx4jmue>해결한 코드</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/lc-lru-cache/";
+const pageId = "lc-lru-cache";
+const pageTitle = "[간만에 스터디] LeetCode LRU Cache";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

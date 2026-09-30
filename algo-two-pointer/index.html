@@ -1,0 +1,81 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>투 포인터 (Two Pointer) 정리</title><meta name="description" content="Two Pointer 일반적으로 어떤 수열 $A = {1,2,3,4,5,6...}$ 에서 각각 다른 원소를 가르키고 있는 두개의 포인터를 움직이며 투포인터 없이는 $O(N^2)$ 만에 수행 할 수 있는 연산을 $O(N)$ 만에 해결하는 것을 의미함 특징 두개의 포인터 "><link rel="canonical" href="https://thxwelchs.github.io/algo-two-pointer/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="투 포인터 (Two Pointer) 정리"><meta property="og:description" content="Two Pointer 일반적으로 어떤 수열 $A = {1,2,3,4,5,6...}$ 에서 각각 다른 원소를 가르키고 있는 두개의 포인터를 움직이며 투포인터 없이는 $O(N^2)$ 만에 수행 할 수 있는 연산을 $O(N)$ 만에 해결하는 것을 의미함 특징 두개의 포인터 "><meta property="og:url" content="https://thxwelchs.github.io/algo-two-pointer/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="투 포인터 (Two Pointer) 정리"><meta name="twitter:description" content="Two Pointer 일반적으로 어떤 수열 $A = {1,2,3,4,5,6...}$ 에서 각각 다른 원소를 가르키고 있는 두개의 포인터를 움직이며 투포인터 없이는 $O(N^2)$ 만에 수행 할 수 있는 연산을 $O(N)$ 만에 해결하는 것을 의미함 특징 두개의 포인터 "><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>투 포인터 (Two Pointer) 정리</h1> <div class="meta" data-astro-cid-fzx4jmue> 2018-05-20 · PS  </div> <img class="cover" src="/img/covers/ps-algorithm.jpg" alt="투 포인터 (Two Pointer) 정리" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <h1 id="two-pointer">Two Pointer</h1>
+<p>일반적으로 어떤 수열 $A = {1,2,3,4,5,6…}$ 에서 각각 다른 원소를 가르키고 있는 두개의 포인터를 움직이며</p>
+<p>투포인터 없이는 $O(N^2)$ 만에 수행 할 수 있는 연산을 $O(N)$ 만에 해결하는 것을 의미함</p>
+<h2 id="특징">특징</h2>
+<p>두개의 포인터 <code>i, j</code> 가 있다고 할 때, 기존에는 i의 위치 기준에서의 각각의 j를 모두 살펴보는 O(N^2) 의 해결방법이 아니라, i의 위치 기준에서의 각각의 j를 이전의 j까지도 활용할 수 있는 j의 최대 N번의 움직임으로 인해
+총 <code>i</code>의 최대 움직임 <code>N</code>, <code>j</code>의 최대 움직임 <code>N</code> = $O(2N)$ 으로 모든 지점을 탐색하여 살펴볼 수 있다.</p>
+<h2 id="포인터가-움직여야-할-조건">포인터가 움직여야 할 조건</h2>
+<p>문제가 가지고 있는 성질(<em>단조증가성, 등등</em>)등을 잘 살펴서 포인터를 적절히 움직여주어야 한다.</p>
+<p>예) <strong>BOJ 2230 수고르기 문제의 성질:</strong></p>
+<p><strong>두 원소의 차가 M이상이면서 가장 작은 값을 구하기
+정렬로 인한 단조증가성을 보장시키고, 두 포인터가 바라보고 있는 두 원소에 대해 더 큰 차이 값을 바라보기 위한 해결법</strong></p>
+<p><code>A[j] - A[i] &#x3C; M</code> 이 참 일 경우 j를 증가 (i를 늘려봐야, 차가 더 작아진다 기대하는 값은 차가 M이상인 값을 찾고자 한다. 그렇다면 당연히 j를 늘려서 차를 더 늘려봐야 한다)</p>
+<p><code>A[j] - A[i] ≥ M</code>이 참 일 경우 i를 증가 (이미 차가 M 이상인 경우이다. 이 경우는 두 포인터가 가지는 두 원소에 대한 차를 찾은 최초지점이라고 볼 수 있다. 이 때 i를 늘려서 최초지점인 j에 대한 나머지 i들을 살펴서 더 작은 차의 값이 나올 가능성이 존재하기 때문에 i를 늘려본다)</p> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#two-pointer" data-astro-cid-fzx4jmue>Two Pointer</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#특징" data-astro-cid-fzx4jmue>특징</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#포인터가-움직여야-할-조건" data-astro-cid-fzx4jmue>포인터가 움직여야 할 조건</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/algo-two-pointer/";
+const pageId = "algo-two-pointer";
+const pageTitle = "투 포인터 (Two Pointer) 정리";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

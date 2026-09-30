@@ -1,0 +1,140 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>프로그래머스 불량 사용자</title><meta name="description" content="문제 응모자 아이디 목록 user id 와, 일부 글자를 로 가린 불량 사용자 패턴 목록 banned id 가 주어진다. 각 banned id 패턴에 맞는 user id 를 하나씩 배정해 만들 수 있는 제재 아이디 목록의 경우의 수 를 구하면 된다. 단, 순서만 다르고"><link rel="canonical" href="https://thxwelchs.github.io/pg-64064-bad-users/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="프로그래머스 불량 사용자"><meta property="og:description" content="문제 응모자 아이디 목록 user id 와, 일부 글자를 로 가린 불량 사용자 패턴 목록 banned id 가 주어진다. 각 banned id 패턴에 맞는 user id 를 하나씩 배정해 만들 수 있는 제재 아이디 목록의 경우의 수 를 구하면 된다. 단, 순서만 다르고"><meta property="og:url" content="https://thxwelchs.github.io/pg-64064-bad-users/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="프로그래머스 불량 사용자"><meta name="twitter:description" content="문제 응모자 아이디 목록 user id 와, 일부 글자를 로 가린 불량 사용자 패턴 목록 banned id 가 주어진다. 각 banned id 패턴에 맞는 user id 를 하나씩 배정해 만들 수 있는 제재 아이디 목록의 경우의 수 를 구하면 된다. 단, 순서만 다르고"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>프로그래머스 불량 사용자</h1> <div class="meta" data-astro-cid-fzx4jmue> 2020-09-01 · PS  </div> <img class="cover" src="/img/covers/ps-algorithm.jpg" alt="프로그래머스 불량 사용자" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <h1 id="문제">문제</h1>
+<p>응모자 아이디 목록 <code>user_id</code>와, 일부 글자를 <code>*</code>로 가린 불량 사용자 패턴 목록 <code>banned_id</code>가 주어진다. 각 <code>banned_id</code> 패턴에 맞는 <code>user_id</code>를 하나씩 배정해 만들 수 있는 <strong>제재 아이디 목록의 경우의 수</strong>를 구하면 된다. 단, 순서만 다르고 구성이 같은 목록은 하나로 센다.</p>
+<ul>
+<li><strong>입력</strong>: <code>user_id</code>(응모자 목록), <code>banned_id</code>(가려진 패턴 목록).</li>
+<li><strong>출력</strong>: 가능한 제재 아이디 목록의 경우의 수.</li>
+<li><strong>제한</strong>: <code>user_id</code> 크기 1 ~ 8, 각 아이디 길이 1 ~ 8. (매칭은 <strong>길이가 같고</strong>, 각 글자가 같거나 패턴이 <code>*</code>일 때 성립.)</li>
+</ul>
+<h1 id="접근">접근</h1>
+<p><code>banned_id</code>가 최대 8개, <code>user_id</code>도 8개라 <strong>백트래킹(순열)</strong> 으로 다 해볼 수 있다. <code>banned_id</code>를 순서대로 보며, 각 패턴에 매칭되는 <code>user_id</code>를 아직 안 쓴 것 중에서 하나씩 골라 끝까지 배정한다.</p>
+<p>매칭 판정은 단순하다. 길이가 같고, 모든 자리에서 <code>글자가 같거나 패턴이 *</code> 이면 매칭.</p>
+<p>문제의 핵심 함정은 <strong>중복 제거</strong>다. <code>{0, 1, 3}</code>을 고르든 <code>{1, 0, 3}</code>을 고르든 같은 목록이라 한 번만 세야 한다. 그래서 고른 <code>user_id</code>의 <strong>인덱스들을 비트마스크 정수로</strong> 만들어(예: 0·1·3번 → <code>0b1011</code>) <code>set</code>에 넣는다. 순서가 달라도 비트마스크는 같아져 자동으로 중복이 제거되니, <code>set</code>의 크기가 곧 답이다.</p>
+<h1 id="풀이">풀이</h1>
+<blockquote>
+<p>전체 코드: <a href="https://github.com/thxwelchs/algorithm/blob/master/%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%A8%B8%EC%8A%A4/p64064_%EB%B6%88%EB%9F%89%EC%82%AC%EC%9A%A9%EC%9E%90.cpp">thxwelchs/algorithm</a></p>
+</blockquote>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="cpp"><code><span class="line"><span style="color:#F97583">#include</span><span style="color:#9ECBFF"> &#x3C;string></span></span>
+<span class="line"><span style="color:#F97583">#include</span><span style="color:#9ECBFF"> &#x3C;vector></span></span>
+<span class="line"><span style="color:#F97583">#include</span><span style="color:#9ECBFF"> &#x3C;unordered_set></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">using</span><span style="color:#F97583"> namespace</span><span style="color:#B392F0"> std</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// 프로그래머스 64064 불량사용자</span></span>
+<span class="line"><span style="color:#6A737D">// https://programmers.co.kr/learn/courses/30/lessons/64064</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">unordered_set</span><span style="color:#F97583">&#x3C;int></span><span style="color:#E1E4E8"> set;</span></span>
+<span class="line"><span style="color:#6A737D">// 순열 중 순서가 뒤바뀐 것이 중복제거가 안되므로 중복제거를 한 뒤에 갯수를 세어주어야 한다. set은 중복허용이 안되므로 set의 size가 즉 답이 되는 것</span></span>
+<span class="line"><span style="color:#6A737D">// 중복이 되는 경우의 예: {frodo, crodo, abc123}, {crodo, frodo, abc123}</span></span>
+<span class="line"><span style="color:#6A737D">// 2중 string set으로 중복제거를 할 수도 있지만, 각 user_id의 index를 기준으로 BIT OR 연산한 결과 또한 중복이라는 것을 보장 할 수 있기에 이렇게 해결하기로 함</span></span>
+<span class="line"><span style="color:#6A737D">// frodo = user_id[0], crodo = user_id[1], abc123 = user_id[3] 라고 봤을 때 user_id의 최대 길이는 8이므로, 총 8비트(int 255) 의 기준으로 각 비트가 1인 값이 user_id의 index라고 했을 때</span></span>
+<span class="line"><span style="color:#6A737D">//  0000 1011 가 되어 11이 된다. 즉 013 순서이든 103 순서이든 bit 연산을 하면 11이 되므로 set으로 저장시 중복제거가 된다.</span></span>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">void</span><span style="color:#B392F0"> permutation</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">vector</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">string</span><span style="color:#E1E4E8">> </span><span style="color:#FFAB70">arr</span><span style="color:#E1E4E8">, </span><span style="color:#B392F0">vector</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">string</span><span style="color:#E1E4E8">> </span><span style="color:#FFAB70">p</span><span style="color:#E1E4E8">, </span><span style="color:#B392F0">vector</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">string</span><span style="color:#E1E4E8">> </span><span style="color:#FFAB70">target</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">bool</span><span style="color:#FFAB70"> visited</span><span style="color:#E1E4E8">[], </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> n</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> r</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> depth</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> bit</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#6A737D">    // banned_id 총 길이만큼의 모든 순열을 구한 뒤, 제재 아이디에 매치가 되는지 검사 한다. </span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8">(depth </span><span style="color:#F97583">==</span><span style="color:#E1E4E8"> r) {</span></span>
+<span class="line"><span style="color:#F97583">        bool</span><span style="color:#E1E4E8"> check </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> true</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">        for</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">; i </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> r; i</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#6A737D">            // 길이 자체가 다르다면 제재 아이디에 매치 될 수 없다.</span></span>
+<span class="line"><span style="color:#F97583">            if</span><span style="color:#E1E4E8">(p[i].</span><span style="color:#B392F0">size</span><span style="color:#E1E4E8">() </span><span style="color:#F97583">!=</span><span style="color:#E1E4E8"> target[i].</span><span style="color:#B392F0">size</span><span style="color:#E1E4E8">()) {</span></span>
+<span class="line"><span style="color:#F97583">                return</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">            }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">            // 순열로 구한 모든 문자열이 제재 아이디에 매치 되는지 확인</span></span>
+<span class="line"><span style="color:#F97583">            for</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> j </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">; j </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> p[i].</span><span style="color:#B392F0">size</span><span style="color:#E1E4E8">(); j</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">){</span></span>
+<span class="line"><span style="color:#E1E4E8">                check </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> check </span><span style="color:#F97583">&#x26;&#x26;</span><span style="color:#E1E4E8"> (p[i][j] </span><span style="color:#F97583">==</span><span style="color:#E1E4E8"> target[i][j] </span><span style="color:#F97583">||</span><span style="color:#E1E4E8"> target[i][j] </span><span style="color:#F97583">==</span><span style="color:#9ECBFF"> '*'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#F97583">                if</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">check) </span><span style="color:#F97583">return</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">            }</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">        // 중복 제거를 위한 bit flag로 계산한 유일한 int값을 set에 삽입</span></span>
+<span class="line"><span style="color:#E1E4E8">        set.</span><span style="color:#B392F0">emplace</span><span style="color:#E1E4E8">(bit);</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">; i </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> n; i</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">visited[i]) {</span></span>
+<span class="line"><span style="color:#E1E4E8">            visited[i] </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> true</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">            p[depth] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> arr[i];</span></span>
+<span class="line"><span style="color:#6A737D">            // user_id의 index 만큼 시프트 연산으로 밀어넣어 bit 변수의 bit flag를 유효한 값으로 설정한다.</span></span>
+<span class="line"><span style="color:#B392F0">            permutation</span><span style="color:#E1E4E8">(arr, p, target, visited, n, r, depth </span><span style="color:#F97583">+</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">, (bit </span><span style="color:#F97583">|</span><span style="color:#79B8FF"> 1</span><span style="color:#F97583"> &#x3C;&#x3C;</span><span style="color:#E1E4E8"> i));</span></span>
+<span class="line"><span style="color:#E1E4E8">            visited[i] </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> false</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#B392F0"> solution</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">vector</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">string</span><span style="color:#E1E4E8">> </span><span style="color:#FFAB70">user_id</span><span style="color:#E1E4E8">, </span><span style="color:#B392F0">vector</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">string</span><span style="color:#E1E4E8">> </span><span style="color:#FFAB70">banned_id</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">    vector</span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8">string</span><span style="color:#F97583">></span><span style="color:#B392F0"> output</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">8</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#F97583">    bool</span><span style="color:#E1E4E8"> visited[</span><span style="color:#79B8FF">8</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> {};</span></span>
+<span class="line"><span style="color:#B392F0">    permutation</span><span style="color:#E1E4E8">(user_id, output, banned_id, visited, user_id.</span><span style="color:#B392F0">size</span><span style="color:#E1E4E8">(), banned_id.</span><span style="color:#B392F0">size</span><span style="color:#E1E4E8">(), </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> set.</span><span style="color:#B392F0">size</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#문제" data-astro-cid-fzx4jmue>문제</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#접근" data-astro-cid-fzx4jmue>접근</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#풀이" data-astro-cid-fzx4jmue>풀이</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/pg-64064-bad-users/";
+const pageId = "pg-64064-bad-users";
+const pageTitle = "프로그래머스 불량 사용자";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

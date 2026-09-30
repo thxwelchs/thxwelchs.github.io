@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>thxwelchs</title>
+    <link>https://thxwelchs.github.io/</link>
+    <description>끄적끄적</description>
+    <language>ko</language>
+    <atom:link href="https://thxwelchs.github.io/rss.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>JobScope 밖에서 JobParameters가 동작하지 않은 이유</title>
+      <link>https://thxwelchs.github.io/troubleshooting-jobscope-jobparameters/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/troubleshooting-jobscope-jobparameters/</guid>
+      <pubDate>Thu, 08 Aug 2024 14:07:27 GMT</pubDate>
+      <description>Spring Batch에서 jobParameters 를 분명 맞게 썼는데도 특정 경로에서만 값이 안 들어와 한참 멍청멍청 삽질하게 된 후기입니다. 결론부터 말하면 ThreadLocal 문제였는데, 디버깅하는 과정에서 Spring Batch가 잡 파라미터를 어떻게 얻어오고 바인딩하는지 코드를 살펴보게 됐고, 직접 구현해서 실험도 해봤습니다. 배경 Spring Batch에서 잡 파라미터를 @Value(&quot; {jobParameters['param']}&quot;) 같은 SpEL로 받아 쓰고 있었습니다. 로컬에서도, 단일 스레드로 도는 경로에서도 값</description>
+      <category>트러블슈팅</category>
+      <category>Spring Batch</category>
+      <category>JobScope</category>
+      <category>SpEL</category>
+      <category>ThreadLocal</category>
+    </item>
+    <item>
+      <title>통합테스트에서만 ConfigurationProperties 바인딩이 안 되던 문제</title>
+      <link>https://thxwelchs.github.io/troubleshooting-kotlin-configurationproperties/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/troubleshooting-kotlin-configurationproperties/</guid>
+      <pubDate>Fri, 26 Jul 2024 10:25:59 GMT</pubDate>
+      <description>Spring + Kotlin으로 개발하면서, 통합테스트에서만 @ConfigurationProperties 바인딩이 안 돼 한참을 삽질했던 조금 민망한 후기를 공유합니다. 배경 코틀린 데이터 클래스로 불변 프로퍼티를 이렇게 선언해 두고 썼습니다. 로컬에서 애플리케이션을 띄우면 application.yml 의 값이 잘 바인딩됩니다. 그런데 @SpringBootTest 통합테스트로 돌리면 이 프로퍼티 빈을 만들다가 컨텍스트 로딩이 깨졌습니다. 대략 이런 에러였습니다. String 타입 빈을 찾는다는 메시지가 좀 이상했습니다. 이건 yml</description>
+      <category>트러블슈팅</category>
+      <category>Kotlin</category>
+      <category>Spring Boot</category>
+      <category>ConfigurationProperties</category>
+    </item>
+    <item>
+      <title>[간만에 스터디] LeetCode Compare Version Numbers</title>
+      <link>https://thxwelchs.github.io/lc-compare-version-numbers/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/lc-compare-version-numbers/</guid>
+      <pubDate>Sun, 30 Jun 2024 14:33:02 GMT</pubDate>
+      <description>Compare Version Numbers 코드 접근 및 풀이방법 - 각 버전에서 . 기준으로 파트를 나누어 파트별 문자열을 정수로 치환 - 정수로 치환한 버전의 파트별로 대소를 구분 - 대소 구분이 되지 않는다면 같은 버전으로 취급 전체 풀이 기록: initi8ors/algorithm2024</description>
+      <category>LeetCode</category>
+      <category>문자열</category>
+      <category>Java</category>
+    </item>
+    <item>
+      <title>[간만에 스터디] LeetCode Path With Minimum Effort</title>
+      <link>https://thxwelchs.github.io/lc-path-with-minimum-effort/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/lc-path-with-minimum-effort/</guid>
+      <pubDate>Sat, 08 Jun 2024 14:30:20 GMT</pubDate>
+      <description>Path With Minimum Effort 코드 접근 및 풀이방법 - minimum effort(최소 노력)을 구하기 위해 다익스트라 알고리즘 활용 - 경로상 최소 노력(최대 절대 높이 차이)를 유지하기 위해 이전에 구했던 최소 노력과 현재 노드와 다음 노드의 높이 차이 중 큰 값을 선택하여 다음 노드까지의 비용을 계산 전체 풀이 기록: initi8ors/algorithm2024</description>
+      <category>LeetCode</category>
+      <category>다익스트라</category>
+      <category>Java</category>
+    </item>
+    <item>
+      <title>[간만에 스터디] LeetCode Number of Provinces</title>
+      <link>https://thxwelchs.github.io/lc-number-of-provinces/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/lc-number-of-provinces/</guid>
+      <pubDate>Thu, 23 May 2024 11:07:07 GMT</pubDate>
+      <description>Number of Provinces 코드 접근 및 풀이방법 1. 그래프탐색(BFS or DFS)은 그래프에 존재하는 모든 간선을 통해 결국 모든 노드를 방문한다. 1. 단 이 문제의 경우 그래프가 양방향 간선이 존재하기 때문에 반드시 방문체크 필요 (방문체크하지 않으면 순환적으로 방문하게 되므로 무한 방문 문제 발생) 2. 그래프탐색의 경우 시간복잡도는 O(V+E) = O(Vertex + Edge) 이므로, 이 문제의 경우 $V = n (도시의 수), E = O(n^2)$ (최악의 경우) 이다. 2. 즉 1번 특성을 활용하여, 만약</description>
+      <category>LeetCode</category>
+      <category>BFS</category>
+      <category>그래프</category>
+      <category>Java</category>
+    </item>
+    <item>
+      <title>[간만에 스터디] LeetCode Longest Common Subsequence</title>
+      <link>https://thxwelchs.github.io/lc-longest-common-subsequence/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/lc-longest-common-subsequence/</guid>
+      <pubDate>Sun, 28 Apr 2024 13:45:24 GMT</pubDate>
+      <description>Longest Common Subsequence 코드 최종 Accepted 코드 Wrong Answer 코드 접근 및 풀이방법 1. 중복문제를 정의하기 위해, 전체문자열이 아닌 현재 위치의 문자 기준으로의 공통 문자열이 구성될 수 있는지 고민했다. 아이디어&lt;br/ 중복문제 탐색&lt;br/ &lt;br/ DP 정의, 점화식&lt;br/ DP 테이블&lt;br/ DP 문제 테이블&lt;br/ 개선점 1. Bottom Up (작은 문제에서 부터 채워나가는) 방식으로 하면 1차원으로도 가능할것 같다. 전체 풀이 기록: initi8ors/algorithm2024</description>
+      <category>LeetCode</category>
+      <category>DP</category>
+      <category>Java</category>
+    </item>
+    <item>
+      <title>[간만에 스터디] LeetCode Partition Array for Maximum Sum</title>
+      <link>https://thxwelchs.github.io/lc-partition-array-max-sum/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/lc-partition-array-max-sum/</guid>
+      <pubDate>Sun, 21 Apr 2024 10:17:38 GMT</pubDate>
+      <description>Partition Array for Maximum Sum 코드 최적화 코드 (아래 최적화되지 않은 코드에 비해 약 270배 빠름) 불필요한 이전의 i - j(0..k까지의 내 부분배열)에 해당하는 최적해를 구하러 가는 것이 제거 되었음 최적화 X 코드 (최초 아이디어 코드, Accepted를 받긴 하지만 시간이 매우 느리게 나옴) 접근 및 풀이방법 1. 중복문제를 정의하기 위해, 어떻게 최선의 파티션 어레이로 쪼갤 수 있고, 그 최선의 파티션 어레이가 쪼개진 경우에도 그 이후의 파티션 어레이의 최대값에도 활용될 수 있는지 확인해봤다</description>
+      <category>LeetCode</category>
+      <category>DP</category>
+      <category>Java</category>
+    </item>
+    <item>
+      <title>[간만에 스터디] LeetCode Decode Ways</title>
+      <link>https://thxwelchs.github.io/lc-decode-ways/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/lc-decode-ways/</guid>
+      <pubDate>Sat, 13 Apr 2024 14:57:28 GMT</pubDate>
+      <description>Decode Ways 코드 접근 및 풀이 방법 아래 이미지 색깔별로 중복문제(메모이제이션 대상) 전체 풀이 기록: initi8ors/algorithm2024</description>
+      <category>LeetCode</category>
+      <category>DP</category>
+      <category>Java</category>
+    </item>
+    <item>
+      <title>[간만에 스터디] LeetCode Find the Original Array of Prefix Xor</title>
+      <link>https://thxwelchs.github.io/lc-prefix-xor/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/lc-prefix-xor/</guid>
+      <pubDate>Sat, 13 Apr 2024 11:08:48 GMT</pubDate>
+      <description>Find The Original Array of Prefix Xor 코드 접근 및 풀이방법 1. 문제에서 묻는 결과 값은 입력으로 주어지는 값을 xor 연산 전의 원본값이다. 2. xor 연산의 특성을 고려해보니 xor을 연산 결과의 값과 다시 재연산해주면 기존 어떤 피연산자와 연산했는지 원본값을 구할 수 있다. - 예를 들어, 1 ^ 2 = 3이라면, 3 ^ 2 = 1이다. XOR 특성&lt;br/ 출력배열 정의&lt;br/ 출력배열 식&lt;br/ XOR 연산 결과는 매번 처음부터 구해야 할까?의 고민&lt;br/ 전체 풀이 기록: initi8ors</description>
+      <category>LeetCode</category>
+      <category>비트연산</category>
+      <category>Java</category>
+    </item>
+    <item>
+      <title>[간만에 스터디] LeetCode Next Permutation</title>
+      <link>https://thxwelchs.github.io/lc-next-permutation/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/lc-next-permutation/</guid>
+      <pubDate>Sun, 31 Mar 2024 11:16:43 GMT</pubDate>
+      <description>Next Permutation 코드 접근 및 풀이방법 - nums.length가 최대 100까지 가므로 실제 순열을 구하는 dfs 방식으로는 100! 까지 될 수 있기 때문에 불가능하다. - 뭔가.. 최대 N^2 까지 할 수 있도록 해봐야 하지 않을까? 최선은 N까지? - 순열의 특성상 가능한 오른쪽에 있는 수를 교체해주면 바로 다음번의 경우의 수 순열이 된다. - 예를 들면 1,2,3,4 - 1,2, 4,3 - 하지만 이런 아름다운 케이스만 존재하는것은 아니다. - 1,3,4,2 의 경우 1,4,2,3이 되어야 하는데, 이러한 경</description>
+      <category>LeetCode</category>
+      <category>구현</category>
+      <category>Java</category>
+    </item>
+    <item>
+      <title>[간만에 스터디] LeetCode Best Time to Buy and Sell Stock II</title>
+      <link>https://thxwelchs.github.io/lc-best-time-stock-ii/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/lc-best-time-stock-ii/</guid>
+      <pubDate>Sun, 31 Mar 2024 10:15:42 GMT</pubDate>
+      <description>Best Time to Buy and Sell Stock II 코드 접근 및 풀이방법 전체 풀이 기록: initi8ors/algorithm2024</description>
+      <category>LeetCode</category>
+      <category>DP</category>
+      <category>Java</category>
+    </item>
+    <item>
+      <title>[간만에 스터디] LeetCode Two Sum</title>
+      <link>https://thxwelchs.github.io/lc-two-sum/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/lc-two-sum/</guid>
+      <pubDate>Sun, 24 Mar 2024 13:01:35 GMT</pubDate>
+      <description>Two Sum https://leetcode.com/problems/two-sum/description/ 3번만에 품 (분명히 몇년전에 알고리즘 공부를 한참 할때에도 몇번씩이나 풀어봤던 문제인데 역시나 오랜만에 다시 하려니 다시 백지가 된것 같다) 코드 풀이 방법 HashMap에 각 Value, Index를 기록해놓고 O(1) 만에 각 원소를 target과의 차이를 보면? 최종적으로 입력에 대한 모든 수의 합이 되는 곳을 O(N)만에 풀 수 있다! 그 외 접근시도 방법 정렬 후 투포인터 (실패) - 음수가 존재하는 이유로 투포인터 </description>
+      <category>LeetCode</category>
+      <category>해시</category>
+      <category>Java</category>
+    </item>
+    <item>
+      <title>[간만에 스터디] LeetCode LRU Cache</title>
+      <link>https://thxwelchs.github.io/lc-lru-cache/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/lc-lru-cache/</guid>
+      <pubDate>Sun, 24 Mar 2024 12:31:47 GMT</pubDate>
+      <description>문제 LRU Cache: capacity 만큼만 담는 캐시를 설계한다. get / put 모두 평균 O(1) 이어야 하고, 용량이 꽉 찬 상태에서 새 키를 넣으면 가장 오래 안 쓴(LRU) 항목을 버린다. - LRUCache(capacity) : 용량을 정해 초기화. - int get(int key) : 있으면 값을 반환(그리고 최근 사용으로 갱신), 없으면 -1 . - void put(int key, int value) : 넣거나 갱신(최근 사용으로). 용량 초과 시 LRU 제거. - 제한 : 1 ≤ capacity ≤ 3000 </description>
+      <category>LeetCode</category>
+      <category>자료구조</category>
+      <category>연결 리스트</category>
+      <category>Java</category>
+    </item>
+    <item>
+      <title>리액티브 스트림즈 9편 - 가상 스레드와 리액티브의 미래</title>
+      <link>https://thxwelchs.github.io/reactive-streams-9/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/reactive-streams-9/</guid>
+      <pubDate>Sun, 14 Jan 2024 14:53:49 GMT</pubDate>
+      <description>벌써.. 리액티브 스트림즈를 1편 작성한 지 시간이 꽤 흐른 것 같습니다.. 한편 한편 정성스럽게 작성했다고 생각했는데 보시는 분들은 어떻게 보셨을지 모르겠습니다 ㅎㅎ 🙈 실은 이 시리즈를 모두 작성하고 이걸 인프런 같은 강의 플랫폼에 강의를 내보려고 이것저것 준비를 해보고 있었는데.. 가상 스레드(Virtual Threads)라는 친구가 나와서 조금 망설여졌습니다. 이 포스팅에서 다루겠지만 가상 스레드가 제대로 자리 잡히면 리액티브 스트림즈, 아니 WebFlux의 실효성이 많이 옅어질 것 같다고 느꼈기 때문입니다. 그럼에도 불구</description>
+      <category>리액티브</category>
+      <category>가상 스레드</category>
+      <category>Virtual Threads</category>
+      <category>Loom</category>
+      <category>백프레셔</category>
+    </item>
+    <item>
+      <title>코틀린 코루틴 4편 - 코루틴 직접 구현해보기</title>
+      <link>https://thxwelchs.github.io/kotlin-coroutine-4/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/kotlin-coroutine-4/</guid>
+      <pubDate>Mon, 18 Dec 2023 12:01:42 GMT</pubDate>
+      <description>들어가며 이번엔 코루틴이 내부에서 어떻게 &quot;멈췄다 다시 이어서&quot; 도는지를 직접 흉내 내봅니다. Kotlin에선 suspend 한 단어로 끝나지만, 그 밑바닥이 늘 궁금했습니다. 그래서 컴파일러의 도움 없이, C로 멈춤·재개를 직접 만들어보고 그걸 JNI로 Java에서 불러봤습니다. 미리 말해두면, 이건 원리를 손으로 만져보려는 교육용 단순 데모입니다. 뒤에서 쓸 ucontext 는 macOS에선 deprecated 됐고(컴파일 시 경고를 끄고 썼습니다), 단일 스레드 기준이라 실전용은 아닙니다. 목적은 &quot;동작 원리 확인&quot;입니다. &lt;</description>
+      <category>kotlin</category>
+      <category>coroutine</category>
+      <category>코루틴</category>
+      <category>continuation</category>
+      <category>JNI</category>
+      <category>ucontext</category>
+    </item>
+    <item>
+      <title>리액티브 스트림즈 8편 - 끝까지 논블로킹, 그리고 한계</title>
+      <link>https://thxwelchs.github.io/reactive-streams-8/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/reactive-streams-8/</guid>
+      <pubDate>Sun, 10 Dec 2023 10:50:33 GMT</pubDate>
+      <description>7편에서 WebFlux의 이점은 &quot;끝까지 논블로킹일 때만&quot; 나온다고 했습니다. 이번엔 그 &quot;끝까지&quot;가 실제로 무엇을 요구하는지, 그리고 어느 부분이 문제가 될 수 있는지를 정리해보겠습니다. 한 군데라도 블로킹이면 무너진다 WebFlux로 웹 계층만 바꾸면 리액티브 웹 환경이 완성되었다고 볼 수 있을까요? 도입하면서 가장 흔히 착각하는 곳이 데이터 계층입니다. 전통적인 JDBC는 본질적으로 블로킹입니다. 심지어 JPA도 내부적으로는 블로킹 JDBC를 사용하기 때문에 블로킹입니다. 쿼리를 보내고 결과가 올 때까지 그 스레드는 멈춰 기다</description>
+      <category>리액티브</category>
+      <category>R2DBC</category>
+      <category>WebFlux</category>
+      <category>StepVerifier</category>
+      <category>논블로킹</category>
+    </item>
+    <item>
+      <title>리액티브 스트림즈 7편 - Spring WebFlux와 논블로킹 스택</title>
+      <link>https://thxwelchs.github.io/reactive-streams-7/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/reactive-streams-7/</guid>
+      <pubDate>Sun, 05 Nov 2023 12:13:34 GMT</pubDate>
+      <description>6편에서 Mono / Flux 등 Reactor의 상세 스펙에 대해 다루어봤었는데요, 이번에는 웹 계층에서의 동작 구현체인 Spring WebFlux에 대해 알아보겠습니다. Spring MVC와는 다른 Spring WebFlux WebFlux로 작성한 컨트롤러는 Spring MVC와 모양이 비슷합니다. @RestController 도 그대로 쓰지만, 반환 타입이 달라집니다. User 대신 Mono&lt;User , List&lt;User 대신 Mono&lt;List&lt;User 혹은 상황에 따라 Flux&lt;User 를 돌려줍니다. 겉모습은 비슷한데, 밑</description>
+      <category>리액티브</category>
+      <category>WebFlux</category>
+      <category>Spring</category>
+      <category>Netty</category>
+      <category>논블로킹</category>
+    </item>
+    <item>
+      <title>코틀린 코루틴 3편 - 여러 값이 흐르는 스트림, Flow</title>
+      <link>https://thxwelchs.github.io/kotlin-coroutine-3/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/kotlin-coroutine-3/</guid>
+      <pubDate>Tue, 24 Oct 2023 10:37:38 GMT</pubDate>
+      <description>들어가며 이번에는 Flow 입니다. 1편이 &quot;코루틴은 왜 도는가&quot;, 2편이 &quot;어떻게 안전하게 굴리는가&quot;였다면, 본편에서는 &quot;여러 값을 어떻게 흘려보내는가&quot;에 대한 내용을 다룹니다. 지금까지 본 suspend 함수는 결국 값 하나를 돌려주고 끝났습니다. 그런데 실제로는 값이 하나가 아니라 시간차를 두고 여러 개가 흘러오는 경우가 많습니다. 페이지 단위로 계속 들어오는 응답, 주기적으로 갱신되는 센서값, DB 커서를 타고 나오는 행들처럼요. 이런 비동기 스트림을 코틀린에서 다루는 도구가 Flow 입니다. &lt;br/ suspend 하나로는</description>
+      <category>kotlin</category>
+      <category>coroutine</category>
+      <category>코루틴</category>
+      <category>Flow</category>
+      <category>비동기 스트림</category>
+      <category>백프레셔</category>
+    </item>
+    <item>
+      <title>리액티브 스트림즈 6편 - Project Reactor 입문, Flux와 Mono</title>
+      <link>https://thxwelchs.github.io/reactive-streams-6/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/reactive-streams-6/</guid>
+      <pubDate>Sun, 17 Sep 2023 10:28:37 GMT</pubDate>
+      <description>지난 5편까지는 리액티브 스트림즈의 개념적인 내용을 다뤘고, 그로부터 많은 시간이 지났습니다. 이번 편부터는 조금 더 실용적인 내용을 다뤄보려고 합니다. 그중 Spring WebFlux에서 사용되는 Reactive Streams의 구현체인 Reactor를 알아보겠습니다. Reactor는 2편의 Reactive Streams 명세를 구현해 쓰기 좋게 만든, 스프링 진영의 표준 라이브러리입니다. Flux와 Mono Reactor는 Publisher 를 두 가지 타입으로 나눠 제공합니다. - Flux&lt;T : 0개에서 N개까지, 여러 값이</description>
+      <category>리액티브</category>
+      <category>Reactor</category>
+      <category>Flux</category>
+      <category>Mono</category>
+      <category>스케줄러</category>
+    </item>
+    <item>
+      <title>TCP 흐름 제어를 tcpdump로 직접 들여다보기</title>
+      <link>https://thxwelchs.github.io/tcp-flow-control-sliding-window/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/tcp-flow-control-sliding-window/</guid>
+      <pubDate>Fri, 15 Sep 2023 12:41:11 GMT</pubDate>
+      <description>최근 네트워크 지식이 부족하다고 느껴 TCP 수준부터 다시 공부해보려고 관련 서적을 읽고 있습니다. 그중 흐름 제어(flow control) 부분을 읽다가 잘 이해되지 않는 부분이 있었는데, 직접 테스트하고 패킷을 캡처해서 분석해보면 어떨까 싶어 느린 수신자와 빠른 송신자를 만들어 놓고 tcpdump 로 잡아봤습니다. 그 과정에서 공부한 내용을 공유합니다. 흐름 제어란 무엇인가 흐름 제어는 한 줄로 줄이면 받는 쪽이 감당할 수 있는 만큼만 보내게 하는 것입니다. 송신자가 아무리 빨라도 수신자가 못 받으면 소용없으니까요. 대화로 그려</description>
+      <category>네트워크</category>
+      <category>TCP</category>
+      <category>흐름 제어</category>
+      <category>슬라이딩 윈도우</category>
+      <category>tcpdump</category>
+    </item>
+    <item>
+      <title>코틀린 코루틴 2편 - 구조화된 동시성, 취소와 예외</title>
+      <link>https://thxwelchs.github.io/kotlin-coroutine-2/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/kotlin-coroutine-2/</guid>
+      <pubDate>Tue, 12 Sep 2023 11:20:43 GMT</pubDate>
+      <description>들어가며 1편에서는 &quot;코루틴이 무엇이고 왜, 어떻게 도는가&quot;를 정리했습니다. 개념과 동작 원리를 잡는 글이었죠. 그런데 막상 실무에서 코루틴을 쓰다 보니, 정작 자주 부딪힌 건 개념보다 생명주기 쪽이었습니다. 이 코루틴은 언제 끝나는지, 중간에 취소되면 어떻게 되는지, 안에서 예외가 터지면 그게 어디로 흘러가는지. WebFlux + 코루틴 환경에서 이걸 어설프게 알고 쓰면 &quot;분명 취소했는데 계속 도는&quot; 코드나, &quot;한 군데 터졌는데 멀쩡한 다른 작업까지 같이 죽는&quot; 상황을 만나게 됩니다. 그래서 2편은 코루틴을 실무에서 안전하게 쓰기</description>
+      <category>kotlin</category>
+      <category>coroutine</category>
+      <category>코루틴</category>
+      <category>구조화된 동시성</category>
+      <category>structured concurrency</category>
+      <category>취소</category>
+      <category>예외처리</category>
+    </item>
+    <item>
+      <title>IntelliJ idea 커맨드 명령으로 실행하기</title>
+      <link>https://thxwelchs.github.io/IntelliJ-command-line-launcher/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/IntelliJ-command-line-launcher/</guid>
+      <pubDate>Thu, 31 Aug 2023 07:12:55 GMT</pubDate>
+      <description>이 포스팅에서는 MacOS M1, M2 칩셋 버전 IntelliJ 에서 Command Line Launcher 설정이 잘 되지 않는 현상을 해결하는 이야기를 다룹니다. 문제 발생 idea 명령으로 IntelliJ 실행이 안되네..? 개발자라면 (특히 Java 개발자) 한번쯤 사용하는 IntelliJ IDEA IntelliJ는 Command Line Launcher라는 기능을 제공하는데요 IntelliJ Command Line Launcher란? idea 명령으로 IntelliJ를 빠르게 실행할 수 있게 명령어 등록을 도와주는 기능입</description>
+      <category>IntelliJ</category>
+    </item>
+    <item>
+      <title>HashMap 동시성으로 기준정보가 꼬인 사건</title>
+      <link>https://thxwelchs.github.io/troubleshooting-hashmap-concurrency/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/troubleshooting-hashmap-concurrency/</guid>
+      <pubDate>Mon, 28 Aug 2023 13:19:41 GMT</pubDate>
+      <description>이번 트러블슈팅은 이번 여름에 겪은 HashMap 동시성 사건입니다. 운영하면서 만난, 로그·모니터링 지표에도 잡히지 않는 특수한 케이스라 원인을 잡기까지 유난히 오래 걸렸던 부류라 기록으로 남겨둡니다. 배경 배경을 짧게 설명하자면 특정 애플리케이션이 서비스하려면 먼저 기준정보(코드 테이블 같은 것들)를 메모리에 들고 있어야 했습니다. Spring Boot가 기동될 때 이 기준정보를 HashMap 에 키-값 형태로 한 번 적재해두고, 이후 API 요청에서는 그 맵에서 기준정보를 읽어서 활용하는 구조였습니다. 문제는 기동 직후 일부 </description>
+      <category>트러블슈팅</category>
+      <category>Java</category>
+      <category>HashMap</category>
+      <category>동시성</category>
+    </item>
+    <item>
+      <title>ES 불필요 필드 역직렬화가 API 서버 CPU 스파이크를 일으킨 사건</title>
+      <link>https://thxwelchs.github.io/troubleshooting-es-unnecessary-fields-cpu/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/troubleshooting-es-unnecessary-fields-cpu/</guid>
+      <pubDate>Wed, 15 Mar 2023 11:20:21 GMT</pubDate>
+      <description>배경 ElasticSearch(ES)를 읽기 전용 조회 DB로 쓰는 Spring Boot 백엔드 애플리케이션에서 발생한 문제였습니다. ES에 비정규화된 문서를 미리 만들어 두고, API는 그 문서를 조회해 내려주는 구조였습니다. 그런데 조회 트래픽이 몰리는 특정 화면에서 API 서버의 CPU가 갑자기 치솟아 장애로 번졌습니다. 처음엔 ES 쪽을 의심했습니다. 쿼리가 무거운가? 샤드가 한쪽으로 쏠렸나? 리인덱싱이 잦나? 그런데 ES 클러스터 지표는 멀쩡했고 쿼리 응답도 빨랐습니다. 이상한 건 부하가 ES가 아니라 API 서버(클라이언</description>
+      <category>트러블슈팅</category>
+      <category>ElasticSearch</category>
+      <category>Jackson</category>
+      <category>CPU 프로파일링</category>
+      <category>성능</category>
+    </item>
+    <item>
+      <title>ElasticSearch 딥다이브 - 6: 역색인을 Java로 직접 만들어보기</title>
+      <link>https://thxwelchs.github.io/elasticsearch-deepdive-6/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/elasticsearch-deepdive-6/</guid>
+      <pubDate>Sat, 18 Feb 2023 14:20:05 GMT</pubDate>
+      <description>5편까지 ES를 &quot;쓰는 사람&quot; 입장에서 역색인부터 분산까지 정리해보고 많은 부분을 명확히 이해할 수 있었습니다. 그러다 보니 직접 역색인 구조를 Java로 구현해보면 어떨까? 라는 생각이 들었습니다. 그래서 마지막 편은 그 핵심(역색인 자료구조 + 분석기 + BM25)을 Java로 직접 만들어보기로 했습니다. 아무래도 직접 구현을 해보면 더 피부로 와닿게 느껴지는 부분도 있을 것 같다는 생각이 들었는데, 시간이 이렇게 생각보다 많이 소요될 줄은 몰랐습니다. 😅 환경은 JDK 17(LTS), 테스트는 JUnit 5, 벤치마크는 JM</description>
+      <category>ElasticSearch</category>
+      <category>역색인</category>
+      <category>BM25</category>
+      <category>Java</category>
+    </item>
+    <item>
+      <title>ElasticSearch 딥다이브 - 5: 분산 아키텍처와 실무 적용</title>
+      <link>https://thxwelchs.github.io/elasticsearch-deepdive-5/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/elasticsearch-deepdive-5/</guid>
+      <pubDate>Sat, 17 Dec 2022 12:11:23 GMT</pubDate>
+      <description>4편까지 한 노드 안에서 문서가 어떻게 매핑되고 저장되는지를 봤습니다. 마지막 편은 시야를 클러스터로 넓혀보겠습니다. 인덱스가 여러 노드에 어떻게 흩어지고 복제되는지, 분산이라 생기는 일관성 문제, 그리고 Spring Boot 연동과 대용량 색인 같은 실무적인 내용으로 시리즈를 마무리합니다. 클러스터, 노드, 샤드 ES는 여러 노드(node)가 모여 하나의 클러스터(cluster)를 이룹니다. 인덱스는 통째로 한 노드에 있는 게 아니라, 만들 때 정한 개수만큼 샤드(shard)로 쪼개져 노드들에 흩어지고, 각 샤드는 복제본을 둘 수</description>
+      <category>ElasticSearch</category>
+      <category>샤딩</category>
+      <category>SpringBoot</category>
+      <category>Bulk</category>
+    </item>
+    <item>
+      <title>ElasticSearch 딥다이브 - 4: 저장 구조와 매핑 파라미터</title>
+      <link>https://thxwelchs.github.io/elasticsearch-deepdive-4/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/elasticsearch-deepdive-4/</guid>
+      <pubDate>Sat, 19 Nov 2022 14:52:52 GMT</pubDate>
+      <description>3편까지는 검색하는 쪽을 봤었습니다. 이번 편은 한 단계 내려가서, 문서가 디스크에 실제로 어떻게 저장되는지를 살펴보겠습니다. ES는 루씬(Lucene) 위에 올라가 있어서, 매핑 파라미터 몇 개가 루씬 레벨의 저장 방식을 직접 결정하는데요. 원본을 보관하는 source · store 부터, 색인을 켜고 끄는 index · enabled , 정렬·집계를 결정하는 doc values 까지 한 번에 정리합니다. 잠깐, 루씬이 뭐냐면: 아파치 루씬(Apache Lucene)은 자바로 만든 검색 라이브러리로, 역색인·스코어링·저장 같은 &quot;</description>
+      <category>ElasticSearch</category>
+      <category>Lucene</category>
+      <category>_source</category>
+      <category>doc_values</category>
+    </item>
+    <item>
+      <title>시스템 디자인 - Design A Rate Limiter</title>
+      <link>https://thxwelchs.github.io/sysdesign-6-rate-limiter/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/sysdesign-6-rate-limiter/</guid>
+      <pubDate>Wed, 19 Oct 2022 10:28:06 GMT</pubDate>
+      <description>이번 챕터는 시스템을 폭주하는 트래픽으로부터 지키는 처리율 제한기(rate limiter)로 마무리하려 합니다. Rate Limiter란? 그리고 왜 필요한가? 특정 클라이언트가 초당 수천 번씩 요청했을 때, 그 부하가 시스템 뒤의 DB·캐시까지 그대로 전달됩니다. 처리율 제한기는 &quot;정해진 한도를 넘는 요청은 거절(429 Too Many Requests)&quot;해서, 한 클라이언트가 전체를 무너뜨리지 못하게 막는 역할을 해주는 장치라고 볼 수 있습니다. DoS 방어, 비용 절감(외부 유료 API 보호 등), 서버 과부하 방지가 주 목적입</description>
+      <category>시스템 디자인</category>
+      <category>Rate Limiter</category>
+      <category>Redis</category>
+      <category>분산</category>
+    </item>
+    <item>
+      <title>시스템 디자인 - Design A Search Autocomplete System</title>
+      <link>https://thxwelchs.github.io/sysdesign-5-search-es/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/sysdesign-5-search-es/</guid>
+      <pubDate>Wed, 21 Sep 2022 14:27:26 GMT</pubDate>
+      <description>4편에서 쓰기와 읽기 모델을 상황에 맞게 분배하는 트레이드오프를 살펴봤었습니다. 이번엔 그 발상이 가장 선명하게 드러나는 검색과 자동완성(autocomplete)을 파볼 겁니다. 책 내용의 검색어 자동완성 챕터를 정리하다 보니, 지금 회사 팀 내에서 사용 중인 CQRS READ 모델 DB인 ElasticSearch(ES)를 공부하면서 겹치는 지식들이 있어서 개인적으로는 좋았습니다. 자동완성이 풀어야 하는 문제 자동완성이란, 아마 포털 검색 서비스를 이용해보신 분은 다 아시겠지만, 검색창에 &quot;아이&quot;를 치면 &quot;아이폰&quot;, &quot;아이패드&quot;가 </description>
+      <category>시스템 디자인</category>
+      <category>ElasticSearch</category>
+      <category>검색</category>
+      <category>자동완성</category>
+    </item>
+    <item>
+      <title>ElasticSearch 딥다이브 - 3: Query DSL과 스코어링</title>
+      <link>https://thxwelchs.github.io/elasticsearch-deepdive-3/</link>
+      <guid isPermaLink="true">https://thxwelchs.github.io/elasticsearch-deepdive-3/</guid>
+      <pubDate>Sat, 17 Sep 2022 13:12:24 GMT</pubDate>
+      <description>2편에서 역색인이 만들어지는 과정을 봤습니다. 이제 그 위에서 검색을 해볼 차례인데요. 이번 편은 ES의 검색 언어인 Query DSL에서 제일 자주 쓰는 것들, match와 term의 차이, bool 쿼리, 그리고 결과 순서를 정하는 스코어링(BM25)을 봅니다. match와 term, 분석하느냐 마느냐 검색하다 제일 먼저 이해가 어려웠던 부분이 match와 term의 차이였습니다. 둘 다 &quot;이 필드에서 이 값을 찾아줘&quot;인데 동작이 미묘하게 다릅니다. - match : 검색어도 분석기에 태운 뒤 검색합니다. 그래서 전문 검색에 씁</description>
+      <category>ElasticSearch</category>
+      <category>QueryDSL</category>
+      <category>BM25</category>
+      <category>검색</category>
+    </item>
+  </channel>
+</rss>

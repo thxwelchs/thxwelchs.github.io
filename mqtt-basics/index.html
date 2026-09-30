@@ -1,0 +1,125 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>MQTT 입문 - 가벼운 메시징은 어떻게 가벼운가</title><meta name="description" content="최근 직장을 옮기게 되면서 MQTT를 마주할 일이 많아졌습니다. 이전에도 찍먹 해본 적은 있지만, 한번 구체적으로 학습해볼 필요가 있을 것 같아 정리해보려고 합니다. MQTT는 무엇인가 MQTT(Message Queuing Telemetry Transport)는 발행-"><link rel="canonical" href="https://thxwelchs.github.io/mqtt-basics/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="MQTT 입문 - 가벼운 메시징은 어떻게 가벼운가"><meta property="og:description" content="최근 직장을 옮기게 되면서 MQTT를 마주할 일이 많아졌습니다. 이전에도 찍먹 해본 적은 있지만, 한번 구체적으로 학습해볼 필요가 있을 것 같아 정리해보려고 합니다. MQTT는 무엇인가 MQTT(Message Queuing Telemetry Transport)는 발행-"><meta property="og:url" content="https://thxwelchs.github.io/mqtt-basics/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/mqtt-basics.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="MQTT 입문 - 가벼운 메시징은 어떻게 가벼운가"><meta name="twitter:description" content="최근 직장을 옮기게 되면서 MQTT를 마주할 일이 많아졌습니다. 이전에도 찍먹 해본 적은 있지만, 한번 구체적으로 학습해볼 필요가 있을 것 같아 정리해보려고 합니다. MQTT는 무엇인가 MQTT(Message Queuing Telemetry Transport)는 발행-"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/mqtt-basics.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>MQTT 입문 - 가벼운 메시징은 어떻게 가벼운가</h1> <div class="meta" data-astro-cid-fzx4jmue> 2021-06-15 · 엔지니어링  </div> <img class="cover" src="/img/covers/eng/mqtt-basics.png" alt="MQTT 입문 - 가벼운 메시징은 어떻게 가벼운가" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <p>최근 직장을 옮기게 되면서 MQTT를 마주할 일이 많아졌습니다. 이전에도 찍먹 해본 적은 있지만, 한번 구체적으로 학습해볼 필요가 있을 것 같아 정리해보려고 합니다.</p>
+<h1 id="mqtt는-무엇인가">MQTT는 무엇인가</h1>
+<p>MQTT(Message Queuing Telemetry Transport)는 발행-구독(pub/sub) 방식의 경량 메시징 프로토콜입니다. TCP 위에서 동작하고, 메시지를 보내는 쪽(publisher)과 받는 쪽(subscriber)이 서로를 전혀 모른 채 <strong>브로커(broker)</strong> 라는 중개자를 통해서만 통신합니다.</p>
+<p>이름에 “Queuing”이 들어가 있어서 메시지 큐 솔루션처럼 들리지만, 찾아보니 정작 MQTT 자체는 큐를 핵심으로 내세우는 프로토콜은 아니었습니다. 이름은 역사적인 흔적에 가깝고, 본질은 “누가 받을지 모르는 메시지를 토픽(topic)에 던지면, 그 토픽을 구독한 쪽이 받는다” 는 단순한 모델입니다.</p>
+<blockquote>
+<p>처음엔 “그럼 그냥 작은 Kafka 같은 건가?” 싶었는데, 들여다볼수록 지향점이 달랐습니다. Kafka가 대용량 로그 스트림을 다룬다면, MQTT는 약한 네트워크에 붙은 수많은 작은 기기를 다루는 쪽에 가깝습니다.</p>
+</blockquote>
+<h1 id="왜-http를-두고-mqtt인가">왜 HTTP를 두고 MQTT인가</h1>
+<p>가장 먼저 든 의문이 이거였습니다. 이미 HTTP가 있는데 왜 또 다른 프로토콜을 쓸까요?</p>
+<p>센서나 모바일 기기처럼 배터리·대역폭이 빠듯하고 연결이 불안정한 환경을 떠올려보면 답이 나옵니다. HTTP는 요청-응답마다 헤더가 무겁고, 기본적으로 클라이언트가 물어봐야(polling) 서버의 변화를 알 수 있습니다. 기기 수천 대가 1초마다 “새 거 있어요?”를 물어보는 그림은 상상만 해도 비효율적입니다.</p>
+<p>MQTT는 추구하는 방향이 조금 다릅니다.</p>
+<ul>
+<li>한 번 TCP 연결을 맺어 <strong>계속 유지</strong>하고, 서버(브로커)가 변화가 생기면 <strong>밀어넣어주는 형태입니다(push)</strong>.</li>
+<li>고정 헤더가 <strong>2바이트</strong>부터 시작할 만큼 작습니다. 제어 패킷 자체가 군더더기가 거의 없습니다.</li>
+<li>한 메시지를 <strong>여러 구독자에게 한 번에</strong> 퍼뜨리는 다대다 구조가 기본입니다.</li>
+</ul>
+<p>즉 “가볍다”는 건 위와 같은 헤더 크기·연결 유지·푸시 모델이라는 구체적인 내부 설계 덕분인 것입니다.</p>
+<h1 id="브로커와-토픽">브로커와 토픽</h1>
+<p>구조 자체는 단순합니다. 모든 통신은 브로커를 거칩니다.</p>
+<ul>
+<li><strong>발행자</strong>는 <code>home/livingroom/temperature</code> 같은 <strong>토픽</strong>에 메시지를 보냅니다.</li>
+<li><strong>구독자</strong>는 관심 있는 토픽을 브로커에 등록해두고, 그 토픽으로 들어온 메시지를 받습니다.</li>
+<li>발행자와 구독자는 서로의 존재를 모릅니다. 오직 토픽이라는 약속만 공유합니다.</li>
+</ul>
+<p>토픽은 <code>/</code>로 계층을 나누고, 구독할 때 <strong>와일드카드</strong>를 쓸 수 있습니다.</p>
+<ul>
+<li><code>+</code> 는 <strong>한 단계</strong>를 의미합니다. <code>home/+/temperature</code> 는 거실·침실 등 한 층의 모든 방 온도를 받습니다.</li>
+<li><code>#</code> 는 <strong>그 아래 전부</strong>를 의미합니다. <code>home/#</code> 는 home 밑의 모든 토픽을 받습니다.</li>
+</ul>
+<p>이 발행-구독 분리가 주는 이점은, 기기를 추가하거나 빼도 서로의 코드를 고칠 필요가 없다는 점입니다. 새 센서는 그냥 약속된 토픽에 던지기만 하면 됩니다. 생산자와 소비자를 이렇게 떼어놓는 발상은 카프카 같은 다른 브로커류와도 비슷한 컨셉인 것 같습니다.</p>
+<h1 id="qos-메세지-전달-보장">QoS 메세지 전달 보장</h1>
+<p>MQTT를 제대로 이해해보는 건 사실상 QoS(Quality of Service) 를 이해하는 일이었습니다. 메시지를 “얼마나 확실하게” 전달할지를 세 단계로 고를 수 있는데, 이게 곧 신뢰성과 비용 사이의 트레이드오프입니다.</p>
+<p><strong>QoS 0 · 최대 한 번 (at most once)</strong></p>
+<p>던지고 끝입니다. 브로커가 받았는지 확인하지 않습니다. 네트워크가 끊기면 그 메시지는 그냥 사라집니다. 대신 가장 빠르고 가볍습니다. 1초마다 갱신되는 온도값처럼 “하나쯤 놓쳐도 다음 값이 곧 온다”면 이걸로 충분합니다.</p>
+<p><strong>QoS 1 · 최소 한 번 (at least once)</strong></p>
+<p>받는 쪽이 <code>PUBACK</code>으로 “받았다”고 응답합니다. 응답이 안 오면 발행자가 <strong>다시 보냅니다</strong>. 그래서 유실은 없지만, 재전송 과정에서 같은 메시지가 중복으로 도착할 수 있습니다. 여기서 처음 “어, 그럼 중복 처리는 누가 하지?”라는 고민이 생깁니다.</p>
+<p><strong>QoS 2 · 정확히 한 번 (exactly once)</strong></p>
+<p>유실도 중복도 없습니다. 대신 그 보장을 위해 <strong>4단계 핸드셰이크</strong>(<code>PUBLISH</code> → <code>PUBREC</code> → <code>PUBREL</code> → <code>PUBCOMP</code>)를 주고받습니다. 가장 안전하지만 가장 비싼 네트워크 비용이 듭니다. 왕복이 늘어나니 지연도, 브로커가 상태를 들고 있어야 하는 부담도 커집니다.</p>
+<blockquote>
+<p>결제·과금처럼 “두 번 처리되면 큰일”인 메시지가 아니라면, QoS는 상황에 맞게 비교해보고 고르는 게 좋을 것 같았습니다.</p>
+</blockquote>
+<p>여기서 짚고 넘어갈 것이 하나 있습니다. QoS는 발행자–브로커 구간과 브로커–구독자 구간에서 따로 적용됩니다. 발행을 QoS 2로 했다고 구독자까지 자동으로 exactly once가 되는 게 아니라, 구독자가 구독할 때 요청한 QoS와 둘 중 <strong>낮은 쪽</strong>으로 맞춰집니다. 이 부분이 제일 헷갈릴수 있는 부분인것 같아 꼭 기억해두면 좋을것 같습니다!</p>
+<h1 id="처음엔-몰랐던-장치들">처음엔 몰랐던 장치들</h1>
+<p>QoS 말고도, 그 외의 주요한 기능들이 몇 개 있었습니다.</p>
+<p><strong>Retained 메시지.</strong> 마지막 값을 붙잡아 두는 용도입니다. 보통 pub/sub은 구독을 시작하기 <em>전</em>에 발행된 메시지는 못 받습니다. 그런데 retained 플래그를 켜서 발행하면, 브로커가 그 토픽의 <strong>마지막 메시지 하나를 보관</strong>해뒀다가, 나중에 새로 구독하는 쪽에 즉시 건네줍니다. “지금 거실 온도 몇 도야?”를 매번 물을 필요 없이, 구독하자마자 최신값을 받는 식입니다.</p>
+<p><strong>LWT(Last Will and Testament).</strong> 유언장. 기기가 비정상적으로 연결이 끊겼을 때, 브로커가 대신 “이 녀석 죽었다”는 메시지를 미리 정해둔 토픽에 발행해줍니다. 센서가 조용히 사라졌는지를 다른 쪽이 알아챌 수 있게 하는 장치입니다. 이런 게 프로토콜 레벨에 들어가 있다는 점에서, MQTT가 “불안정한 연결”을 얼마나 기본 전제로 깔고 설계됐는지 느껴졌습니다.</p>
+<p><strong>Keep-alive.</strong> 일정 시간 보낼 게 없으면 클라이언트가 <code>PINGREQ</code>라는 작은 핑을 보내 “나 살아있다”를 알립니다. 이게 없으면 브로커는 조용히 붙어만 있는 연결이 살아있는지 죽었는지 구분할 수 없습니다. 연결을 계속 살려둔다는 컨셉은 HTTP의 keep-alive와도 이런 부분이 비슷해보였습니다.</p>
+<h1 id="311과-50-작성-시점-기준">3.1.1과 5.0 (작성 시점 기준)</h1>
+<p>지금(2021년) 가장 많이 쓰이는 버전은 <strong>MQTT 3.1.1</strong>(2014년 OASIS 표준)이고, 2019년에 <strong>MQTT 5.0</strong>이 나와 도입이 늘어가는 중입니다. 5.0에서는 실패 원인을 알려주는 reason code, 메시지 만료 시간, 여러 구독자가 메시지를 나눠 받는 shared subscription, user property 같은 게 추가됐습니다. 새로 시작한다면 5.0을 보되, 붙으려는 브로커·기기가 5.0을 지원하는지부터 확인하는 게 순서일 것 같습니다.</p>
+<h1 id="정리">정리</h1>
+<p>직접 정리해보니 MQTT의 “가볍다”는 결국 푸시 기반 지속 연결 + 작은 헤더 + 발행-구독 분리였고, 진짜 고민거리는 그 위에서 QoS로 신뢰성과 비용을 어디에 둘 것인가였습니다. QoS 1을 골랐다면 중복을 누가 어떻게 거를지, QoS 2가 정말 필요한지를 같이 정해야 비로소 설계가 완성되는 느낌이었습니다.</p>
+<p>다음 편에서는 이 MQTT 프로토콜을 실제로 실행해줄수 있는 구현체인 ActiveMQ에 대해서 알아보려고 합니다.</p>
+<h1 id="참고">참고</h1>
+<blockquote>
+<p><a href="https://docs.oasis-open.org/mqtt/mqtt/v3.1.1/mqtt-v3.1.1.html">MQTT Version 3.1.1 (OASIS Standard)</a>
+<a href="https://docs.oasis-open.org/mqtt/mqtt/v5.0/mqtt-v5.0.html">MQTT Version 5.0 (OASIS Standard)</a></p>
+</blockquote> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#mqtt는-무엇인가" data-astro-cid-fzx4jmue>MQTT는 무엇인가</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#왜-http를-두고-mqtt인가" data-astro-cid-fzx4jmue>왜 HTTP를 두고 MQTT인가</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#브로커와-토픽" data-astro-cid-fzx4jmue>브로커와 토픽</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#qos-메세지-전달-보장" data-astro-cid-fzx4jmue>QoS 메세지 전달 보장</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#처음엔-몰랐던-장치들" data-astro-cid-fzx4jmue>처음엔 몰랐던 장치들</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#311과-50-작성-시점-기준" data-astro-cid-fzx4jmue>3.1.1과 5.0 (작성 시점 기준)</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#정리" data-astro-cid-fzx4jmue>정리</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/mqtt-basics/";
+const pageId = "mqtt-basics";
+const pageTitle = "MQTT 입문 - 가벼운 메시징은 어떻게 가벼운가";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

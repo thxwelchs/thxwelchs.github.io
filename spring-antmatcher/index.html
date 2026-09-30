@@ -1,0 +1,121 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>AntPathMatcher 제대로 보기 - 경로 패턴 매칭은 어디에 쓰이나</title><meta name="description" content="Spring Security 설정을 짜다 보면 antMatchers(&#34;/admin/ &#34;) 같은 줄을 거의 무의식적으로 씁니다. 저도 그랬는데요. 어느 순간 궁금해졌습니다. 이 / 패턴은 어떤 원리로 구현되어 있고 어떻게 동작되는걸까요? AntPathMatcher가 뭔가"><link rel="canonical" href="https://thxwelchs.github.io/spring-antmatcher/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="AntPathMatcher 제대로 보기 - 경로 패턴 매칭은 어디에 쓰이나"><meta property="og:description" content="Spring Security 설정을 짜다 보면 antMatchers(&#34;/admin/ &#34;) 같은 줄을 거의 무의식적으로 씁니다. 저도 그랬는데요. 어느 순간 궁금해졌습니다. 이 / 패턴은 어떤 원리로 구현되어 있고 어떻게 동작되는걸까요? AntPathMatcher가 뭔가"><meta property="og:url" content="https://thxwelchs.github.io/spring-antmatcher/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/spring-antmatcher.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="AntPathMatcher 제대로 보기 - 경로 패턴 매칭은 어디에 쓰이나"><meta name="twitter:description" content="Spring Security 설정을 짜다 보면 antMatchers(&#34;/admin/ &#34;) 같은 줄을 거의 무의식적으로 씁니다. 저도 그랬는데요. 어느 순간 궁금해졌습니다. 이 / 패턴은 어떤 원리로 구현되어 있고 어떻게 동작되는걸까요? AntPathMatcher가 뭔가"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/spring-antmatcher.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>AntPathMatcher 제대로 보기 - 경로 패턴 매칭은 어디에 쓰이나</h1> <div class="meta" data-astro-cid-fzx4jmue> 2021-09-14 · 엔지니어링  </div> <img class="cover" src="/img/covers/eng/spring-antmatcher.png" alt="AntPathMatcher 제대로 보기 - 경로 패턴 매칭은 어디에 쓰이나" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <p>Spring Security 설정을 짜다 보면 <code>antMatchers("/admin/**")</code> 같은 줄을 거의 무의식적으로 씁니다. 저도 그랬는데요. 어느 순간 궁금해졌습니다. 이 <code>/**</code> 패턴은 어떤 원리로 구현되어 있고 어떻게 동작되는걸까요?</p>
+<h1 id="antpathmatcher가-뭔가">AntPathMatcher가 뭔가</h1>
+<p>핵심부터 정리하면, <code>antMatchers</code>의 매칭은 <code>AntPathMatcher</code>라는 클래스가 담당합니다. 이름 그대로 <strong>Ant</strong> 빌드 툴에서 쓰던 경로 패턴 문법을 가져온 건데, 스프링에서는 “경로 문자열이 이 패턴에 맞는가”를 판단하는 범용 유틸로 자리 잡았습니다.</p>
+<h1 id="매칭-규칙">매칭 규칙</h1>
+<p>기호의 의미는 이렇습니다.</p>
+<ul>
+<li><code>?</code> : 한 글자</li>
+<li><code>*</code> : 한 경로 구간(segment) 안의 임의 문자열 (<code>/</code>는 못 넘음)</li>
+<li><code>**</code> : 여러 구간에 걸친 임의 경로</li>
+<li><code>{id}</code> : 경로 변수 (값을 뽑아 쓸 수 있음)</li>
+<li><code>{var:[a-z]+}</code> : 정규식을 곁들인 경로 변수</li>
+</ul>
+<p>그래서 <code>/admin/*</code> 는 <code>/admin/users</code>엔 맞지만 <code>/admin/users/1</code>엔 안 맞고, <code>/admin/**</code>는 그 아래 전부에 맞습니다. <code>com/t?st.jsp</code>는 <code>com/test.jsp</code>·<code>com/tast.jsp</code>엔 맞습니다. 직접 써본다면 이렇게 단순합니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#E1E4E8">AntPathMatcher matcher </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> AntPathMatcher</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">matcher.</span><span style="color:#B392F0">match</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/admin/**"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"/admin/users/1"</span><span style="color:#E1E4E8">);   </span><span style="color:#6A737D">// true</span></span>
+<span class="line"><span style="color:#E1E4E8">matcher.</span><span style="color:#B392F0">match</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/admin/*"</span><span style="color:#E1E4E8">,  </span><span style="color:#9ECBFF">"/admin/users/1"</span><span style="color:#E1E4E8">);   </span><span style="color:#6A737D">// false</span></span>
+<span class="line"><span style="color:#E1E4E8">matcher.</span><span style="color:#B392F0">match</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"com/t?st.jsp"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"com/test.jsp"</span><span style="color:#E1E4E8">);  </span><span style="color:#6A737D">// true</span></span></code></pre>
+<h1 id="시큐리티만-쓰는-게-아니다">시큐리티만 쓰는 게 아니다</h1>
+<p>여기가 이번에 새로 알게 된 부분입니다. AntPathMatcher는 스프링 여러 모듈에서 “경로를 패턴으로 다뤄야 하는” 거의 모든 곳에 들어가 있었습니다.</p>
+<ul>
+<li><strong>Spring MVC 요청 매핑</strong>: <code>@RequestMapping("/users/**")</code> 같은 컨트롤러 매핑이 (전통적으로) 이 매처로 동작했습니다.</li>
+<li><strong>정적 리소스 핸들러</strong>: <code>registry.addResourceHandler("/assets/**")</code> 처럼 어떤 경로를 정적 파일로 내줄지 정할 때.</li>
+<li><strong>인터셉터 경로</strong>: <code>addPathPatterns("/api/**")</code> / <code>excludePathPatterns("/api/public/**")</code> 로 인터셉터를 걸고 뺄 때.</li>
+<li><strong>리소스 로딩</strong>: <code>PathMatchingResourcePatternResolver</code>가 <code>classpath*:config/**/*.xml</code> 같은 패턴으로 클래스패스의 파일들을 한 번에 긁어올 때.</li>
+<li><strong>메시징/인터그레이션</strong>: STOMP 목적지 매칭, Spring Integration 라우팅 등에서도 같은 패턴 문법을 씁니다.</li>
+<li>그리고 <strong>Spring Security</strong>의 <code>antMatchers</code>.</li>
+</ul>
+<p>같은 패턴이 리소스 핸들러에서도, 인터셉터에서도 똑같이 동작한다는 걸 알면 한 번 익힌 걸 여러 곳에 써먹을 수 있습니다.</p>
+<h1 id="spring-security의-antmatcher와-함정">Spring Security의 antMatcher와 함정</h1>
+<p>이제 시큐리티 얘기입니다. 작성 시점(2021년) 기준 설정은 보통 이렇게 생겼습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#E1E4E8">@</span><span style="color:#F97583">Configuration</span></span>
+<span class="line"><span style="color:#F97583">public</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> SecurityConfig</span><span style="color:#F97583"> extends</span><span style="color:#B392F0"> WebSecurityConfigurerAdapter</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">Override</span></span>
+<span class="line"><span style="color:#F97583">    protected</span><span style="color:#F97583"> void</span><span style="color:#B392F0"> configure</span><span style="color:#E1E4E8">(HttpSecurity </span><span style="color:#FFAB70">http</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">throws</span><span style="color:#E1E4E8"> Exception {</span></span>
+<span class="line"><span style="color:#E1E4E8">        http.</span><span style="color:#B392F0">authorizeRequests</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"><span style="color:#E1E4E8">            .</span><span style="color:#B392F0">antMatchers</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/admin/**"</span><span style="color:#E1E4E8">).</span><span style="color:#B392F0">hasRole</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"ADMIN"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">            .</span><span style="color:#B392F0">antMatchers</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/login"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"/css/**"</span><span style="color:#E1E4E8">).</span><span style="color:#B392F0">permitAll</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"><span style="color:#E1E4E8">            .</span><span style="color:#B392F0">anyRequest</span><span style="color:#E1E4E8">().</span><span style="color:#B392F0">authenticated</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>여기서 두 가지를 조심해야 했습니다.</p>
+<p>먼저 <strong>순서</strong>. 규칙은 위에서부터 먼저 매칭되는 게 우선됩니다. 넓은 <code>/**</code>를 구체적 규칙보다 위에 두면 뒤 규칙이 통째로 무시됩니다.</p>
+<p>그리고 더 까다로운 게 하나 있었는데요. <code>antMatchers</code>의 매칭 규칙과, 실제 컨트롤러를 찾는 MVC의 매칭 규칙이 <strong>미묘하게 다릅니다.</strong> 예를 들어 <code>antMatchers("/admin")</code>은 정확히 <code>/admin</code>에만 맞는데, MVC는 끝에 슬래시가 붙은 <code>/admin/</code>도 같은 컨트롤러로 받아줍니다(트레일링 슬래시 규칙이 허용되어 있다면요). 그럼 어떻게 될까요? 공격자가 <code>/admin/</code>로 요청하면 시큐리티 규칙엔 안 걸리고 컨트롤러는 정상 처리해버리는, 인증 우회가 생깁니다.</p>
+<p>그래서 MVC를 쓰는 환경이라면, 시큐리티 매칭을 MVC와 같은 규칙으로 맞추는 <code>mvcMatchers</code>가 더 안전한 선택입니다. 매칭 기준을 통일하여 관리하는 방법을 택하는 거죠. 결국 보안 규칙을 짤 땐 “이 패턴이 무엇에 맞는가”만큼이나 “컨트롤러와 똑같이 맞는가”를 같이 봐야 한다는 걸, 직접 파보고서야 이해했습니다.</p>
+<h1 id="53에-들어온-pathpattern">5.3에 들어온 PathPattern</h1>
+<p>작성 시점 기준으로 한 가지 흐름만 덧붙이면, Spring 5.3부터는 경로 매칭 엔진으로 기존 <code>AntPathMatcher</code> 외에 <code>PathPatternParser</code>(<code>PathPattern</code>)가 들어왔습니다. 더 빠르고 파싱을 미리 해두는 방식이라, 앞으로는 해당 경로 패턴 구현체들을 사용 사례에 맞게 활용해볼 수 있지 않을까 싶습니다.</p>
+<h1 id="정리">정리</h1>
+<p>정리하면 AntPathMatcher는 시큐리티 전용이 아니라 <strong>스프링 전반의 경로 패턴 매칭 도구</strong>였고, 리소스 핸들러·인터셉터·리소스 로딩·메시징·시큐리티가 다 같은 문법을 공유하고 있었습니다. 시큐리티에서만큼은 그 매칭 규칙이 실제 컨트롤러 매핑과 어긋날 수 있어서, MVC 환경이면 <code>mvcMatchers</code>로 기준을 맞추는 게 안전함. 한 번 익힌 패턴 문법을 여러 곳에 써먹을 수 있다는 게, 이 글을 정리하며 얻은 가장 실용적인 수확이었음.</p>
+<h1 id="참고">참고</h1>
+<blockquote>
+<p><a href="https://docs.spring.io/spring-framework/docs/5.3.x/javadoc-api/org/springframework/util/AntPathMatcher.html">Spring Framework: AntPathMatcher (Javadoc)</a>
+<a href="https://docs.spring.io/spring-security/site/docs/5.5.x/reference/html5/#servlet-authorization">Spring Security Reference: Authorize HttpServletRequests</a></p>
+</blockquote> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#antpathmatcher가-뭔가" data-astro-cid-fzx4jmue>AntPathMatcher가 뭔가</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#매칭-규칙" data-astro-cid-fzx4jmue>매칭 규칙</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#시큐리티만-쓰는-게-아니다" data-astro-cid-fzx4jmue>시큐리티만 쓰는 게 아니다</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#spring-security의-antmatcher와-함정" data-astro-cid-fzx4jmue>Spring Security의 antMatcher와 함정</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#53에-들어온-pathpattern" data-astro-cid-fzx4jmue>5.3에 들어온 PathPattern</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#정리" data-astro-cid-fzx4jmue>정리</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/spring-antmatcher/";
+const pageId = "spring-antmatcher";
+const pageTitle = "AntPathMatcher 제대로 보기 - 경로 패턴 매칭은 어디에 쓰이나";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

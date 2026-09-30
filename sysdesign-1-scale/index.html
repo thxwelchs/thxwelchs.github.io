@@ -1,0 +1,133 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>시스템 디자인 - Scale From Zero To Millions Of Users</title><meta name="description" content="요즘 스터디에서 System Design Interview — An Insider's Guide (Alex Xu)를 같이 보고 있습니다. 책 내용이 워낙 방대해서.. 😢 중요하다고 생각되는 챕터 몇 가지만 골라 시리즈로 정리해보려고 합니다. 단순히 책 내용을 옮기는 "><link rel="canonical" href="https://thxwelchs.github.io/sysdesign-1-scale/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="시스템 디자인 - Scale From Zero To Millions Of Users"><meta property="og:description" content="요즘 스터디에서 System Design Interview — An Insider's Guide (Alex Xu)를 같이 보고 있습니다. 책 내용이 워낙 방대해서.. 😢 중요하다고 생각되는 챕터 몇 가지만 골라 시리즈로 정리해보려고 합니다. 단순히 책 내용을 옮기는 "><meta property="og:url" content="https://thxwelchs.github.io/sysdesign-1-scale/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/sysdesign-1-scale.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="시스템 디자인 - Scale From Zero To Millions Of Users"><meta name="twitter:description" content="요즘 스터디에서 System Design Interview — An Insider's Guide (Alex Xu)를 같이 보고 있습니다. 책 내용이 워낙 방대해서.. 😢 중요하다고 생각되는 챕터 몇 가지만 골라 시리즈로 정리해보려고 합니다. 단순히 책 내용을 옮기는 "><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/sysdesign-1-scale.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>시스템 디자인 - Scale From Zero To Millions Of Users</h1> <div class="meta" data-astro-cid-fzx4jmue> 2022-05-18 · 엔지니어링  · <a class="series-badge" href="/series/" data-astro-cid-fzx4jmue>시리즈 · 시스템 디자인</a>  </div> <img class="cover" src="/img/covers/eng/sysdesign-1-scale.png" alt="시스템 디자인 - Scale From Zero To Millions Of Users" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <p>요즘 스터디에서 <em>System Design Interview — An Insider’s Guide</em>(Alex Xu)를 같이 보고 있습니다. 책 내용이 워낙 방대해서.. 😢 중요하다고 생각되는 챕터 몇 가지만 골라 시리즈로 정리해보려고 합니다. 단순히 책 내용을 옮기는 느낌이 아니라, 가능하면 저의 해석으로 정리하는 식으로 해보려 하니 혹시 틀린 점이나 지적해주실 사항이 있으면 편하게 댓글 부탁드립니다.</p>
+<p>보통 이 책은 챕터 제목에 그 장의 핵심이 함축적으로 담겨 있는데, 첫 챕터도 마찬가지로 “사용자 한 명짜리 서버 한 대를 수백만 사용자까지 어떻게 키우나”입니다. 시스템을 확장할 때의 로드맵을 한 번에 훑게 해주는 챕터라, 시리즈의 출발점으로 딱 맞았습니다.</p>
+<h1 id="서버-한-대에서-출발한다">서버 한 대에서 출발한다</h1>
+<p>모든 건 결국 서버 한 대에서 시작합니다. 웹 서버, 애플리케이션, 데이터베이스가 한 서버 머신에 다 올라가 있는 상태입니다. 사용자가 적으면 이걸로 충분합니다.</p>
+<p>요청이 들어오는 흐름은 단순합니다. 사용자가 도메인으로 접속하면 DNS가 IP를 돌려주고, 브라우저가 그 IP의 웹 서버로 HTTP 요청을 보내고, 서버가 HTML이나 JSON과 같은, 사용자가 원하는 자원의 데이터를 돌려줍니다. 트래픽이 들어오는 경로는 보통 두 개인데, 웹 브라우저, 그리고 모바일 앱(주로 JSON API)입니다.</p>
+<p>그리고 웹 서비스를 이루기 위해 선택해야 하는 갈림길 중 하나인 데이터베이스 선택입니다. 전통적인 관계형 데이터베이스(RDBMS)로 갈지, NoSQL로 갈지. 이 책에서는 대부분의 경우 관계형을 기본값으로 두고, 초저지연이 필요하거나·비정형 데이터거나·직렬화/역직렬화만 하면 되거나·데이터가 아주 방대할 때 NoSQL을 고려하라고 정리합니다.</p>
+<h1 id="수직-확장-먼저-그다음-수평-확장">수직 확장 먼저, 그다음 수평 확장</h1>
+<p>서버 한 대가 버거워지면 어떻게 키워야 할까요? 전형적인 방식은 다음과 같이 두 가지로 나뉩니다.</p>
+<ul>
+<li>수직 확장(scale-up): 서버 사양 자체를 키웁니다(CPU·메모리 증설). 코드를 거의 안 바꿔도 되고 구조가 단순한 게 장점이라, 트래픽이 아직 크지 않은 초기엔 가장 손쉬운 선택인 듯합니다. 다만 한 대가 가질 수 있는 사양엔 물리적 한계가 있고, 이중화가 안 돼 그 한 대가 죽으면 서비스가 통째로 멈춥니다. 고사양으로 갈수록 비용도 가파르게 오릅니다. 그래서 대규모·고가용성이 필요한 순간엔 한계가 분명합니다.</li>
+<li>수평 확장(scale-out): 서버를 여러 대로 늘립니다. 이론상 거의 무한히 늘릴 수 있고 이중화로 가용성도 좋아지지만, 무상태 설계·로드 밸런서·분산에 따른 복잡도를 같이 떠안아야 합니다. 트래픽이 크고 고가용성이 중요한 대규모 서비스라면 사실상 이쪽이 해답지에 가깝습니다.</li>
+</ul>
+<p>대부분의 현대적인 IT 서비스 아키텍처에서는 수평 확장을 기본 전략으로 취합니다. 수평 확장을 선택하는 순간 고려해야 하는 것은 로드 밸런서입니다. 사용자는 로드 밸런서의 공개 IP 혹은 DNS를 바라보고, 로드 밸런서가 뒤의 웹 서버들에게 트래픽을 나눠 줍니다. 서버 한 대가 죽어도 나머지로 흘려보내고, 트래픽이 늘면 서버를 더 붙이면 됩니다.</p>
+<h1 id="데이터베이스-복제">데이터베이스 복제</h1>
+<p>위에서 웹 서버를 수평 확장으로 늘리면 만사 OK일까요? 웹 서버를 여러 대로 늘려도 결국 DB가 한 대면 그 DB가 병목이자 단일 장애점이 됩니다. 그래서 보통은 이 데이터베이스에도 확장성을 고려해, 주(master)–복제본(replica) 구조인 리플리케이션 구조를 사용합니다.</p>
+<ul>
+<li>주 DB는 쓰기(write)를 받습니다.</li>
+<li>복제본은 주 DB의 데이터를 복사해 두고 읽기(read)를 받습니다.</li>
+</ul>
+<p>예를 들어 어떤 게시판 서비스가 있다면, 글 하나를 올리는 동안 그 글은 수천·수만 번 읽힙니다. 이렇듯 대부분의 서비스는 쓰기보다 읽기 트래픽이 압도적으로 많아서, 읽기를 복제본 여러 대로 분산하면 효과가 큽니다. 가용성·안정성 측면도 좋아져 장애 대응에 수월해지기도 합니다. 복제본이 죽으면 읽기를 다른 복제본으로 돌리고, 주 DB가 죽으면 복제본 하나를 새 주로 승격하기도 합니다.</p>
+<p>하지만 리플리케이션에서도 트레이드오프로 치러야 하는 대가가 있습니다. 바로 복제 지연(replication lag)입니다. 주 DB에 쓴 데이터가 복제본까지 퍼지는 데 시간이 걸려서, 방금 쓴 걸 복제본에서 곧바로 읽으면 아직 존재하지 않을 수 있습니다.</p>
+<p><img src="/img/sysdesign-1-scale/replication-lag-v2.png" alt="복제 지연: 클라이언트가 주 DB에 쓴 직후 복제본에서 읽으면, 복제가 끝나기 전이라 옛 값이거나 아직 없을 수 있다"></p>
+<h1 id="캐시">캐시</h1>
+<p>혹은 데이터 읽기를 더 빠르게, DB 부하를 더 줄이려면 어디부터 손볼 수 있을까요? 소프트웨어에서 이를 위한 가장 흔한 해결책은 캐시입니다. 자주 읽고 잘 안 바뀌는 데이터를 메모리(예: Redis)에 얹어두고, DB보다 먼저 캐시를 확인하는 방식(읽기 우선 캐시, cache-aside)을 흔하게 사용합니다. 캐시 쓰기 전략은 write-through·write-back 등 여러 가지가 더 있는데, 그건 나중에 기회가 되면 따로 정리해보겠습니다.</p>
+<p>캐시는 강력하지만 고려할 게 많습니다.</p>
+<ul>
+<li>무엇을 캐시할지: 자주 읽고 자주 안 바뀌는 데이터.</li>
+<li>만료(expiration): 너무 짧으면 DB를 더 자주 조회하게 되고, 너무 길면 오래된 데이터를 캐시에 가지고 있게 됩니다.</li>
+<li>일관성: 원본이 바뀌었는데 캐시가 오래된 값을 들고 있으면 사용자는 오래된 잘못된 데이터를 봅니다. 이걸 캐시 무효화라고 하는데, 소프트웨어에서는 거의 숙명 같은 문제로 꼽힙니다. (“컴퓨터 과학에서 어려운 건 딱 두 가지, 캐시 무효화와 이름 짓기다”라는 유명한 말이 있을 정도죠. <a href="https://martinfowler.com/bliki/TwoHardThings.html">Martin Fowler, TwoHardThings</a>)</li>
+<li>장애: 만약 캐시 서버도 단일 서버이고 그 한 대에 의존하면, 그 부분 또한 단일 장애점이 됩니다. 그래서 캐시도 여러 대로 분산합니다.</li>
+<li>축출: 캐시가 꽉 차면 무엇을 버릴지. 보통 LRU(Least Recently Used, 가장 오래 안 쓴 것부터 버리기)를 씁니다. LRU는 캐시뿐 아니라 운영체제의 페이지 교체, 데이터베이스 버퍼 풀 등 여러 곳에서 흔히 쓰이는 축출 알고리즘입니다.</li>
+</ul>
+<h1 id="cdn">CDN</h1>
+<p>이미지·CSS·JS 같은 정적 콘텐츠는 사용자와 지리적으로 가까운 CDN에서 서빙하게 됩니다. 만약 유튜브와 같은 서비스라면 영상 썸네일 이미지가 여기 해당합니다. 첫 요청 때 원본(origin)에서 받아 CDN에 캐싱해두고, 이후 같은 지역 사용자는 CDN에서 바로 받습니다.</p>
+<p><img src="/img/sysdesign-1-scale/cdn-flow-v2.png" alt="CDN이 이미지를 전달하는 과정: 첫 요청은 캐시가 없어 원본에서 받아와 CDN에 저장하고, 이후 같은 지역 요청은 가까운 CDN 캐시에서 바로 받는다"></p>
+<p>CDN도 역시 장점만 있는 것은 아닙니다. 여러 비용이 들고(자주 안 쓰는 걸 올려두면 낭비), 만료 시간 설정이 애매하면 갱신이 늦게 반영되고, CDN이 죽었을 때의 폴백(원본 직접 조회)도 생각해둬야 합니다.</p>
+<h1 id="무상태-웹-계층">무상태 웹 계층</h1>
+<p>수평 확장에서 자주 놓치는 함정이 상태(state)입니다. 사용자 세션 정보를 특정 웹 서버의 메모리에 들고 있으면, 다음 요청이 다른 서버로 가는 순간 세션이 없어서 서비스할 수 없습니다.</p>
+<p>그래서 웹 계층은 무상태(stateless)로 만듭니다. 세션 같은 상태 데이터는 웹 서버 밖, 공유 저장소(예: Redis나 별도 DB)로 빼둡니다. 그러면 어느 서버가 요청을 받아도 같은 상태를 보게 되고, 서버를 자유롭게 늘리고 줄일 수 있습니다.</p>
+<h1 id="데이터센터-그리고-더-멀리">데이터센터, 그리고 더 멀리</h1>
+<p>사용자가 여러 지역으로 퍼지면 데이터센터를 여러 곳에 둡니다. geoDNS로 사용자를 가까운 데이터센터로 보내고, 한 곳에 장애가 나면 다른 곳으로 트래픽을 돌립니다. 이때 데이터센터 간 데이터 동기화, 테스트·배포 자동화 같은 새 숙제가 생깁니다.</p>
+<h1 id="메시지-큐">메시지 큐</h1>
+<p>시스템이 커질수록 컴포넌트를 느슨하게 묶는 게 중요해집니다. 메시지 큐가 그 역할을 합니다. 생산자가 큐에 메시지를 넣으면 소비자가 꺼내 처리합니다. 둘은 서로의 사정을 몰라도 되고, 각자 독립적으로 확장할 수 있습니다. 갑자기 들어온 부하도 큐가 일단 받아 커버해 줍니다.</p>
+<p><img src="/img/sysdesign-1-scale/message-queue-v2.png" alt="메시지 큐로 생산자와 소비자를 분리하면, 직접 호출(강결합)과 달리 서로를 모른 채 각자 확장하고 부하를 큐가 버퍼처럼 받아낸다"></p>
+<p>물론 이렇게 느슨하게 묶는 데도 대가가 따릅니다. 생산자와 소비자가 서로를 모른 채 큐를 거쳐 처리되는 만큼, 그 사이의 결과적 일관성과 큐 자체를 운영하는 복잡도를 떠안아야 합니다.</p>
+<h1 id="로깅-메트릭-자동화">로깅, 메트릭, 자동화</h1>
+<p>규모가 커지면 “왜 느린지, 어디가 터졌는지”를 알아야 합니다. 로깅(에러·요청 기록), 메트릭(호스트 단위·집계·비즈니스 지표), 그리고 CI/CD 같은 자동화는 시스템 규모가 작을 땐 없어도 되지만 커지면 필수가 됩니다. 책이 이걸 확장 단계에 같이 넣어둔 게 의외였습니다. 확장은 트래픽만의 문제가 아니라 운영의 문제이기도 하다는 뜻이니까요.</p>
+<h1 id="데이터베이스-샤딩">데이터베이스 샤딩</h1>
+<p>읽기는 복제본으로 풀었지만, 쓰기와 데이터 양 자체가 한 DB에 몰리면 결국 DB를 쪼개야 합니다. 이때 사용할 수 있는 기법이 샤딩(수평 분할)인데, 큰 DB를 샤드(shard)라는 작은 DB 여러 개로 나누고, 샤드 키(sharding key)로 “이 데이터는 어느 샤드에 저장할지” 정합니다(예: <code>user_id % 샤드수</code>).</p>
+<p>샤딩은 가장 강력하지만 가장 운영 복잡도가 높은 구성이기도 합니다.</p>
+<ul>
+<li>리샤딩(resharding): 데이터가 더 늘어 샤드를 추가하면, 단순 <code>mod</code> 방식은 대부분의 데이터를 재배치해야 합니다.</li>
+<li>핫스팟(hotspot): 특정 샤드에 데이터·트래픽이 몰리는 문제.</li>
+<li>조인 곤란: 샤드를 넘는 조인이 어려워서, 보통 비정규화로 풉니다.</li>
+</ul>
+<p>여기까지 쌓으면 처음의 서버 한 대가 아래 그림처럼 됩니다.</p>
+<p><img src="/img/sysdesign-1-scale/scaling-architecture-v2.png" alt="확장의 끝에서 본 전체 아키텍처. 로드밸런서·무상태 웹서버·캐시·DB 복제·메시지 큐·샤딩이 모두 올라간 모습"></p>
+<h1 id="읽으면서-든-생각">읽으면서 든 생각</h1>
+<p>챕터를 덮고 가장 크게 남은 건 개별 기술이 아니라 한 가지 패턴이라는 느낌이었습니다. 거의 모든 확장 기법이 “읽기·쓰기를 분리하거나, 복제하거나, 떼어내서” 성능을 얻고, 그 대가로 강한 일관성을 조금씩 내준다는 것. 복제 지연, 캐시 staleness, 큐의 결과적 일관성까지 표현만 다를 뿐 본질은 같았습니다.</p>
+<h1 id="정리">정리</h1>
+<p>1편은 복잡한 확장 맥락을 일단 간소하게 풀어낸 로드맵 정도였음. 서버 한 대에서 로드밸런서·복제·캐시·CDN·무상태·큐·샤딩까지, 확장의 각 단계는 성능을 얻는 대신 일관성·복잡도를 내주는 것이었음.</p>
+<h1 id="참고">참고</h1>
+<blockquote>
+<p><a href="https://www.amazon.com/System-Design-Interview-insiders-Second/dp/B08CMF2CQF">Alex Xu, <em>System Design Interview — An Insider’s Guide</em> (Vol.1), Ch.1</a></p>
+</blockquote> </div> <section class="series-foot" data-astro-cid-fzx4jmue> <p class="sf-h" data-astro-cid-fzx4jmue> <span class="sf-label" data-astro-cid-fzx4jmue>시리즈</span> <a href="/series/" data-astro-cid-fzx4jmue>시스템 디자인</a> <span class="sf-count" data-astro-cid-fzx4jmue>전 6편</span> </p> <ol class="sf-list" data-astro-cid-fzx4jmue> <li class="cur" data-astro-cid-fzx4jmue> <a href="/sysdesign-1-scale/" aria-current="page" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>01</span> <span class="sf-text" data-astro-cid-fzx4jmue>Scale From Zero To Millions Of Users</span>  <span class="sf-tag cur" data-astro-cid-fzx4jmue>현재 글</span>  </a> </li><li data-astro-cid-fzx4jmue> <a href="/sysdesign-2-consistent-hashing/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>02</span> <span class="sf-text" data-astro-cid-fzx4jmue>Design Consistent Hashing</span>   <span class="sf-tag" data-astro-cid-fzx4jmue>다음</span> </a> </li><li data-astro-cid-fzx4jmue> <a href="/sysdesign-3-kv-store/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>03</span> <span class="sf-text" data-astro-cid-fzx4jmue>Design A Key-Value Store</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/sysdesign-4-read-fanout/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>04</span> <span class="sf-text" data-astro-cid-fzx4jmue>Design A News Feed System</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/sysdesign-5-search-es/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>05</span> <span class="sf-text" data-astro-cid-fzx4jmue>Design A Search Autocomplete System</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/sysdesign-6-rate-limiter/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>06</span> <span class="sf-text" data-astro-cid-fzx4jmue>Design A Rate Limiter</span>    </a> </li> </ol> </section> <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#서버-한-대에서-출발한다" data-astro-cid-fzx4jmue>서버 한 대에서 출발한다</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#수직-확장-먼저-그다음-수평-확장" data-astro-cid-fzx4jmue>수직 확장 먼저, 그다음 수평 확장</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#데이터베이스-복제" data-astro-cid-fzx4jmue>데이터베이스 복제</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#캐시" data-astro-cid-fzx4jmue>캐시</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#cdn" data-astro-cid-fzx4jmue>CDN</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#무상태-웹-계층" data-astro-cid-fzx4jmue>무상태 웹 계층</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#데이터센터-그리고-더-멀리" data-astro-cid-fzx4jmue>데이터센터, 그리고 더 멀리</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#메시지-큐" data-astro-cid-fzx4jmue>메시지 큐</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#로깅-메트릭-자동화" data-astro-cid-fzx4jmue>로깅, 메트릭, 자동화</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#데이터베이스-샤딩" data-astro-cid-fzx4jmue>데이터베이스 샤딩</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#읽으면서-든-생각" data-astro-cid-fzx4jmue>읽으면서 든 생각</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#정리" data-astro-cid-fzx4jmue>정리</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/sysdesign-1-scale/";
+const pageId = "sysdesign-1-scale";
+const pageTitle = "시스템 디자인 - Scale From Zero To Millions Of Users";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

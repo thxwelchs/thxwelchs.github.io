@@ -1,0 +1,225 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>JobScope 밖에서 JobParameters가 동작하지 않은 이유</title><meta name="description" content="Spring Batch에서 jobParameters 를 분명 맞게 썼는데도 특정 경로에서만 값이 안 들어와 한참 멍청멍청 삽질하게 된 후기입니다. 결론부터 말하면 ThreadLocal 문제였는데, 디버깅하는 과정에서 Spring Batch가 잡 파라미터를 어떻게 얻어오"><link rel="canonical" href="https://thxwelchs.github.io/troubleshooting-jobscope-jobparameters/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="JobScope 밖에서 JobParameters가 동작하지 않은 이유"><meta property="og:description" content="Spring Batch에서 jobParameters 를 분명 맞게 썼는데도 특정 경로에서만 값이 안 들어와 한참 멍청멍청 삽질하게 된 후기입니다. 결론부터 말하면 ThreadLocal 문제였는데, 디버깅하는 과정에서 Spring Batch가 잡 파라미터를 어떻게 얻어오"><meta property="og:url" content="https://thxwelchs.github.io/troubleshooting-jobscope-jobparameters/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/troubleshooting-jobscope-jobparameters-v2.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="JobScope 밖에서 JobParameters가 동작하지 않은 이유"><meta name="twitter:description" content="Spring Batch에서 jobParameters 를 분명 맞게 썼는데도 특정 경로에서만 값이 안 들어와 한참 멍청멍청 삽질하게 된 후기입니다. 결론부터 말하면 ThreadLocal 문제였는데, 디버깅하는 과정에서 Spring Batch가 잡 파라미터를 어떻게 얻어오"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/troubleshooting-jobscope-jobparameters-v2.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>JobScope 밖에서 JobParameters가 동작하지 않은 이유</h1> <div class="meta" data-astro-cid-fzx4jmue> 2024-08-08 · 엔지니어링  · <a class="series-badge" href="/series/" data-astro-cid-fzx4jmue>시리즈 · 트러블슈팅</a>  </div> <img class="cover" src="/img/covers/eng/troubleshooting-jobscope-jobparameters-v2.png" alt="JobScope 밖에서 JobParameters가 동작하지 않은 이유" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <p>Spring Batch에서 <code>jobParameters</code>를 분명 맞게 썼는데도 특정 경로에서만 값이 안 들어와 한참 멍청멍청 삽질하게 된 후기입니다. 결론부터 말하면 ThreadLocal 문제였는데, 디버깅하는 과정에서 Spring Batch가 잡 파라미터를 어떻게 얻어오고 바인딩하는지 코드를 살펴보게 됐고, 직접 구현해서 실험도 해봤습니다.</p>
+<h1 id="배경">배경</h1>
+<p>Spring Batch에서 잡 파라미터를 <code>@Value("#{jobParameters['param']}")</code> 같은 SpEL로 받아 쓰고 있었습니다. 로컬에서도, 단일 스레드로 도는 경로에서도 값이 멀쩡히 들어왔습니다. 그런데 멀티스레드로 도는 특정 경로에서만 <code>jobParameters</code>가 null이 됐습니다. 같은 잡 실행 안인데 왜 어떤 데선 되고 어떤 데선 안 될까요?</p>
+<h1 id="해결">해결</h1>
+<h2 id="jobparameters는-spel로-동작한다">jobParameters는 SpEL로 동작한다</h2>
+<p>Spring Batch에서 잡 파라미터를 받는 기본 방식은 이렇게 SpEL입니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#E1E4E8">@</span><span style="color:#F97583">Value</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"#{jobParameters['param']}"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">private</span><span style="color:#E1E4E8"> String param;</span></span></code></pre>
+<p><code>jobParameters['param']</code>은 SpEL이 먼저 <code>jobParameters</code>라는 객체를 평가한 뒤, 거기서 <code>param</code> 키를 꺼내는 표현입니다. 그래서 핵심 질문은 하나로 좁혀지는 것 같습니다. SpEL은 <code>jobParameters</code>라는 이름을 대체 어디서 찾을까요?</p>
+<p>SpEL이 이름을 해석하게 되는 출처는 크게 둘입니다. 하나는 Spring Bean이고, 다른 하나는 Spring Scope의 contextual object입니다. 먼저 Bean 쪽부터 보면, 애플리케이션 컨텍스트에 빈이 있으면 그 빈을 SpEL로 참조할 수 있습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> MyBean</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#E1E4E8"> String name;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">    MyBean</span><span style="color:#E1E4E8">(String </span><span style="color:#FFAB70">name</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#79B8FF">        this</span><span style="color:#E1E4E8">.name </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> name;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#E1E4E8"> String </span><span style="color:#B392F0">getName</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> name;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">@</span><span style="color:#F97583">Bean</span></span>
+<span class="line"><span style="color:#F97583">public</span><span style="color:#E1E4E8"> MyBean </span><span style="color:#B392F0">myBean</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> MyBean</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"myBean"</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// 컨텍스트의 빈을 SpEL로 참조</span></span>
+<span class="line"><span style="color:#E1E4E8">@</span><span style="color:#F97583">Value</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"#{myBean.name}"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">private</span><span style="color:#E1E4E8"> String myBeanName;</span></span></code></pre>
+<p>그런데 <code>jobParameters</code>는 이런 Spring Bean이 아닙니다. 애플리케이션 컨텍스트 그 어느 곳에도 <code>jobParameters</code>라는 빈은 없습니다.</p>
+<h2 id="jobparameters는-bean이-아니라-scope에서-온다">jobParameters는 Bean이 아니라 Scope에서 온다</h2>
+<p><code>jobParameters</code>는 <strong>Scope의 contextual object</strong>로 제공됩니다. <code>Scope</code> 인터페이스에는 <code>resolveContextualObject(key)</code>라는 메서드가 있는데, SpEL이 빈을 만들 때 그 빈이 속한 스코프의 이 메서드를 불러 이름을 해석하게 됩니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> MyScope</span><span style="color:#F97583"> implements</span><span style="color:#B392F0"> Scope</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">Override</span></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#E1E4E8"> Object </span><span style="color:#B392F0">resolveContextualObject</span><span style="color:#E1E4E8">(String </span><span style="color:#FFAB70">key</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> (</span><span style="color:#9ECBFF">"jobParameters"</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">equals</span><span style="color:#E1E4E8">(key)) {</span></span>
+<span class="line"><span style="color:#F97583">            return</span><span style="color:#6A737D"> /* 어딘가에서 가져온 잡 파라미터 */</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#6A737D">    // ... get, remove 등 생략</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>Spring Batch에서는 이 역할을 <code>Scope</code>를 구현한 <a href="https://docs.spring.io/spring-batch/reference/job/configuring.html"><code>JobScope</code></a>(스텝 단위면 <code>StepScope</code>)가 맡습니다. 즉 <code>#{jobParameters[...]}</code>는 그 빈이 잡/스텝 스코프 빈일 때만 의미가 있고, 값은 그 스코프가 꺼내 줍니다.</p>
+<h2 id="진짜-원인은-threadlocal이었다">진짜 원인은 ThreadLocal이었다</h2>
+<p>진짜 헤맨 지점이 여기였습니다. 결론부터 말하면 ThreadLocal이었습니다. Spring Batch는 현재 실행 중인 <code>JobExecution</code>(스텝이면 <code>StepExecution</code>)을 ThreadLocal에 담아두고, 스코프가 값을 꺼낼 때 이 ThreadLocal을 참조합니다. 그 ThreadLocal은 <a href="https://github.com/spring-projects/spring-batch/blob/main/spring-batch-core/src/main/java/org/springframework/batch/core/scope/context/SynchronizationManagerSupport.java"><code>SynchronizationManagerSupport</code></a>에 존재합니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#6A737D">// org.springframework.batch.core.scope.context.SynchronizationManagerSupport</span></span>
+<span class="line"><span style="color:#F97583">private</span><span style="color:#F97583"> final</span><span style="color:#E1E4E8"> ThreadLocal&#x3C;Stack&#x3C;</span><span style="color:#F97583">E</span><span style="color:#E1E4E8">>> executionHolder </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#E1E4E8"> ThreadLocal&#x3C;>();</span></span></code></pre>
+<p>여기서 두 가지가 중요했습니다.</p>
+<ul>
+<li><code>executionHolder</code>는 <code>ThreadLocal</code>이다. 즉 스레드마다 따로 들고 있다.</li>
+<li>그리고 <code>InheritableThreadLocal</code>이 아니다. 즉 부모 스레드에서 만든 워커(자식) 스레드라도 이 값을 물려받지 못한다.</li>
+</ul>
+<p>그 ThreadLocal에 담기는 <code>JobExecution</code> 안에 잡 파라미터가 들어 있습니다. 실제로 로그를 출력해보면 이런 모양이었습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>JobExecution: id=1, version=0, status=STARTING,</span></span>
+<span class="line"><span>  job=[JobInstance: id=1, Job=[playGroundJob]],</span></span>
+<span class="line"><span>  jobParameters={</span></span>
+<span class="line"><span>    'run.id':{value=1, type=Long, identifying=true},</span></span>
+<span class="line"><span>    'firstParam':{value=hello, type=String, identifying=true},</span></span>
+<span class="line"><span>    'secondParam':{value=world, type=String, identifying=true}</span></span>
+<span class="line"><span>  }</span></span></code></pre>
+<p>배치는 잡/스텝 설정 빈을 보통 메인 스레드에서 올리고, 스코프 빈도 그 흐름에서 처음 해석됩니다. 그래서 메인 스레드에는 ThreadLocal에 <code>JobExecution</code>이 있고, <code>@Value("#{jobParameters[...]}")</code>도 그 시점에 멀쩡히 풀립니다. 문제는 멀티스레드였습니다. 워커 스레드에서 처음으로 잡 스코프 빈을 건드려 스코프가 그 스레드 위에서 값을 풀어야 하는 순간, 그 워커의 ThreadLocal엔 <code>JobExecution</code>이 없어 <code>jobParameters</code>가 null이 돼버립니다.</p>
+<p>그래서 헷갈렸던 겁니다. 멀티스레드로 도는 <code>ItemProcessor</code>라도 그 자체를 잡 스코프 빈으로 등록해 두면, 해석이 메인 스레드 흐름에서 일어나 <code>jobParameters[...]</code>가 잘 동작합니다. 그런데 그 안에서 jobParameters를 응집해 둔 또 다른 객체를 워커 스레드에서 처음 꺼내려 하면, 그 스레드엔 컨텍스트가 없어 깨지는 것이었습니다.</p>
+<h2 id="커스텀-스코프로-직접-재현">커스텀 스코프로 직접 재현</h2>
+<p>말로만 보면 추상적인데, 정말 ThreadLocal 때문일까요? 확인해보고 싶어서, Spring Batch를 통째로 띄우는 대신 핵심 메커니즘만 떼어 직접 재현해봤습니다. <code>JobScope</code>를 흉내 낸 <code>MyJobScope</code>(<code>Scope</code> 구현)와, 잡 파라미터를 ThreadLocal에 담는 holder를 두고, <code>@Value("#{jobParameters['firstParam']}")</code>를 가진 빈을 메인/워커 스레드에서 각각 접근하게 했습니다.</p>
+<p>먼저 잡 파라미터를 ThreadLocal에 들고 있는 holder입니다. Spring Batch의 <code>executionHolder</code>를 흉내 낸 부분인데, 일부러 <code>InheritableThreadLocal</code>이 아니라 평범한 <code>ThreadLocal</code>로 뒀습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#F97583">public</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> JobScopeContext</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#6A737D">    // SynchronizationManagerSupport.executionHolder 를 흉내 낸 ThreadLocal</span></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#F97583"> static</span><span style="color:#F97583"> final</span><span style="color:#E1E4E8"> ThreadLocal&#x3C;Map&#x3C;</span><span style="color:#F97583">String</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">Object</span><span style="color:#E1E4E8">>> HOLDER </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#E1E4E8"> ThreadLocal&#x3C;>();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#F97583"> static</span><span style="color:#F97583"> void</span><span style="color:#B392F0"> register</span><span style="color:#E1E4E8">(Map&#x3C;</span><span style="color:#F97583">String</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">Object</span><span style="color:#E1E4E8">> </span><span style="color:#FFAB70">jobParameters</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">        HOLDER.</span><span style="color:#B392F0">set</span><span style="color:#E1E4E8">(jobParameters);</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#F97583"> static</span><span style="color:#E1E4E8"> Map&#x3C;</span><span style="color:#F97583">String</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">Object</span><span style="color:#E1E4E8">> </span><span style="color:#B392F0">getJobParameters</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> HOLDER.</span><span style="color:#B392F0">get</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>스코프는 <code>resolveContextualObject</code>에서 이 holder를 읽어 <code>jobParameters</code>를 돌려줍니다. <code>#{jobParameters[...]}</code> SpEL이 바로 이 경로를 탑니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#F97583">public</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> MyJobScope</span><span style="color:#F97583"> implements</span><span style="color:#B392F0"> Scope</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">Override</span></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#E1E4E8"> Object </span><span style="color:#B392F0">get</span><span style="color:#E1E4E8">(String </span><span style="color:#FFAB70">name</span><span style="color:#E1E4E8">, ObjectFactory&#x3C;</span><span style="color:#F97583">?</span><span style="color:#E1E4E8">> </span><span style="color:#FFAB70">objectFactory</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> objectFactory.</span><span style="color:#B392F0">getObject</span><span style="color:#E1E4E8">();   </span><span style="color:#6A737D">// 접근 때마다 생성 → @Value SpEL 재평가</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">Override</span></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#E1E4E8"> Object </span><span style="color:#B392F0">resolveContextualObject</span><span style="color:#E1E4E8">(String </span><span style="color:#FFAB70">key</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> (</span><span style="color:#9ECBFF">"jobParameters"</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">equals</span><span style="color:#E1E4E8">(key)) {</span></span>
+<span class="line"><span style="color:#F97583">            return</span><span style="color:#E1E4E8"> JobScopeContext.</span><span style="color:#B392F0">getJobParameters</span><span style="color:#E1E4E8">();   </span><span style="color:#6A737D">// ThreadLocal에 의존</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">Override</span></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#E1E4E8"> String </span><span style="color:#B392F0">getConversationId</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> Thread.</span><span style="color:#B392F0">currentThread</span><span style="color:#E1E4E8">().</span><span style="color:#B392F0">getName</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">Override</span></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#E1E4E8"> Object </span><span style="color:#B392F0">remove</span><span style="color:#E1E4E8">(String </span><span style="color:#FFAB70">name</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">Override</span></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#F97583"> void</span><span style="color:#B392F0"> registerDestructionCallback</span><span style="color:#E1E4E8">(String </span><span style="color:#FFAB70">name</span><span style="color:#E1E4E8">, Runnable </span><span style="color:#FFAB70">callback</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><code>jobParameters</code>를 SpEL로 받는 빈은 이 스코프에 둡니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#E1E4E8">@</span><span style="color:#F97583">Component</span></span>
+<span class="line"><span style="color:#E1E4E8">@</span><span style="color:#F97583">Scope</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">scopeName</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "job"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">proxyMode</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> ScopedProxyMode.TARGET_CLASS)</span></span>
+<span class="line"><span style="color:#F97583">public</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> ParamHolder</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">Value</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"#{jobParameters['firstParam']}"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    String firstParam;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#E1E4E8"> String </span><span style="color:#B392F0">getFirstParam</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> firstParam;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>이제 메인 스레드에서는 holder에 잡 파라미터를 올려두고(배치가 <code>JobExecution</code>을 ThreadLocal에 hold하는 상황을 흉내) 접근하고, 워커 스레드에서는 아무것도 올리지 않은 채 접근해봅니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#F97583">var</span><span style="color:#E1E4E8"> ctx </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> AnnotationConfigApplicationContext</span><span style="color:#E1E4E8">(AppConfig.class);</span></span>
+<span class="line"><span style="color:#E1E4E8">ParamHolder holder </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> ctx.</span><span style="color:#B392F0">getBean</span><span style="color:#E1E4E8">(ParamHolder.class);   </span><span style="color:#6A737D">// 스코프 프록시</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// 1) 메인 스레드: ThreadLocal에 잡 파라미터가 있다</span></span>
+<span class="line"><span style="color:#E1E4E8">JobScopeContext.</span><span style="color:#B392F0">register</span><span style="color:#E1E4E8">(Map.</span><span style="color:#B392F0">of</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"firstParam"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"hello"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"secondParam"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"world"</span><span style="color:#E1E4E8">));</span></span>
+<span class="line"><span style="color:#E1E4E8">System.out.</span><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"[main]   firstParam = "</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> holder.</span><span style="color:#B392F0">getFirstParam</span><span style="color:#E1E4E8">());</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// 2) 워커 스레드: ThreadLocal이 비어 있다 (InheritableThreadLocal이 아니라 못 물려받음)</span></span>
+<span class="line"><span style="color:#E1E4E8">Thread worker </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> Thread</span><span style="color:#E1E4E8">(() </span><span style="color:#F97583">-></span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">    System.out.</span><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"[worker] jobParameters in ThreadLocal? "</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> JobScopeContext.</span><span style="color:#B392F0">getJobParameters</span><span style="color:#E1E4E8">());</span></span>
+<span class="line"><span style="color:#F97583">    try</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">        System.out.</span><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"[worker] firstParam = "</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> holder.</span><span style="color:#B392F0">getFirstParam</span><span style="color:#E1E4E8">());</span></span>
+<span class="line"><span style="color:#E1E4E8">    } </span><span style="color:#F97583">catch</span><span style="color:#E1E4E8"> (Exception </span><span style="color:#FFAB70">e</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">        Throwable root </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> e;</span></span>
+<span class="line"><span style="color:#F97583">        while</span><span style="color:#E1E4E8"> (root.</span><span style="color:#B392F0">getCause</span><span style="color:#E1E4E8">() </span><span style="color:#F97583">!=</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">) root </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> root.</span><span style="color:#B392F0">getCause</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">        System.out.</span><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"[worker] 실패: "</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> root.</span><span style="color:#B392F0">getClass</span><span style="color:#E1E4E8">().</span><span style="color:#B392F0">getSimpleName</span><span style="color:#E1E4E8">() </span><span style="color:#F97583">+</span><span style="color:#9ECBFF"> " - "</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> root.</span><span style="color:#B392F0">getMessage</span><span style="color:#E1E4E8">());</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}, </span><span style="color:#9ECBFF">"worker-1"</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">worker.</span><span style="color:#B392F0">start</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">worker.</span><span style="color:#B392F0">join</span><span style="color:#E1E4E8">();</span></span></code></pre>
+<p>돌려보면 이렇게 갈립니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>[main]   jobParameters in ThreadLocal? {firstParam=hello, secondParam=world}</span></span>
+<span class="line"><span>[main]   firstParam = hello</span></span>
+<span class="line"><span>[worker] jobParameters in ThreadLocal? null</span></span>
+<span class="line"><span>[worker] 실패: SpelEvaluationException - EL1012E: Cannot index into a null value</span></span></code></pre>
+<p>메인 스레드는 ThreadLocal에 잡 파라미터가 있어 SpEL이 <code>hello</code>로 정상적으로 해석됩니다. 반면 워커 스레드는 ThreadLocal이 비어 있어 <code>jobParameters</code>가 null로 평가되고, 결국 <code>null['firstParam']</code>을 인덱싱하다 <code>EL1012E: Cannot index into a null value</code>로 깨집니다. 실제 배치에서 봤던 증상과 같은 모양이었습니다.</p>
+<h1 id="결과">결과</h1>
+<p>이 사건이 오래 걸린 건, 증상이 “틀렸다”가 아니라 “가끔만 맞는다”는 형태의 문제였기 때문이었습니다. 항상 그렇듯, 매번 문제가 되는 경우보다 어쩌다 문제가 되는 경우가 디버깅하기 더 어려운 것 같습니다. <code>jobParameters</code>는 빈이 아니라 스코프가 그때그때 ThreadLocal에서 꺼내주는 값이었고, 그 ThreadLocal마저 <code>InheritableThreadLocal</code>이 아니라서 워커 스레드로는 따라가지 않는 것이 원인이었습니다.</p>
+<p>그래서 결국은 스코프 해석이 일어나는 시점(메인 스레드)에 값을 미리 받아, 워커가 쓸 객체에 넘겨줘야 한다는 것을 알게 되었습니다. 이렇게 스코프와 스레드의 관계를 다시 한번 살펴보았습니다.</p>
+<h1 id="참고">참고</h1>
+<blockquote>
+<ul>
+<li><a href="https://github.com/spring-projects/spring-batch/blob/main/spring-batch-core/src/main/java/org/springframework/batch/core/scope/context/SynchronizationManagerSupport.java">Spring Batch: SynchronizationManagerSupport (소스)</a></li>
+<li><a href="https://docs.spring.io/spring-batch/reference/step/late-binding.html">Spring Batch Reference: Job/Step Scope</a></li>
+</ul>
+</blockquote> </div> <section class="series-foot" data-astro-cid-fzx4jmue> <p class="sf-h" data-astro-cid-fzx4jmue> <span class="sf-label" data-astro-cid-fzx4jmue>시리즈</span> <a href="/series/" data-astro-cid-fzx4jmue>트러블슈팅</a> <span class="sf-count" data-astro-cid-fzx4jmue>전 4편</span> </p> <ol class="sf-list" data-astro-cid-fzx4jmue> <li data-astro-cid-fzx4jmue> <a href="/troubleshooting-es-unnecessary-fields-cpu/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>01</span> <span class="sf-text" data-astro-cid-fzx4jmue>ES 불필요 필드 역직렬화가 API 서버 CPU 스파이크를 일으킨 사건</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/troubleshooting-hashmap-concurrency/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>02</span> <span class="sf-text" data-astro-cid-fzx4jmue>HashMap 동시성으로 기준정보가 꼬인 사건</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/troubleshooting-kotlin-configurationproperties/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>03</span> <span class="sf-text" data-astro-cid-fzx4jmue>통합테스트에서만 ConfigurationProperties 바인딩이 안 되던 문제</span> <span class="sf-tag" data-astro-cid-fzx4jmue>이전</span>   </a> </li><li class="cur" data-astro-cid-fzx4jmue> <a href="/troubleshooting-jobscope-jobparameters/" aria-current="page" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>04</span> <span class="sf-text" data-astro-cid-fzx4jmue>JobScope 밖에서 JobParameters가 동작하지 않은 이유</span>  <span class="sf-tag cur" data-astro-cid-fzx4jmue>현재 글</span>  </a> </li> </ol> </section> <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#배경" data-astro-cid-fzx4jmue>배경</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#해결" data-astro-cid-fzx4jmue>해결</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#jobparameters는-spel로-동작한다" data-astro-cid-fzx4jmue>jobParameters는 SpEL로 동작한다</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#jobparameters는-bean이-아니라-scope에서-온다" data-astro-cid-fzx4jmue>jobParameters는 Bean이 아니라 Scope에서 온다</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#진짜-원인은-threadlocal이었다" data-astro-cid-fzx4jmue>진짜 원인은 ThreadLocal이었다</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#커스텀-스코프로-직접-재현" data-astro-cid-fzx4jmue>커스텀 스코프로 직접 재현</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#결과" data-astro-cid-fzx4jmue>결과</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/troubleshooting-jobscope-jobparameters/";
+const pageId = "troubleshooting-jobscope-jobparameters";
+const pageTitle = "JobScope 밖에서 JobParameters가 동작하지 않은 이유";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

@@ -1,0 +1,208 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>코틀린 코루틴 4편 - 코루틴 직접 구현해보기</title><meta name="description" content="들어가며 이번엔 코루틴이 내부에서 어떻게 &#34;멈췄다 다시 이어서&#34; 도는지를 직접 흉내 내봅니다. Kotlin에선 suspend 한 단어로 끝나지만, 그 밑바닥이 늘 궁금했습니다. 그래서 컴파일러의 도움 없이, C로 멈춤·재개를 직접 만들어보고 그걸 JNI로 Java에서 "><link rel="canonical" href="https://thxwelchs.github.io/kotlin-coroutine-4/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="코틀린 코루틴 4편 - 코루틴 직접 구현해보기"><meta property="og:description" content="들어가며 이번엔 코루틴이 내부에서 어떻게 &#34;멈췄다 다시 이어서&#34; 도는지를 직접 흉내 내봅니다. Kotlin에선 suspend 한 단어로 끝나지만, 그 밑바닥이 늘 궁금했습니다. 그래서 컴파일러의 도움 없이, C로 멈춤·재개를 직접 만들어보고 그걸 JNI로 Java에서 "><meta property="og:url" content="https://thxwelchs.github.io/kotlin-coroutine-4/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/kotlin-coroutine-4.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="코틀린 코루틴 4편 - 코루틴 직접 구현해보기"><meta name="twitter:description" content="들어가며 이번엔 코루틴이 내부에서 어떻게 &#34;멈췄다 다시 이어서&#34; 도는지를 직접 흉내 내봅니다. Kotlin에선 suspend 한 단어로 끝나지만, 그 밑바닥이 늘 궁금했습니다. 그래서 컴파일러의 도움 없이, C로 멈춤·재개를 직접 만들어보고 그걸 JNI로 Java에서 "><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/kotlin-coroutine-4.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>코틀린 코루틴 4편 - 코루틴 직접 구현해보기</h1> <div class="meta" data-astro-cid-fzx4jmue> 2023-12-18 · 엔지니어링  · <a class="series-badge" href="/series/" data-astro-cid-fzx4jmue>시리즈 · 코틀린 코루틴</a>  </div> <img class="cover" src="/img/covers/eng/kotlin-coroutine-4.png" alt="코틀린 코루틴 4편 - 코루틴 직접 구현해보기" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <h1 id="들어가며">들어가며</h1>
+<p>이번엔 코루틴이 내부에서 어떻게 “멈췄다 다시 이어서” 도는지를 직접 흉내 내봅니다. Kotlin에선 <code>suspend</code> 한 단어로 끝나지만, 그 밑바닥이 늘 궁금했습니다. 그래서 컴파일러의 도움 없이, C로 멈춤·재개를 직접 만들어보고 그걸 JNI로 Java에서 불러봤습니다.</p>
+<p>미리 말해두면, 이건 원리를 손으로 만져보려는 교육용 단순 데모입니다. 뒤에서 쓸 <code>ucontext</code>는 macOS에선 deprecated 됐고(컴파일 시 경고를 끄고 썼습니다), 단일 스레드 기준이라 실전용은 아닙니다. 목적은 “동작 원리 확인”입니다.</p>
+<br>
+<h1 id="컨티뉴에이션이-뭐였더라">컨티뉴에이션이 뭐였더라</h1>
+<p>코루틴의 핵심은 <code>suspend</code>, 즉 “멈춤”입니다. 그런데 멈췄다가 나중에 그 자리에서 다시 이어서 돌려면 무엇이 필요할까요? “어디서 멈췄고, 그때 무슨 값을 들고 있었는지”를 어딘가에 저장해둬야 합니다. 그 “저장된 나머지 계산”을 컨티뉴에이션(continuation)이라고 부릅니다.</p>
+<p>비유하면 책갈피(북마크)입니다. <code>yield</code>는 책갈피를 끼우고 책을 덮어 호출자에게 넘기는 것이고, <code>resume</code>은 그 책갈피를 펴서 멈춘 줄부터 다시 읽는 것입니다.</p>
+<p><img src="/img/kotlin-coroutine-4/continuation-resume-v1.png" alt="suspend는 멈춘 지점(북마크=컨티뉴에이션)을 저장하고, resume은 그 북마크에서 이어서 실행한다는 타임라인"></p>
+<br>
+<h1 id="c로-yieldresume-만들기-ucontext">C로 yield/resume 만들기 (ucontext)</h1>
+<p>그럼 컴파일러의 도움 없이 이 멈춤·재개를 어떻게 만들 수 있을까요? C에는 실행 컨텍스트를 통째로 다루는 <code>ucontext</code>라는 도구가 있습니다. <code>getcontext</code>로 현재 상태를 뜨고, <code>makecontext</code>로 새 컨텍스트에 진입 함수를 걸고, <code>swapcontext</code>로 두 컨텍스트를 맞바꿉니다. 이 <code>swapcontext</code>가 핵심인데, <strong>현재 실행 컨텍스트(스택 + 레지스터)를 저장하고 다른 컨텍스트를 복원</strong>합니다. 이게 사실상 컨티뉴에이션을 교체하는 동작 그 자체였습니다.</p>
+<p><img src="/img/kotlin-coroutine-4/ucontext-swap-v1.png" alt="swapcontext가 호출자 컨텍스트와 코루틴 컨텍스트(각자의 스택)를 맞바꿔, 제어가 둘 사이를 오가는 그림"></p>
+<p>코루틴 본체는 10, 20, 30을 차례로 내보내는 단순한 함수로 잡았습니다. 값을 하나 정해두고 <code>swapcontext</code>로 호출자에게 돌아가면(yield), 다음에 호출자가 다시 들어올 때(resume) 바로 그 다음 줄부터 이어집니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="c"><code><span class="line"><span style="color:#F97583">typedef</span><span style="color:#F97583"> struct</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#79B8FF">    ucontext_t</span><span style="color:#E1E4E8"> caller;</span><span style="color:#6A737D">   // resume를 호출한 쪽으로 돌아갈 컨텍스트</span></span>
+<span class="line"><span style="color:#79B8FF">    ucontext_t</span><span style="color:#E1E4E8"> coro;</span><span style="color:#6A737D">     // 코루틴 본체의 컨텍스트</span></span>
+<span class="line"><span style="color:#F97583">    char</span><span style="color:#F97583"> *</span><span style="color:#E1E4E8">stack;</span></span>
+<span class="line"><span style="color:#F97583">    int</span><span style="color:#E1E4E8"> yielded;</span></span>
+<span class="line"><span style="color:#F97583">    int</span><span style="color:#E1E4E8"> finished;</span></span>
+<span class="line"><span style="color:#E1E4E8">} Coro;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// 코루틴 본체: 10, 20, 30 을 차례로 yield</span></span>
+<span class="line"><span style="color:#6A737D">// makecontext는 int 인자만 넘길 수 있어, 핸들 포인터를 상·하위 32비트로 쪼개 받는다</span></span>
+<span class="line"><span style="color:#F97583">static</span><span style="color:#F97583"> void</span><span style="color:#B392F0"> coro_entry</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">unsigned</span><span style="color:#F97583"> int</span><span style="color:#FFAB70"> hi</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">unsigned</span><span style="color:#F97583"> int</span><span style="color:#FFAB70"> lo</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">    Coro </span><span style="color:#F97583">*</span><span style="color:#E1E4E8">self </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> (Coro </span><span style="color:#F97583">*</span><span style="color:#E1E4E8">) (((</span><span style="color:#F97583">uintptr_t</span><span style="color:#E1E4E8">) hi </span><span style="color:#F97583">&#x3C;&#x3C;</span><span style="color:#79B8FF"> 32</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">|</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">uintptr_t</span><span style="color:#E1E4E8">) lo);</span></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">; i </span><span style="color:#F97583">&#x3C;=</span><span style="color:#79B8FF"> 3</span><span style="color:#E1E4E8">; i</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">        self->yielded </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">*</span><span style="color:#79B8FF"> 10</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#B392F0">        swapcontext</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">&#x26;</span><span style="color:#E1E4E8">self->coro, </span><span style="color:#F97583">&#x26;</span><span style="color:#E1E4E8">self->caller);</span><span style="color:#6A737D">   // yield: 내 컨텍스트 저장 후 호출자로</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">    self->finished </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#B392F0"> coro_resume</span><span style="color:#E1E4E8">(Coro </span><span style="color:#F97583">*</span><span style="color:#FFAB70">c</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> (c->finished) {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#F97583"> -</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#B392F0">    swapcontext</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">&#x26;</span><span style="color:#E1E4E8">c->caller, </span><span style="color:#F97583">&#x26;</span><span style="color:#E1E4E8">c->coro);</span><span style="color:#6A737D">   // resume: 호출자 저장 후 코루틴으로 점프</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> (c->finished) {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#F97583"> -</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> c->yielded;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><code>swapcontext(&#x26;coro, &#x26;caller)</code>가 yield, <code>swapcontext(&#x26;caller, &#x26;coro)</code>가 resume입니다. 같은 함수 호출인데 어느 쪽을 저장하고 어느 쪽으로 가느냐만 다릅니다. 멈춤과 재개가 결국 한 동작의 양방향이었던 셈입니다.</p>
+<br>
+<h1 id="jni로-java에서-부르기">JNI로 Java에서 부르기</h1>
+<p>이제 이 C 코루틴을 Java에서 부를 차례입니다. Java는 <code>native</code> 메서드와 JNI(Java Native Interface)로 C 함수를 호출할 수 있습니다. Java 쪽엔 네이티브 선언만 둡니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#F97583">public</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> NativeCoroutine</span><span style="color:#F97583"> implements</span><span style="color:#B392F0"> AutoCloseable</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    static</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">        System.</span><span style="color:#B392F0">loadLibrary</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"coro"</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#F97583"> final</span><span style="color:#F97583"> long</span><span style="color:#E1E4E8"> handle;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#B392F0"> NativeCoroutine</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#79B8FF">        this</span><span style="color:#E1E4E8">.handle </span><span style="color:#F97583">=</span><span style="color:#B392F0"> create</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#F97583"> static</span><span style="color:#F97583"> native</span><span style="color:#F97583"> long</span><span style="color:#B392F0"> create</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#F97583"> static</span><span style="color:#F97583"> native</span><span style="color:#F97583"> int</span><span style="color:#B392F0"> resume</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">long</span><span style="color:#FFAB70"> handle</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#F97583"> static</span><span style="color:#F97583"> native</span><span style="color:#F97583"> boolean</span><span style="color:#B392F0"> done</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">long</span><span style="color:#FFAB70"> handle</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#F97583"> static</span><span style="color:#F97583"> native</span><span style="color:#F97583"> void</span><span style="color:#B392F0"> destroy</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">long</span><span style="color:#FFAB70"> handle</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#F97583"> int</span><span style="color:#B392F0"> resume</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#B392F0"> resume</span><span style="color:#E1E4E8">(handle);</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#F97583"> boolean</span><span style="color:#B392F0"> isDone</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#B392F0"> done</span><span style="color:#E1E4E8">(handle);</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">Override</span></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#F97583"> void</span><span style="color:#B392F0"> close</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#B392F0">        destroy</span><span style="color:#E1E4E8">(handle);</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>빌드는 세 단계였습니다. <code>javac -h</code>로 JNI 헤더를 만들고, 그 시그니처에 맞춰 C를 구현한 뒤, 공유 라이브러리로 컴파일합니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># 1) JNI 헤더 생성 (NativeCoroutine.h)</span></span>
+<span class="line"><span style="color:#B392F0">javac</span><span style="color:#79B8FF"> -h</span><span style="color:#9ECBFF"> .</span><span style="color:#9ECBFF"> NativeCoroutine.java</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 2) 공유 라이브러리 컴파일 (macOS arm64, JDK 21)</span></span>
+<span class="line"><span style="color:#B392F0">clang</span><span style="color:#79B8FF"> -shared</span><span style="color:#79B8FF"> -fPIC</span><span style="color:#79B8FF"> -Wno-deprecated-declarations</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -I</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$JAVA_HOME</span><span style="color:#9ECBFF">/include"</span><span style="color:#79B8FF"> -I</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$JAVA_HOME</span><span style="color:#9ECBFF">/include/darwin"</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#9ECBFF">  coro.c</span><span style="color:#79B8FF"> -o</span><span style="color:#9ECBFF"> libcoro.dylib</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 3) 실행</span></span>
+<span class="line"><span style="color:#B392F0">java</span><span style="color:#79B8FF"> -Djava.library.path=.</span><span style="color:#9ECBFF"> NativeCoroutine</span></span></code></pre>
+<p><code>resume</code>을 반복 호출하며 yield 값을 받아 찍어봤더니, 실제로 이렇게 나왔습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>=== JNI 네이티브 코루틴 흉내 (C ucontext) ===</span></span>
+<span class="line"><span>resume #1 -> 코루틴이 yield 한 값: 10</span></span>
+<span class="line"><span>resume #2 -> 코루틴이 yield 한 값: 20</span></span>
+<span class="line"><span>resume #3 -> 코루틴이 yield 한 값: 30</span></span>
+<span class="line"><span>코루틴이 끝까지 실행됨 (done)</span></span></code></pre>
+<p>Java 입장에선 <code>resume()</code>을 부를 때마다 코루틴이 멈췄던 자리에서 다음 값을 들고 돌아왔습니다. 손으로 만든 yield/resume이 정말로 도는 걸 보니, 추상적이던 컨티뉴에이션이 비로소 손에 잡히는 느낌이었습니다.</p>
+<br>
+<h1 id="두-개를-번갈아-돌려도-안전한가">두 개를 번갈아 돌려도 안전한가</h1>
+<p>코루틴이라면 여러 개를 번갈아 돌릴 수 있어야 진짜 쓸모가 있겠죠? 그래서 핸들을 <code>makecontext</code>의 인자로 넘기도록 만들었습니다(<code>ucontext</code>는 <code>int</code> 인자만 받아서, 포인터를 상·하위 32비트로 쪼개 전달했습니다). 코루틴 A와 B를 번갈아 <code>resume</code> 해봤습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#F97583">try</span><span style="color:#E1E4E8"> (NativeCoroutine A </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> NativeCoroutine</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">     NativeCoroutine B </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> NativeCoroutine</span><span style="color:#E1E4E8">()) {</span></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> round </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">; round </span><span style="color:#F97583">&#x3C;=</span><span style="color:#79B8FF"> 3</span><span style="color:#E1E4E8">; round</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">        int</span><span style="color:#E1E4E8"> va </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> A.</span><span style="color:#B392F0">resume</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#F97583">        int</span><span style="color:#E1E4E8"> vb </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> B.</span><span style="color:#B392F0">resume</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">        System.out.</span><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"round "</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> round </span><span style="color:#F97583">+</span><span style="color:#9ECBFF"> ":  A -> "</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> va </span><span style="color:#F97583">+</span><span style="color:#9ECBFF"> "   B -> "</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> vb);</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>=== 두 코루틴 A, B 를 번갈아 resume ===</span></span>
+<span class="line"><span>round 1:  A -> 10   B -> 10</span></span>
+<span class="line"><span>round 2:  A -> 20   B -> 20</span></span>
+<span class="line"><span>round 3:  A -> 30   B -> 30</span></span></code></pre>
+<p>A와 B가 서로의 진행에 끼어들지 않고 각자 10·20·30을 이어갑니다. 컨티뉴에이션(멈춘 지점 + 상태)을 코루틴마다 따로 들고 있으니 당연한 결과인데, 직접 번갈아 돌려보니 “각자의 책갈피”라는 게 더 또렷하게 와닿았습니다.</p>
+<br>
+<h1 id="kotlin은-이걸-어떻게-할까">Kotlin은 이걸 어떻게 할까?</h1>
+<p>그럼 Kotlin도 이렇게 스택을 통째로 뜰까요? 우리는 코루틴 전용 스택을 통째로 따로 떠서(<code>ucontext</code>) 그걸 맞바꿨습니다. 이런 방식을 스택풀(stackful)이라고 합니다. 그런데 Kotlin 코루틴은 이렇게 하지 않습니다.</p>
+<p>Kotlin은 컴파일러가 <code>suspend</code> 함수를 상태 머신(CPS, continuation-passing style)으로 바꿔치웁니다. 멈출 수 있는 지점마다 번호(label)를 매기고, 그때까지의 지역변수를 <code>Continuation</code> 객체에 담아둡니다. 재개할 때는 그 객체의 label을 보고 “몇 번 지점부터”를 이어서 실행합니다. 스택을 통째로 들고 있는 게 아니라, 작은 객체 하나에 상태를 담는 스택리스(stackless) 방식입니다.</p>
+<p><img src="/img/kotlin-coroutine-4/kotlin-vs-native-v1.png" alt="Kotlin은 컴파일러가 suspend를 CPS 상태머신으로 바꿔 Continuation 객체(label+지역변수)에 담고, 이 데모는 ucontext로 스택을 통째로 맞바꾸는 비교"></p>
+<p>그래서 차이가 큽니다. 우리 데모는 코루틴 하나당 네이티브 스택을 하나씩 잡아 무겁지만, Kotlin은 힙에 작은 객체만 남기니 코루틴을 수십만 개 띄워도 가볍습니다. 1편에서 “코루틴은 스레드보다 가볍다”고 했던 그 가벼움의 출처가, 결국 이 스택리스 설계였던 거였음. 방식은 달라도 목적은 똑같았습니다. 멈춘 지점을 저장했다가 그 자리에서 재개하는 것.</p>
+<blockquote>
+<p>참고로 최근의 자바 가상 스레드(Virtual Threads)도 큰 틀에서는 JVM 레벨의 컨티뉴에이션을 활용합니다. “멈췄다 재개”라는 발상은 같은데 층위가 다른 셈인데, 이건 <a href="/reactive-streams-9/">리액티브 시리즈</a>에서 예고한 대로 가상 스레드를 따로 다룰 때 이어서 정리해보려 합니다.</p>
+</blockquote>
+<br>
+<h1 id="마지막-정리">마지막 정리</h1>
+<p>4편 내용을 정리하면 이렇습니다.</p>
+<ul>
+<li><strong>컨티뉴에이션</strong>: 코루틴의 본질은 “멈춘 지점 + 그때의 상태”를 저장했다가 그 자리에서 재개하는 것. yield와 resume은 한 동작의 양방향이었음.</li>
+<li><strong>직접 구현</strong>: C의 <code>ucontext</code>로 <code>swapcontext</code>를 yield/resume으로 써서 코루틴을 흉내 냈고, JNI로 Java에서 불러 실제로 10·20·30을 받아봤음.</li>
+<li><strong>Kotlin과의 차이</strong>: 우리는 스택을 통째로 뜨는 스택풀, Kotlin은 컴파일러가 CPS로 바꿔 <code>Continuation</code> 객체에 담는 스택리스. 코루틴이 가벼운 이유가 여기 있었음.</li>
+</ul>
+<p>직접 만들어보니, 코루틴이라는 추상이 결국 “어디서 멈췄는지를 저장하는 자료구조”로 내려앉는 게 보였습니다. 평소에 <code>suspend</code> 한 줄로 누리던 편함 뒤에 이런 기계가 돌고 있었다는 걸, 손으로 한 번 만들어보고 나서야 제대로 납득한 것 같습니다.</p>
+<br>
+<h1 id="참고">참고</h1>
+<blockquote>
+<ul>
+<li><a href="https://github.com/Kotlin/KEEP/blob/master/proposals/coroutines.md">Kotlin coroutines 디자인 문서(KEEP)</a></li>
+<li><a href="https://docs.oracle.com/en/java/javase/21/docs/specs/jni/index.html">Java Native Interface Specification</a></li>
+<li><code>man ucontext</code> / <code>man swapcontext</code></li>
+</ul>
+</blockquote> </div> <section class="series-foot" data-astro-cid-fzx4jmue> <p class="sf-h" data-astro-cid-fzx4jmue> <span class="sf-label" data-astro-cid-fzx4jmue>시리즈</span> <a href="/series/" data-astro-cid-fzx4jmue>코틀린 코루틴</a> <span class="sf-count" data-astro-cid-fzx4jmue>전 4편</span> </p> <ol class="sf-list" data-astro-cid-fzx4jmue> <li data-astro-cid-fzx4jmue> <a href="/kotlin-coroutine-intro/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>01</span> <span class="sf-text" data-astro-cid-fzx4jmue>개념과 동작 원리 제대로 보기</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/kotlin-coroutine-2/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>02</span> <span class="sf-text" data-astro-cid-fzx4jmue>구조화된 동시성, 취소와 예외</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/kotlin-coroutine-3/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>03</span> <span class="sf-text" data-astro-cid-fzx4jmue>여러 값이 흐르는 스트림, Flow</span> <span class="sf-tag" data-astro-cid-fzx4jmue>이전</span>   </a> </li><li class="cur" data-astro-cid-fzx4jmue> <a href="/kotlin-coroutine-4/" aria-current="page" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>04</span> <span class="sf-text" data-astro-cid-fzx4jmue>코루틴 직접 구현해보기</span>  <span class="sf-tag cur" data-astro-cid-fzx4jmue>현재 글</span>  </a> </li> </ol> </section> <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#들어가며" data-astro-cid-fzx4jmue>들어가며</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#컨티뉴에이션이-뭐였더라" data-astro-cid-fzx4jmue>컨티뉴에이션이 뭐였더라</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#c로-yieldresume-만들기-ucontext" data-astro-cid-fzx4jmue>C로 yield/resume 만들기 (ucontext)</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#jni로-java에서-부르기" data-astro-cid-fzx4jmue>JNI로 Java에서 부르기</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#두-개를-번갈아-돌려도-안전한가" data-astro-cid-fzx4jmue>두 개를 번갈아 돌려도 안전한가</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#kotlin은-이걸-어떻게-할까" data-astro-cid-fzx4jmue>Kotlin은 이걸 어떻게 할까?</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#마지막-정리" data-astro-cid-fzx4jmue>마지막 정리</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/kotlin-coroutine-4/";
+const pageId = "kotlin-coroutine-4";
+const pageTitle = "코틀린 코루틴 4편 - 코루틴 직접 구현해보기";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

@@ -1,0 +1,273 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Spring 중복코드 줄여보기</title><meta name="description" content="Spring 다형성, 상속성을 이용한 중복코드 줄여보기 스프링부트를 활용하면 상당 부분 설정이 편리해진 부분이 있었지만, 흔한 MVC 패턴에서(물론 실제 개발은 MVVM 패턴으로 개발중) 엔드포인트 혹은 엔티티가 늘어 날 때마다 반복되는 코드들이 생기는게 불만스러웠습니"><link rel="canonical" href="https://thxwelchs.github.io/SPRING-DUPLICATION/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="Spring 중복코드 줄여보기"><meta property="og:description" content="Spring 다형성, 상속성을 이용한 중복코드 줄여보기 스프링부트를 활용하면 상당 부분 설정이 편리해진 부분이 있었지만, 흔한 MVC 패턴에서(물론 실제 개발은 MVVM 패턴으로 개발중) 엔드포인트 혹은 엔티티가 늘어 날 때마다 반복되는 코드들이 생기는게 불만스러웠습니"><meta property="og:url" content="https://thxwelchs.github.io/SPRING-DUPLICATION/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/SPRING-DUPLICATION.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Spring 중복코드 줄여보기"><meta name="twitter:description" content="Spring 다형성, 상속성을 이용한 중복코드 줄여보기 스프링부트를 활용하면 상당 부분 설정이 편리해진 부분이 있었지만, 흔한 MVC 패턴에서(물론 실제 개발은 MVVM 패턴으로 개발중) 엔드포인트 혹은 엔티티가 늘어 날 때마다 반복되는 코드들이 생기는게 불만스러웠습니"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/SPRING-DUPLICATION.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>Spring 중복코드 줄여보기</h1> <div class="meta" data-astro-cid-fzx4jmue> 2020-02-25 · 엔지니어링  </div> <img class="cover" src="/img/covers/eng/SPRING-DUPLICATION.png" alt="Spring 중복코드 줄여보기" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <h1 id="spring-다형성-상속성을-이용한-중복코드-줄여보기">Spring 다형성, 상속성을 이용한 중복코드 줄여보기</h1>
+<p>스프링부트를 활용하면 상당 부분 설정이 편리해진 부분이 있었지만, 흔한 MVC 패턴에서(물론 실제 개발은 MVVM 패턴으로 개발중) 엔드포인트 혹은 엔티티가 늘어 날 때마다 반복되는 코드들이 생기는게 불만스러웠습니다. 그래서 고민을 하게 되었습니다.</p>
+<blockquote>
+<p>객체지향스럽게(?) 다형성과 상속성을 지키는 구조로 중복되는 코드들을 줄여보는게 어떨까?</p>
+</blockquote>
+<h1 id="공통이되-중복되는-부분-제거">공통이되 중복되는 부분 제거</h1>
+<p>먼저 저의 스프링부트 구조에서 중복을 없앨만한 요소들을 찾아 보았습니다.</p>
+<p>저의 스프링부트 프로젝트의 모듈구조는 싱글모듈 구조 였고,</p>
+<p><code>controller</code>, <code>model</code>(entity), <code>service</code>, <code>repository</code> 를 주요 레이어로 가지는 구조였기에</p>
+<p><code>entity</code>가 늘어나면 늘어난 entity 기반으로 <code>controller</code>, <code>repository</code>, <code>service</code>를 생성해주어야 했습니다.</p>
+<p><img src="/img/SPRING-DUPLICATION/Untitled.png" alt="Untitled/Untitled.png"></p>
+<p><br>
+그래서 controller, repository, service의 공통되는 부분을 묶어서 중복을 제거하고자 했습니다.</p>
+<p><br><br></p>
+<h2 id="service-공통-부분-중복-제거">Service 공통 부분 중복 제거</h2>
+<p>중복되는 부분은 예를 들어 <code>service</code>에서 단순히 <code>repository</code>를 통해 처리 한 뒤  <code>controller</code>에게 전달해주는 그런 로직들이 대상이 될 것 입니다.  예시 코드입니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#B392F0">@Service</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> MenuService</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">private</span><span style="color:#F97583"> val</span><span style="color:#E1E4E8"> menuRepository: </span><span style="color:#B392F0">MenuRepository</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#6A737D">        // 이런거.. 일일이 굳이 코드로 작성 할 필요는 없지 않을까?</span></span>
+<span class="line"><span style="color:#F97583">        fun</span><span style="color:#B392F0"> save</span><span style="color:#E1E4E8">(menu: </span><span style="color:#B392F0">Menu</span><span style="color:#E1E4E8">): </span><span style="color:#B392F0">Menu</span><span style="color:#E1E4E8"> { </span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> menuRepository.</span><span style="color:#B392F0">save</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    fun</span><span style="color:#B392F0"> findAll</span><span style="color:#E1E4E8">(): </span><span style="color:#B392F0">MutableList</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">Menu</span><span style="color:#E1E4E8">> {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> menuRepository.</span><span style="color:#B392F0">findAll</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">        ..</span><span style="color:#E1E4E8">.</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>물론 controller에서 바로 repository를 DI하여 작업을 수행 할 수도 있겠지만
+가능하면 <code>controller</code> -> <code>service</code> -> <code>repository</code> | <code>other service</code> 의 레이어 형태를 지키는
+것이 바람직하지 않을까? 라는 생각 하고 있습니다.
+그래서 위 예시코드에 기본적으로 제공되는 메소드들을 굳이 직접 service에 작성하지 않고 호출하는 구조로 만들고 싶어서 다음과 같이 entity를 다루는 service라면 반드시 상속받게 할 BaseEntityService를 생성했습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#6A737D">/**</span></span>
+<span class="line"><span style="color:#6A737D">    * Entity 공통 Service</span></span>
+<span class="line"><span style="color:#6A737D">    * Generics description</span></span>
+<span class="line"><span style="color:#6A737D">    * E: Entity, ID: Entity Primary Key (직렬화 할 수 있는 형태의 자료 형태)</span></span>
+<span class="line"><span style="color:#6A737D">    *</span></span>
+<span class="line"><span style="color:#6A737D">    * SimpleJpaRepository는 JpaRepository의 실질적인 구현체 클래스입니다.</span></span>
+<span class="line"><span style="color:#6A737D">    * SimpleJpaRepository를 상속받기 위해선 반드시 super생성자로 클래스를 초기화 해주어야 하는 것 같은데,</span></span>
+<span class="line"><span style="color:#6A737D">    * 그 super 생성자는 찾아보니 두개의 생성자로 오버로딩 되어 있고, 저는 그 중 하나인 </span></span>
+<span class="line"><span style="color:#6A737D">    * entity의 클래스 타입과, entityManager를 받는 생성자로 슈퍼클래스 상속받게 했습니다.</span></span>
+<span class="line"><span style="color:#6A737D">    */</span></span>
+<span class="line"><span style="color:#F97583">abstract</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> BaseEntityService</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">E</span><span style="color:#E1E4E8"> : </span><span style="color:#B392F0">Any</span><span style="color:#E1E4E8">, </span><span style="color:#B392F0">ID</span><span style="color:#E1E4E8"> : </span><span style="color:#B392F0">Serializable</span><span style="color:#E1E4E8">?>(</span></span>
+<span class="line"><span style="color:#E1E4E8">        clazz: </span><span style="color:#B392F0">KClass</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">E</span><span style="color:#E1E4E8">>,</span></span>
+<span class="line"><span style="color:#E1E4E8">        entityManager: </span><span style="color:#B392F0">EntityManager</span><span style="color:#E1E4E8">) : </span><span style="color:#B392F0">SimpleJpaRepository</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">E</span><span style="color:#E1E4E8">, </span><span style="color:#B392F0">ID</span><span style="color:#E1E4E8">>(</span><span style="color:#B392F0">clazz</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">java</span><span style="color:#E1E4E8">, </span><span style="color:#B392F0">entityManager</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>저는 JpaRepository가 어떤 구현체로 이루어져있는지 관심도 없었는데 이번에 처음 관심 갖게 되었고, 살펴보게 되었습니다.</p>
+<p>다음과 같이 두가지 생성자가 있는데 저는 두번째 타입의 생성자를 통해 상속하고 있습니다.</p>
+<p><img src="/img/SPRING-DUPLICATION/Untitled1.png" alt="Untitled/Untitled%201.png"></p>
+<p>그럼 <code>BaseEntityService</code>가 완성되었으니 사용하게 될 Service에서 상속만 하면 되겠죠?</p>
+<p>그 구조는 다음과 같습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#B392F0">@Service</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> MenuService</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#F97583">        private</span><span style="color:#F97583"> val</span><span style="color:#E1E4E8"> menuRepository: </span><span style="color:#B392F0">MenuRepository</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#F97583">        private</span><span style="color:#F97583"> val</span><span style="color:#E1E4E8"> entityManager: </span><span style="color:#B392F0">EntityManager</span></span>
+<span class="line"><span style="color:#E1E4E8">) : </span><span style="color:#B392F0">BaseEntityService</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">Menu</span><span style="color:#E1E4E8">, </span><span style="color:#B392F0">Int</span><span style="color:#E1E4E8">>(</span><span style="color:#B392F0">Menu</span><span style="color:#E1E4E8">::</span><span style="color:#B392F0">class</span><span style="color:#E1E4E8">, </span><span style="color:#B392F0">entityManager</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">        // 이런거.. 일일이 굳이 코드로 작성 할 필요는 없지 않을까?</span></span>
+<span class="line"><span style="color:#6A737D">        // BaseEntityService에 이미 구현되어 있으니</span></span>
+<span class="line"><span style="color:#6A737D">        // 이제 이런 JpaRepository에서 정의된 함수들은 없어도 됌</span></span>
+<span class="line"><span style="color:#6A737D">        /*</span></span>
+<span class="line"><span style="color:#6A737D">        fun save(menu: Menu): Menu { </span></span>
+<span class="line"><span style="color:#6A737D">        return menuRepository.save()</span></span>
+<span class="line"><span style="color:#6A737D">        }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    fun findAll(): MutableList&#x3C;Menu> {</span></span>
+<span class="line"><span style="color:#6A737D">        return menuRepository.findAll()</span></span>
+<span class="line"><span style="color:#6A737D">    }</span></span>
+<span class="line"><span style="color:#6A737D">        </span></span>
+<span class="line"><span style="color:#6A737D">        ...</span></span>
+<span class="line"><span style="color:#6A737D">        */</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    fun</span><span style="color:#B392F0"> findAllJoinRestaurant</span><span style="color:#E1E4E8">(): </span><span style="color:#B392F0">MutableList</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">Menu</span><span style="color:#E1E4E8">> {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> menuRepository.</span><span style="color:#B392F0">findAllJoinRestaurant</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>이 서비스는 <code>Menu</code> 엔티티의 비즈니스로직을 처리하는 <code>Service</code>이고, Entity 타입과, Entity의 기본키가 될 자료타입을 제네릭으로 넘겨주고 Entity의 클래스와 DI 받은 EntityManager를 슈퍼클래스 생성자에 인자로 전달해주는 구조입니다.</p>
+<p>위처럼 구조를 갖춘 이유는, 사실 아직 제가 잘 몰라서..ㅋㅋ 도 맞지만</p>
+<p>BaseEntityService에서 받을 제네릭타입의 클래스를 런타임에선 얻을 수 없다는 걸 알았습니다.</p>
+<p>Spring에서 제공하는 어떤 Util이 있다는 자료를 보긴 했지만, 일단은 포기하고 저렇게 인자로 전달해주는 방식을 선택했습니다.</p>
+<p>어쨌든.. 저 형태를 갖추게 되면 MenuService에 직접적인 find, save, delete 등 JpaRepository에 정의되어진 spring data jpa의 기본 메소드들을 사용 할 수 있게 됩니다. 혹시 메소드의 재정의가 필요하다면 override하여 재정의 하면 됩니다.</p>
+<p>그 다음은 controller 차례입니다.</p>
+<p><br><br></p>
+<h2 id="controller-공통-부분-중복-제거">Controller 공통 부분 중복 제거</h2>
+<p>먼저 controller에서 항상 공통이되 중복되는 부분이 어떤걸까요?</p>
+<p>주로 <code>전체조회하기</code>, <code>id로 하나 조회하기,</code> <code>삭제하기</code>, <code>수정하기</code>, <code>등록하기</code> 정도가 될 것 같습니다.</p>
+<p>그래서 이것들을 제거하기 위해 다음과 같은 BaseAPIController를 작성했습니다.</p>
+<p>저는 Restful 한 구조의 엔드포인트를 관리하는 controller를 생성할 것이기 때문에 <code>@RestController</code> 전용 슈퍼클래스를 생성 했습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#6A737D">/**</span></span>
+<span class="line"><span style="color:#6A737D">    * Rest API 공통 컨트롤러</span></span>
+<span class="line"><span style="color:#6A737D">    * Generics description</span></span>
+<span class="line"><span style="color:#6A737D">    * E: Entity, ID: Entity Primary Key (직렬화 할 수 있는 형태의 자료 형태), S: 해당 엔티티의 비즈니스 로직을 처리하기 위한 서비스 클래스 (BaseEntityService를 상속하는 객체 여야 함.)</span></span>
+<span class="line"><span style="color:#6A737D">    */</span></span>
+<span class="line"><span style="color:#B392F0">@RestController</span></span>
+<span class="line"><span style="color:#F97583">abstract</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> BaseAPIController</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">E</span><span style="color:#E1E4E8"> : </span><span style="color:#B392F0">Any</span><span style="color:#E1E4E8">, </span><span style="color:#B392F0">ID</span><span style="color:#E1E4E8"> : </span><span style="color:#B392F0">Serializable</span><span style="color:#E1E4E8">, </span><span style="color:#B392F0">S</span><span style="color:#E1E4E8"> : </span><span style="color:#B392F0">BaseEntityService</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">E</span><span style="color:#E1E4E8">, </span><span style="color:#B392F0">ID</span><span style="color:#E1E4E8">>> {</span></span>
+<span class="line"><span style="color:#B392F0">    @Autowired</span></span>
+<span class="line"><span style="color:#F97583">    lateinit</span><span style="color:#F97583"> var</span><span style="color:#E1E4E8"> service: </span><span style="color:#B392F0">S</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">    @GetMapping</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/{id}"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    fun</span><span style="color:#B392F0"> getOneByID</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">@PathVariable</span><span style="color:#E1E4E8"> id: </span><span style="color:#B392F0">ID</span><span style="color:#E1E4E8">): </span><span style="color:#B392F0">ResponseEntity</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">E</span><span style="color:#E1E4E8">> {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> ResponseEntity.</span><span style="color:#B392F0">ok</span><span style="color:#E1E4E8">(service.</span><span style="color:#B392F0">findById</span><span style="color:#E1E4E8">(id).</span><span style="color:#B392F0">orElseThrow</span><span style="color:#E1E4E8"> { </span><span style="color:#B392F0">EntityNotFoundException</span><span style="color:#E1E4E8">() })</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">    @GetMapping</span></span>
+<span class="line"><span style="color:#F97583">    fun</span><span style="color:#B392F0"> get</span><span style="color:#E1E4E8">(): </span><span style="color:#B392F0">ResponseEntity</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">MutableList</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">E</span><span style="color:#E1E4E8">>?> {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> ResponseEntity.</span><span style="color:#B392F0">ok</span><span style="color:#E1E4E8">(service.</span><span style="color:#B392F0">findAll</span><span style="color:#E1E4E8">())</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">    @PostMapping</span></span>
+<span class="line"><span style="color:#F97583">    fun</span><span style="color:#B392F0"> create</span><span style="color:#E1E4E8">(entity: </span><span style="color:#B392F0">E</span><span style="color:#E1E4E8">): </span><span style="color:#B392F0">ResponseEntity</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">E</span><span style="color:#E1E4E8">> {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> ResponseEntity.</span><span style="color:#B392F0">ok</span><span style="color:#E1E4E8">(service.</span><span style="color:#B392F0">save</span><span style="color:#E1E4E8">(entity))</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">    @PutMapping</span></span>
+<span class="line"><span style="color:#F97583">    fun</span><span style="color:#B392F0"> update</span><span style="color:#E1E4E8">(entity: </span><span style="color:#B392F0">E</span><span style="color:#E1E4E8">): </span><span style="color:#B392F0">ResponseEntity</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">E</span><span style="color:#E1E4E8">> {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> ResponseEntity.</span><span style="color:#B392F0">ok</span><span style="color:#E1E4E8">(service.</span><span style="color:#B392F0">save</span><span style="color:#E1E4E8">(entity))</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">    @DeleteMapping</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/{id}"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    fun</span><span style="color:#B392F0"> deleteById</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">@PathVariable</span><span style="color:#E1E4E8"> id: </span><span style="color:#B392F0">ID</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">        service.</span><span style="color:#B392F0">deleteById</span><span style="color:#E1E4E8">(id)</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">    @DeleteMapping</span></span>
+<span class="line"><span style="color:#F97583">    fun</span><span style="color:#B392F0"> delete</span><span style="color:#E1E4E8">(entity: </span><span style="color:#B392F0">E</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">        service.</span><span style="color:#B392F0">delete</span><span style="color:#E1E4E8">(entity)</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>상속받을 슈퍼클래스를 만들었으니 상속만 하면 슈퍼클래스에서 제공하는 엔드포인트는 모두 코드 작성 없이도 얻을 수 있을 것 같습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#B392F0">@RestController</span></span>
+<span class="line"><span style="color:#B392F0">@RequestMapping</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">$API_VERSION_PREFIX</span><span style="color:#9ECBFF">/menus"</span><span style="color:#E1E4E8">) </span><span style="color:#6A737D">// ENDPOINT: localhost:8080/v1/menus</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> MenuController</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#F97583">        private</span><span style="color:#F97583"> val</span><span style="color:#E1E4E8"> menuService: </span><span style="color:#B392F0">MenuService</span></span>
+<span class="line"><span style="color:#E1E4E8">) : </span><span style="color:#B392F0">BaseAPIController</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">Menu</span><span style="color:#E1E4E8">, </span><span style="color:#B392F0">Int</span><span style="color:#E1E4E8">, </span><span style="color:#B392F0">MenuService</span><span style="color:#E1E4E8">>() {</span></span>
+<span class="line"><span style="color:#6A737D">        // 여긴 분명.. 비어 있는데?</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>다음과 같이 슈퍼클래스에서 제공하는 엔드포인트에 정상적으로 요청하여 응답받아오는 것을 보실 수 있습니다.</p>
+<p><img src="/img/SPRING-DUPLICATION/Untitled2.png" alt="Untitled/Untitled%202.png"></p>
+<p>음.. 이걸론 뭔가 부족한 것 같아서 덧붙여 AOP로 request 정보를 logging하는 것도 추가해보겠습니다.</p>
+<h2 id="aop-request-logger-추가">AOP request logger 추가</h2>
+<p>먼저 저는 Kotlin에서 사용하는 KotlinLogging을 통해 logging을 할거라서 의존성을 하나 추가해주었습니다. java나 기존 slf4j를 사용하실거라면 이 의존성은 필요 없습니다.</p>
+<p>그러나 org.springframework.boot:spring-boot-starter-web 에서 제공하는 Aspect를 이용할 것이기 때문에 해당 의존성은 필수입니다. 아마 스프링부트 프로젝트라면 따로 추가하실 필요는 없습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#6A737D">//logging</span></span>
+<span class="line"><span style="color:#B392F0">implementation</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"io.github.microutils:kotlin-logging:1.7.6"</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<p>다음과 같이 Aspect logger를 작성해주고 pointcut과 around전략을 세웠습니다.</p>
+<p>보시다시피 그냥 request를 받는 controller 메소드들에 한해서 request 정보를 로깅하는 용도입니다.</p>
+<p>추후 APM(애플리케이션 성능 관리 툴)같은 것을 활용해서 로깅 추적 같은 것을 할 때 도움이 될 것 같습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#B392F0">@Component</span></span>
+<span class="line"><span style="color:#B392F0">@Aspect</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> RequestLoggerAspect</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#F97583"> val</span><span style="color:#E1E4E8"> logger </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> KotlinLogging.</span><span style="color:#B392F0">logger</span><span style="color:#E1E4E8">{}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    // 해당 패키지 하위에 있는 컨트롤러의 모든 메소드에 적용</span></span>
+<span class="line"><span style="color:#B392F0">    @Pointcut</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"execution(* com.example.demo..controller.*.*(..))"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    fun</span><span style="color:#B392F0"> requestPointCut</span><span style="color:#E1E4E8">() {}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">    @Around</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"requestPointCut()"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#B392F0">    @Throws</span><span style="color:#E1E4E8">(Throwable::</span><span style="color:#B392F0">class</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    fun</span><span style="color:#B392F0"> requestLogger</span><span style="color:#E1E4E8">(joinPoint: </span><span style="color:#B392F0">ProceedingJoinPoint</span><span style="color:#E1E4E8">): </span><span style="color:#B392F0">Any</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">        val</span><span style="color:#E1E4E8"> result </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> joinPoint.</span><span style="color:#B392F0">proceed</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"><span style="color:#F97583">        val</span><span style="color:#E1E4E8"> request </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> (RequestContextHolder.</span><span style="color:#B392F0">currentRequestAttributes</span><span style="color:#E1E4E8">() </span><span style="color:#F97583">as</span><span style="color:#E1E4E8"> ServletRequestAttributes).request</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">        // TODO mapper를 빈으로 등록 해버리고 싱글톤 형태로 관리할까?</span></span>
+<span class="line"><span style="color:#F97583">        val</span><span style="color:#E1E4E8"> mapper </span><span style="color:#F97583">=</span><span style="color:#B392F0"> ObjectMapper</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">        val</span><span style="color:#E1E4E8"> logMap: </span><span style="color:#B392F0">MutableMap</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">String</span><span style="color:#E1E4E8">, </span><span style="color:#B392F0">Any</span><span style="color:#E1E4E8">> </span><span style="color:#F97583">=</span><span style="color:#B392F0"> HashMap</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"><span style="color:#E1E4E8">        logMap[</span><span style="color:#9ECBFF">"sessionID"</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> request.requestedSessionId?: </span><span style="color:#9ECBFF">""</span></span>
+<span class="line"><span style="color:#E1E4E8">        logMap[</span><span style="color:#9ECBFF">"requestURI"</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> request.requestURI</span></span>
+<span class="line"><span style="color:#E1E4E8">        logMap[</span><span style="color:#9ECBFF">"requestMethod"</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> request.method</span></span>
+<span class="line"><span style="color:#E1E4E8">        logMap[</span><span style="color:#9ECBFF">"sourceMethod"</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> joinPoint.signature.declaringType.simpleName </span><span style="color:#F97583">+</span><span style="color:#9ECBFF"> "."</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> joinPoint.signature.name</span></span>
+<span class="line"><span style="color:#E1E4E8">        logMap[</span><span style="color:#9ECBFF">"params"</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> request.parameterMap</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        logger.</span><span style="color:#B392F0">info</span><span style="color:#E1E4E8">(mapper.</span><span style="color:#B392F0">writerWithDefaultPrettyPrinter</span><span style="color:#E1E4E8">().</span><span style="color:#B392F0">writeValueAsString</span><span style="color:#E1E4E8">(logMap))</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> joinPoint.</span><span style="color:#B392F0">proceed</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>자, 이제 AOP 적용 후 요청을 해보면?</p>
+<p>다음과 같이 로깅됩니다.</p>
+<p><img src="/img/SPRING-DUPLICATION/Untitled3.png" alt="Untitled/Untitled%203.png"></p>
+<p><br><br></p>
+<h2 id="repository-공통-부분-중복-제거">Repository 공통 부분 중복 제거</h2>
+<p>예를 들어 createdAt 컬럼에 인덱스가 있고 범위 조회를 해야 하는 조건과 같은 것이 될 수도 있겠습니다. (<code>SELECT * FROM entity WHERE createdAt BETWEEN 'YYYY-MM-DD' AND 'YYYY-MM-DD'</code>) 혹은 2차캐시를 적용하거나 locking이 필요한 경우에도 공통되는 부분들을 이 <code>BaseEntityRepository</code>에 정의 후 각각의 엔티티 <code>Repository</code>에서 상속받게 하면 중복되는 부분들이 제거 되고 한결 깔끔해진 코드를 볼 수 있을 것 같습니다.</p>
+<p>아 이 공통 repository는 상속용 interface이므로 스프링부트 애플리케이션이
+처음 로드 되면서 컴포넌트 클래스(Controller, Repository, Component)들을 빈에 등록 할 때 이 인터페이스도 포함하면 안되므로 반드시 <code>@NoRepositoryBean</code> 어노테이션을 달아주어야 합니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#B392F0">@NoRepositoryBean</span></span>
+<span class="line"><span style="color:#F97583">interface</span><span style="color:#B392F0"> BaseEntityRepository</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">T</span><span style="color:#E1E4E8">, </span><span style="color:#B392F0">ID</span><span style="color:#E1E4E8"> : </span><span style="color:#B392F0">Serializable</span><span style="color:#E1E4E8">?>: </span><span style="color:#B392F0">JpaRepository</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">T</span><span style="color:#E1E4E8">, </span><span style="color:#B392F0">ID</span><span style="color:#E1E4E8">> {</span></span>
+<span class="line"><span style="color:#F97583">    fun</span><span style="color:#B392F0"> findByCreatedAtBetween</span><span style="color:#E1E4E8">(start: </span><span style="color:#B392F0">LocalDateTime</span><span style="color:#E1E4E8">, end: </span><span style="color:#B392F0">LocalDateTime</span><span style="color:#E1E4E8">): </span><span style="color:#B392F0">MutableList</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">T</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">    @Query</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"SELECT t FROM #{#entityName} t WHERE t.id >= :id"</span><span style="color:#E1E4E8">) </span><span style="color:#6A737D">// 이런식으로 T로 받은 제네릭을 JPQL에서도 활용 가능합니다.</span></span>
+<span class="line"><span style="color:#F97583">    fun</span><span style="color:#B392F0"> findByBiggerId</span><span style="color:#E1E4E8">(id: </span><span style="color:#B392F0">ID</span><span style="color:#E1E4E8">): </span><span style="color:#B392F0">MutableList</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">T</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">    @Query</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"SELECT t FROM #{#entityName} t WHERE t.id = :id"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#B392F0">    @Lock</span><span style="color:#E1E4E8">(LockModeType.PESSIMISTIC_WRITE)</span></span>
+<span class="line"><span style="color:#F97583">    fun</span><span style="color:#B392F0"> findByIdWithExclusiveLock</span><span style="color:#E1E4E8">(id: </span><span style="color:#B392F0">ID</span><span style="color:#E1E4E8">): </span><span style="color:#B392F0">T</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">    @Query</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"SELECT t FROM #{#entityName} t WHERE t.id = :id"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#B392F0">    @Lock</span><span style="color:#E1E4E8">(LockModeType.PESSIMISTIC_READ)</span></span>
+<span class="line"><span style="color:#F97583">    fun</span><span style="color:#B392F0"> findByIdWithSharedLock</span><span style="color:#E1E4E8">(id: </span><span style="color:#B392F0">ID</span><span style="color:#E1E4E8">): </span><span style="color:#B392F0">T</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>글이 너무 길어져 쓰고보니 많이 장황하네요, 어쨌든 앞으로 이런 중복되는 코드를 제거해가며 확장성 있는 구조가 될 수 있게 하는 연구를 많이 해 봐야겠습니다!</p>
+<p><br>
+코드링크 -> <a href="https://github.com/thxwelchs/springboot-starter-with-kotlin">https://github.com/thxwelchs/springboot-starter-with-kotlin</a></p> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#spring-다형성-상속성을-이용한-중복코드-줄여보기" data-astro-cid-fzx4jmue>Spring 다형성, 상속성을 이용한 중복코드 줄여보기</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#공통이되-중복되는-부분-제거" data-astro-cid-fzx4jmue>공통이되 중복되는 부분 제거</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#service-공통-부분-중복-제거" data-astro-cid-fzx4jmue>Service 공통 부분 중복 제거</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#controller-공통-부분-중복-제거" data-astro-cid-fzx4jmue>Controller 공통 부분 중복 제거</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#aop-request-logger-추가" data-astro-cid-fzx4jmue>AOP request logger 추가</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#repository-공통-부분-중복-제거" data-astro-cid-fzx4jmue>Repository 공통 부분 중복 제거</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/SPRING-DUPLICATION/";
+const pageId = "SPRING-DUPLICATION";
+const pageTitle = "Spring 중복코드 줄여보기";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

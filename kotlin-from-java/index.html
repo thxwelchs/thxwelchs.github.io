@@ -1,0 +1,191 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>자바에서 코틀린으로 - 편함과, 그만큼의 트레이드오프</title><meta name="description" content="팀을 옮기고 코틀린(Kotlin)을 본격적으로 쓰게 된 지 몇 달이 됐습니다. 자바를 오래 쓰다 넘어오니 그동안 답답했던 것들이 코틀린 코드 단 몇 줄로 풀리는 순간이 자주 있었는데, 신기하게도 편해진 만큼 딱 그 자리에서 새로운 함정이 같이 따라오는 것 같았습니다. "><link rel="canonical" href="https://thxwelchs.github.io/kotlin-from-java/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="자바에서 코틀린으로 - 편함과, 그만큼의 트레이드오프"><meta property="og:description" content="팀을 옮기고 코틀린(Kotlin)을 본격적으로 쓰게 된 지 몇 달이 됐습니다. 자바를 오래 쓰다 넘어오니 그동안 답답했던 것들이 코틀린 코드 단 몇 줄로 풀리는 순간이 자주 있었는데, 신기하게도 편해진 만큼 딱 그 자리에서 새로운 함정이 같이 따라오는 것 같았습니다. "><meta property="og:url" content="https://thxwelchs.github.io/kotlin-from-java/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/kotlin-from-java.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="자바에서 코틀린으로 - 편함과, 그만큼의 트레이드오프"><meta name="twitter:description" content="팀을 옮기고 코틀린(Kotlin)을 본격적으로 쓰게 된 지 몇 달이 됐습니다. 자바를 오래 쓰다 넘어오니 그동안 답답했던 것들이 코틀린 코드 단 몇 줄로 풀리는 순간이 자주 있었는데, 신기하게도 편해진 만큼 딱 그 자리에서 새로운 함정이 같이 따라오는 것 같았습니다. "><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/kotlin-from-java.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>자바에서 코틀린으로 - 편함과, 그만큼의 트레이드오프</h1> <div class="meta" data-astro-cid-fzx4jmue> 2022-01-19 · 엔지니어링  </div> <img class="cover" src="/img/covers/eng/kotlin-from-java.png" alt="자바에서 코틀린으로 - 편함과, 그만큼의 트레이드오프" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <p>팀을 옮기고 코틀린(Kotlin)을 본격적으로 쓰게 된 지 몇 달이 됐습니다. 자바를 오래 쓰다 넘어오니 그동안 답답했던 것들이 코틀린 코드 단 몇 줄로 풀리는 순간이 자주 있었는데, 신기하게도 편해진 만큼 딱 그 자리에서 새로운 함정이 같이 따라오는 것 같았습니다. 이번 글은 그 편함과 대가를 정리해본 것입니다. (작성 시점 기준 코틀린은 1.6대입니다.)</p>
+<h1 id="어떤-것들이-편해졌을까">어떤 것들이 편해졌을까?</h1>
+<h2 id="null이-타입에-들어왔다">null이 타입에 들어왔다</h2>
+<p>자바에서 제일 지긋지긋했던 건 역시 <code>NullPointerException</code>이었습니다. <code>Optional</code>이 나왔어도 결국 런타임에 터지는 건 비슷했고 (물론 제가 잘 사용을 못했을수도 있겠죠). 코틀린은 null 가능 여부를 아예 타입에 박아버렸는데요. <code>String</code>은 null이 못 들어가고, null을 담으려면 <code>String?</code>이라고 명시해야 합니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#F97583">var</span><span style="color:#E1E4E8"> a: </span><span style="color:#B392F0">String</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "hi"</span></span>
+<span class="line"><span style="color:#6A737D">// a = null            // 컴파일 에러 - 아예 안 됨</span></span>
+<span class="line"><span style="color:#F97583">var</span><span style="color:#E1E4E8"> b: </span><span style="color:#B392F0">String</span><span style="color:#E1E4E8">? </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> null</span><span style="color:#6A737D">  // 이건 OK</span></span>
+<span class="line"><span style="color:#F97583">val</span><span style="color:#E1E4E8"> len </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> b?.length ?: </span><span style="color:#79B8FF">0</span><span style="color:#6A737D">  // b가 null이면 0</span></span></code></pre>
+<p><code>?.</code>(safe call)과 <code>?:</code>(엘비스 연산자)로 null 흐름을 표현식 안에서 처리하니, 자바에서 if문으로 겹겹이 감싸던 게 한 줄로 줄었습니다. 컴파일러가 null 가능성을 강제로 따지게 만드는 것, 이게 가장 크게 와닿은 변화였습니다.</p>
+<h2 id="data-class-한-줄로-끝나는-보일러플레이트">data class 한 줄로 끝나는 보일러플레이트</h2>
+<p>DTO 하나 만들려고 getter/setter/<code>equals</code>/<code>hashCode</code>/<code>toString</code>을 줄줄이 적던 걸 떠올리면, <code>data class</code>는 거의 사기처럼 느껴졌습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#F97583">data</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> User</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">val</span><span style="color:#E1E4E8"> id: </span><span style="color:#B392F0">Long</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">val</span><span style="color:#E1E4E8"> name: </span><span style="color:#B392F0">String</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<p>이 한 줄이 <code>equals</code>, <code>hashCode</code>, <code>toString</code>, <code>copy</code>, 구조 분해까지 만들어줍니다. (단 이 편리함이 나중에 JPA·Jackson과 만나면 오히려 함정이 되는데, 그건 다음에 기회가 있다면 다루겠습니다.)</p>
+<h2 id="스마트-캐스트-캐스팅이-사라진다">스마트 캐스트, 캐스팅이 사라진다</h2>
+<p><code>if (x is String)</code> 안에서는 <code>x</code>가 자동으로 <code>String</code>으로 취급되어, 자바처럼 <code>instanceof</code> 후 다시 캐스팅할 필요가 없습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#F97583">fun</span><span style="color:#B392F0"> describe</span><span style="color:#E1E4E8">(x: </span><span style="color:#B392F0">Any</span><span style="color:#E1E4E8">): </span><span style="color:#B392F0">String</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> (x </span><span style="color:#F97583">is</span><span style="color:#E1E4E8"> String) {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#9ECBFF"> "길이 ${x.length}짜리 문자열"</span><span style="color:#6A737D">   // 캐스팅 없이 바로 String</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#9ECBFF"> "문자열 아님"</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h2 id="when은-값을-돌려주는-표현식">when은 값을 돌려주는 표현식</h2>
+<p>자바 switch가 코틀린에선 값을 돌려주는 표현식이라, 변수에 바로 대입할 수 있습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#F97583">val</span><span style="color:#E1E4E8"> grade </span><span style="color:#F97583">=</span><span style="color:#F97583"> when</span><span style="color:#E1E4E8"> (score) {</span></span>
+<span class="line"><span style="color:#F97583">    in</span><span style="color:#79B8FF"> 90</span><span style="color:#F97583">..</span><span style="color:#79B8FF">100</span><span style="color:#F97583"> -></span><span style="color:#9ECBFF"> "A"</span></span>
+<span class="line"><span style="color:#F97583">    in</span><span style="color:#79B8FF"> 80</span><span style="color:#F97583">..</span><span style="color:#79B8FF">89</span><span style="color:#F97583">  -></span><span style="color:#9ECBFF"> "B"</span></span>
+<span class="line"><span style="color:#F97583">    else</span><span style="color:#F97583">       -></span><span style="color:#9ECBFF"> "C"</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h2 id="확장-함수-컬렉션이-1급-컬렉션처럼">확장 함수, 컬렉션이 1급 컬렉션처럼</h2>
+<p><code>StringUtils</code> 같은 유틸 클래스 대신, 기존 타입에 메서드를 덧붙이듯 쓸 수 있습니다. 특히 컬렉션에 확장 함수를 붙이면 도메인 연산에 이름이 생겨서, 1급 컬렉션처럼 활용할수 있는 부분이 개인적으로 매우 인상적이었고 지금도 잘 사용하고 있습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#F97583">fun</span><span style="color:#B392F0"> List</span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8">Order</span><span style="color:#F97583">></span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">paidOnly</span><span style="color:#E1E4E8">(): </span><span style="color:#B392F0">List</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">Order</span><span style="color:#E1E4E8">> {</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#79B8FF"> this</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">filter</span><span style="color:#E1E4E8"> { it.paid }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">fun</span><span style="color:#B392F0"> List</span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8">Order</span><span style="color:#F97583">></span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">totalPrice</span><span style="color:#E1E4E8">(): </span><span style="color:#B392F0">Int</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#79B8FF"> this</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">sumOf</span><span style="color:#E1E4E8"> { it.price }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">val</span><span style="color:#E1E4E8"> amount </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> orders.</span><span style="color:#B392F0">paidOnly</span><span style="color:#E1E4E8">().</span><span style="color:#B392F0">totalPrice</span><span style="color:#E1E4E8">()   </span><span style="color:#6A737D">// 읽히는 그대로</span></span></code></pre>
+<h2 id="기본값과-이름-있는-인자">기본값과 이름 있는 인자</h2>
+<p>생성자 오버로딩 지옥이 사라집니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#F97583">fun</span><span style="color:#B392F0"> connect</span><span style="color:#E1E4E8">(host: </span><span style="color:#B392F0">String</span><span style="color:#E1E4E8">, port: </span><span style="color:#B392F0">Int</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> 8080</span><span style="color:#E1E4E8">, secure: </span><span style="color:#B392F0">Boolean</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> false</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#6A737D">    // ...</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">connect</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"localhost"</span><span style="color:#E1E4E8">)                  </span><span style="color:#6A737D">// 기본값 사용</span></span>
+<span class="line"><span style="color:#B392F0">connect</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"localhost"</span><span style="color:#E1E4E8">, secure </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> true</span><span style="color:#E1E4E8">)   </span><span style="color:#6A737D">// 필요한 것만 이름으로</span></span></code></pre>
+<h1 id="그런데-편한만큼-드는-비용도-있다">그런데, 편한만큼 드는 비용도 있다</h1>
+<h2 id="-플랫폼-타입-null-안전이-뚫리는-구멍">① 플랫폼 타입, null 안전이 뚫리는 구멍</h2>
+<p>코틀린의 null 안전성은 코틀린 코드 안에서만 보장됩니다. 자바 라이브러리에서 넘어온 값은 코틀린이 null 여부를 알 수 없어서 플랫폼 타입(<code>String!</code>)으로 취급하는데, “null일 수도 아닐 수도 있는데 네가 알아서 해라” 상태입니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#6A737D">// 자바 메서드가 null을 반환할 수 있는데</span></span>
+<span class="line"><span style="color:#F97583">val</span><span style="color:#E1E4E8"> name: </span><span style="color:#B392F0">String</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> javaApi.</span><span style="color:#B392F0">getName</span><span style="color:#E1E4E8">()  </span><span style="color:#6A737D">// 컴파일은 통과한다</span></span>
+<span class="line"><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(name.length)                  </span><span style="color:#6A737D">// 런타임에 NPE 가능</span></span></code></pre>
+<p>그렇게 피하고 싶던 NPE가 결국에는 생기게 됩니다. 자바를 호출하는 쪽에서는 반환을 <code>String?</code>으로 받아 null을 의식적으로 처리해야 안전했습니다.</p>
+<h2 id="-와--자바와-의미가-반대다">② ==와 ===, 자바와 의미가 반대다</h2>
+<p>자바에선 <code>==</code>가 참조 비교라 문자열은 <code>.equals()</code>로 비교하라고 귀에 못이 박히게 배웠습니다. 코틀린은 반대인데요. <code>==</code>가 구조적 동등성(내부적으로 <code>equals</code>)이고, 참조 동일성은 <code>===</code>입니다. 헷갈려서 직접 돌려봤습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#F97583">val</span><span style="color:#E1E4E8"> x: </span><span style="color:#B392F0">Int</span><span style="color:#E1E4E8">? </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 1000</span></span>
+<span class="line"><span style="color:#F97583">val</span><span style="color:#E1E4E8"> y: </span><span style="color:#B392F0">Int</span><span style="color:#E1E4E8">? </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 1000</span></span>
+<span class="line"><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(x </span><span style="color:#F97583">==</span><span style="color:#E1E4E8"> y)    </span><span style="color:#6A737D">// 값 비교</span></span>
+<span class="line"><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(x </span><span style="color:#F97583">===</span><span style="color:#E1E4E8"> y)   </span><span style="color:#6A737D">// 참조 비교</span></span></code></pre>
+<p>실제 출력은 이렇습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>true</span></span>
+<span class="line"><span>false</span></span></code></pre>
+<p><code>==</code>는 값이 같으니 true, <code>===</code>는 박싱된 <code>Integer</code> 객체가 서로 달라서(1000은 Integer 캐시 밖) false입니다. 자바 습관대로 <code>==</code>를 참조 비교라고 착각하면 정반대로 읽게 되니, 넘어올 때 한 번은 짚고 가야 했습니다.</p>
+<h2 id="-val은-불변immutable이-아니다">③ val은 불변(immutable)이 아니다</h2>
+<p><code>val</code>을 보고 “아, 불변이구나” 했는데, 정확히는 재할당 금지일 뿐이었습니다. <code>val</code>이 가리키는 객체의 내부는 얼마든지 바뀔 수 있습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#F97583">val</span><span style="color:#E1E4E8"> list </span><span style="color:#F97583">=</span><span style="color:#B392F0"> mutableListOf</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">list.</span><span style="color:#B392F0">add</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">3</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(list)   </span><span style="color:#6A737D">// [1, 2, 3]</span></span></code></pre>
+<p>다른 리스트를 다시 대입하는 건 막히지만 원소 추가는 됩니다. 진짜 불변 컬렉션이 필요하면 <code>listOf</code>처럼 읽기 전용 타입을 써야 하고, lateinit 같은 장치도 초기화 전에 접근하면 <code>UninitializedPropertyAccessException</code>을 던지니, “val·코틀린이니 안전하겠지”라는 인상만 믿으면 안 되는 것 같습니다.</p>
+<p>몇 달 써보니 코틀린은 분명 좋지만 “은총알”(silver bullet)은 아니었습니다. 단점 대부분이 사실은 장점의 뒷면이라, 트레이드오프로 정리하는 게 맞을 것 같습니다.</p>
+<h2 id="-빌드-속도를-끌어내리는-kapt">④ 빌드 속도를 끌어내리는 kapt</h2>
+<p>보통 같은 규모의 코드여도 자바와 코틀린 중 코틀린이 빌드가 느린데, 그 원인엔 <code>kapt</code>가 있었습니다.</p>
+<p>먼저 <code>kapt</code>가 뭔지 짚고 가면, 원래 자바에는 컴파일 시점에 애너테이션을 읽어 코드를 생성하는 APT(Annotation Processing Tool)라는 표준 기능이 있습니다. Lombok, JPA 메타모델, QueryDSL의 <code>Q클래스</code> 같은 게 다 이 애너테이션 프로세서로 만들어집니다. 문제는 이 프로세서들이 전부 “자바 소스”를 입력으로 기대한다는 점입니다. 코틀린 소스는 그대로 적용시키지 못합니다.</p>
+<p>그래서 코틀린은 <code>kapt</code>(Kotlin Annotation Processing Tool)라는 다리를 둬서 해결을 하는데, 코틀린 코드에서 자바 stub(껍데기만 있는 자바 소스)을 먼저 만들어내고, 거기에 기존 자바 애너테이션 프로세서를 돌리는 방식입니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>코틀린 소스 → (kapt) 자바 stub 생성 → 애너테이션 프로세서 실행 → 본 컴파일</span></span></code></pre>
+<p>이 stub 생성 단계가 통째로 더 붙는 거라 빌드가 더 길어질 수밖에 없습니다. JPA·QueryDSL처럼 애너테이션 처리가 많은 프로젝트일수록 더해집니다. (요즘은 stub 없이 코틀린을 직접 분석하는 KSP가 나오고 있어 지켜보는 중입니다.)</p>
+<h2 id="-checked-exception-없어짐">⑤ Checked Exception 없어짐</h2>
+<p>코틀린엔 체크 예외(checked exception) 강제가 없어서, 자바의 checked exception 처리를 깜빡해도 컴파일이 통과합니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#6A737D">// 자바 쪽 메서드: 파일을 쓰다 IOException을 던질 수 있다</span></span>
+<span class="line"><span style="color:#6A737D">//   public void writeReport(String path) throws IOException { ... }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">fun</span><span style="color:#B392F0"> saveReport</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#E1E4E8">    reportWriter.</span><span style="color:#B392F0">writeReport</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/tmp/report.txt"</span><span style="color:#E1E4E8">)   </span><span style="color:#6A737D">// try-catch 없이도 컴파일 통과</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>자바였다면 <code>IOException</code>을 catch하거나 <code>throws</code>로 다시 던지라고 컴파일러가 강제했을 텐데, 코틀린에선 그냥 넘어갑니다. 디스크가 꽉 차거나 경로가 잘못됐을 때 이 호출이 예외를 던진다는 사실이 코드만 봐선 안 드러납니다.</p>
+<p>안전망이 하나 사라진 셈이죠. 하지만 한편으로는 개인적으로 자바의 checked exception에 대해 큰 필요성과 실효성을 못느꼈던 1인으로서 오히려 좋게도 느껴졌습니다.</p>
+<h2 id="-표현력의-양면">⑥ 표현력의 양면</h2>
+<p><code>let</code>/<code>run</code>/<code>apply</code>/<code>also</code>/<code>with</code> 스코프 함수는 처음엔 흑마법..? 같지만, 중첩되면 <code>it</code>·<code>this</code>가 뭘 가리키는지 헷갈려 가독성을 해칩니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#E1E4E8">user?.</span><span style="color:#B392F0">let</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">    it.address?.</span><span style="color:#B392F0">run</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#6A737D">        // 여기서 this는 address, it은 user... 슬슬 헷갈리기 시작합니다</span></span>
+<span class="line"><span style="color:#B392F0">        println</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">$city</span><span style="color:#9ECBFF"> / ${it.name}"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>표현력이 높다는 건 같은 비즈니스 로직도 코드 작성자마다 다르게 작성될수도 있다는 뜻이기도 해서, 팀 컨벤션이 없으면 스타일이 제각각이 됩니다. 우리 팀도 “스코프 함수 중첩은 2단 이상 금지” 같은 선을 정해두고 쓰고 있습니다.</p>
+<h2 id="-디버깅과-도구">⑦ 디버깅과 도구</h2>
+<p>코루틴이 끼면 스택 트레이스가 불편하게(가독성 측면) 찍혀서, 예외가 어디서 났는지 따라가는 데 시간이 더 듭니다. 말로만 하면 와닿지 않아 직접 돌려봤습니다. 같은 호출 체인(<code>level1 → level2 → level3</code>)에서 맨 안쪽이 예외를 던지게 해두고, 자바와 코틀린 코루틴(suspend)으로 각각 찍어봤습니다.</p>
+<p>자바는 호출 경로가 그대로 다 남습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>java.lang.IllegalStateException: boom</span></span>
+<span class="line"><span>	at Demo.level3(Demo.java:2)</span></span>
+<span class="line"><span>	at Demo.level2(Demo.java:3)</span></span>
+<span class="line"><span>	at Demo.level1(Demo.java:4)</span></span>
+<span class="line"><span>	at Demo.main(Demo.java:6)</span></span></code></pre>
+<p>그런데 같은 흐름을 suspend 함수로 짜서 던지면, <code>level2</code>·<code>level1</code>이 통째로 사라지고 그 자리를 코루틴 내부 프레임이 채웁니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>java.lang.IllegalStateException: boom</span></span>
+<span class="line"><span>	at DemoKt.level3(Demo.kt:2)</span></span>
+<span class="line"><span>	at DemoKt$level3$1.invokeSuspend(Demo.kt)</span></span>
+<span class="line"><span>	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)</span></span>
+<span class="line"><span>	at kotlinx.coroutines.DispatchedTaskKt.resume(DispatchedTask.kt:234)</span></span>
+<span class="line"><span>	... (CancellableContinuationImpl, EventLoopImplBase 등 코루틴 인프라 프레임) ...</span></span>
+<span class="line"><span>	at DemoKt.main(Demo.kt:6)</span></span></code></pre>
+<p>왜 이렇게 될까요? suspend 함수는 컴파일되면 콜백(Continuation)을 주고받는 상태 머신으로 바뀝니다. 그래서 실행 시점의 스택은 “내가 누구한테 불렸나”가 아니라 “어느 콜백이 재개(resume)됐나”를 따라가게 됩니다. <code>level3</code>을 부른 게 <code>level2</code>라는 정보는 그 시점 호출 스택엔 없는 거죠. 그나마 <code>kotlinx-coroutines-debug</code>의 <code>DebugProbes</code>나 디버그 모드를 켜면 원래 경로를 복원해 보여주는데, 기본 실행에선 이렇게 끊겨 나옵니다. 그리고 코틀린 클래스는 기본이 <code>final</code>이라 상속을 전제로 한 도구들과 부딪힙니다. Mockito로 목을 만들려면 mockito-inline이 필요했고, 결국 코틀린 친화적인 MockK 쪽을 사용하는게 편했습니다. 스프링에서 프록시 때문에 kotlin-spring(all-open) 플러그인을 까는 것도 같은 결의 비용입니다.</p>
+<blockquote>
+<p>솔직히 저는 그래도 코틀린이 좋습니다. 다만 “좋다”에서 멈추지 않고 “그 대가가 뭔지”까지 말할 수 있어야, 팀에 권할 때도 정직할 수 있을 것 같습니다.</p>
+</blockquote>
+<h1 id="정리">정리</h1>
+<p>자바에서 코틀린으로 넘어왔을 때 그 편의성이 너무 크게 다가왔습니다. 다만 그 편의마다 비용도 짝으로 따라온다는 걸 알고 고르면 될 것 같습니다.</p>
+<h1 id="참고">참고</h1>
+<blockquote>
+<p><a href="https://kotlinlang.org/docs/null-safety.html">Kotlin Docs: Null safety</a>
+<a href="https://kotlinlang.org/docs/equality.html">Kotlin Docs: Equality</a></p>
+</blockquote> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#어떤-것들이-편해졌을까" data-astro-cid-fzx4jmue>어떤 것들이 편해졌을까?</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#null이-타입에-들어왔다" data-astro-cid-fzx4jmue>null이 타입에 들어왔다</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#data-class-한-줄로-끝나는-보일러플레이트" data-astro-cid-fzx4jmue>data class 한 줄로 끝나는 보일러플레이트</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#스마트-캐스트-캐스팅이-사라진다" data-astro-cid-fzx4jmue>스마트 캐스트, 캐스팅이 사라진다</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#when은-값을-돌려주는-표현식" data-astro-cid-fzx4jmue>when은 값을 돌려주는 표현식</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#확장-함수-컬렉션이-1급-컬렉션처럼" data-astro-cid-fzx4jmue>확장 함수, 컬렉션이 1급 컬렉션처럼</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#기본값과-이름-있는-인자" data-astro-cid-fzx4jmue>기본값과 이름 있는 인자</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#그런데-편한만큼-드는-비용도-있다" data-astro-cid-fzx4jmue>그런데, 편한만큼 드는 비용도 있다</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#-플랫폼-타입-null-안전이-뚫리는-구멍" data-astro-cid-fzx4jmue>① 플랫폼 타입, null 안전이 뚫리는 구멍</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#-와--자바와-의미가-반대다" data-astro-cid-fzx4jmue>② ==와 ===, 자바와 의미가 반대다</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#-val은-불변immutable이-아니다" data-astro-cid-fzx4jmue>③ val은 불변(immutable)이 아니다</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#-빌드-속도를-끌어내리는-kapt" data-astro-cid-fzx4jmue>④ 빌드 속도를 끌어내리는 kapt</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#-checked-exception-없어짐" data-astro-cid-fzx4jmue>⑤ Checked Exception 없어짐</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#-표현력의-양면" data-astro-cid-fzx4jmue>⑥ 표현력의 양면</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#-디버깅과-도구" data-astro-cid-fzx4jmue>⑦ 디버깅과 도구</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#정리" data-astro-cid-fzx4jmue>정리</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/kotlin-from-java/";
+const pageId = "kotlin-from-java";
+const pageTitle = "자바에서 코틀린으로 - 편함과, 그만큼의 트레이드오프";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

@@ -1,0 +1,163 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>백준 2583 영역 구하기</title><meta name="description" content="문제 M × N 모눈종이에 K 개의 직사각형을 칠한다. 칠하지 않은 나머지 부분이 몇 개의 분리된 영역 으로 나뉘는지, 그리고 각 영역의 넓이가 얼마인지 구하면 된다. - 입력 : 1번째 줄에 M N K , 이어서 K 줄에 직사각형의 왼쪽 아래 (x, y) 와 오른쪽 "><link rel="canonical" href="https://thxwelchs.github.io/boj-2583-area/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="백준 2583 영역 구하기"><meta property="og:description" content="문제 M × N 모눈종이에 K 개의 직사각형을 칠한다. 칠하지 않은 나머지 부분이 몇 개의 분리된 영역 으로 나뉘는지, 그리고 각 영역의 넓이가 얼마인지 구하면 된다. - 입력 : 1번째 줄에 M N K , 이어서 K 줄에 직사각형의 왼쪽 아래 (x, y) 와 오른쪽 "><meta property="og:url" content="https://thxwelchs.github.io/boj-2583-area/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="백준 2583 영역 구하기"><meta name="twitter:description" content="문제 M × N 모눈종이에 K 개의 직사각형을 칠한다. 칠하지 않은 나머지 부분이 몇 개의 분리된 영역 으로 나뉘는지, 그리고 각 영역의 넓이가 얼마인지 구하면 된다. - 입력 : 1번째 줄에 M N K , 이어서 K 줄에 직사각형의 왼쪽 아래 (x, y) 와 오른쪽 "><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>백준 2583 영역 구하기</h1> <div class="meta" data-astro-cid-fzx4jmue> 2020-12-30 · PS  </div> <img class="cover" src="/img/covers/ps-algorithm.jpg" alt="백준 2583 영역 구하기" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <h1 id="문제">문제</h1>
+<p><code>M × N</code> 모눈종이에 <code>K</code>개의 직사각형을 칠한다. 칠하지 않은 나머지 부분이 <strong>몇 개의 분리된 영역</strong>으로 나뉘는지, 그리고 각 영역의 넓이가 얼마인지 구하면 된다.</p>
+<ul>
+<li><strong>입력</strong>: 1번째 줄에 <code>M N K</code>, 이어서 <code>K</code>줄에 직사각형의 왼쪽 아래 <code>(x, y)</code>와 오른쪽 위 <code>(x, y)</code>.</li>
+<li><strong>출력</strong>: 1번째 줄에 영역의 개수, 2번째 줄에 각 영역의 넓이를 <strong>오름차순</strong>으로.</li>
+<li><strong>제한</strong>: <code>M, N, K ≤ 100</code>. 좌표는 왼쪽 아래가 <code>(0,0)</code>, 오른쪽 위가 <code>(N, M)</code>.</li>
+</ul>
+<h1 id="접근">접근</h1>
+<p>전형적인 <strong>영역 세기(flood fill)</strong> 문제다.</p>
+<p>먼저 직사각형들을 격자에 칠해 둔다. 그다음 <strong>아직 칠하지 않은 칸</strong>을 찾을 때마다 거기서 BFS로 연결된 칸을 전부 따라가며 한 덩어리를 이룬다. BFS 한 번 = 영역 하나이므로, BFS를 시작한 횟수가 영역 개수이고, 그때 방문한 칸 수가 그 영역의 넓이다.</p>
+<p>주의할 건 좌표계다. 문제는 왼쪽 아래가 원점인데 배열은 위에서 아래로 인덱싱하니, 직사각형을 칠할 때 행을 뒤집어 변환해 줘야 한다(아래 코드의 <code>si = M - max(ly, ry)</code> 부분). 마지막에 넓이들을 정렬해 출력한다.</p>
+<h1 id="풀이">풀이</h1>
+<blockquote>
+<p>전체 코드: <a href="https://github.com/thxwelchs/algorithm/blob/master/%EB%B0%B1%EC%A4%80/b2583_%EC%98%81%EC%97%AD%EA%B5%AC%ED%95%98%EA%B8%B0.cpp">thxwelchs/algorithm</a></p>
+</blockquote>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="cpp"><code><span class="line"><span style="color:#F97583">#include</span><span style="color:#9ECBFF">&#x3C;bits/stdc++.h></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">using</span><span style="color:#F97583"> namespace</span><span style="color:#B392F0"> std</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// 백준 2583 영역 구하기</span></span>
+<span class="line"><span style="color:#6A737D">// https://www.acmicpc.net/problem/2583</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#E1E4E8"> M, N, K;</span></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#E1E4E8"> arr[</span><span style="color:#79B8FF">100</span><span style="color:#E1E4E8">][</span><span style="color:#79B8FF">100</span><span style="color:#E1E4E8">];</span></span>
+<span class="line"><span style="color:#F97583">bool</span><span style="color:#E1E4E8"> v[</span><span style="color:#79B8FF">100</span><span style="color:#E1E4E8">][</span><span style="color:#79B8FF">100</span><span style="color:#E1E4E8">];</span></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#E1E4E8"> dy[</span><span style="color:#79B8FF">4</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> {</span><span style="color:#F97583">-</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">};</span></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#E1E4E8"> dx[</span><span style="color:#79B8FF">4</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> {</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">-</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">};</span></span>
+<span class="line"><span style="color:#E1E4E8">vector</span><span style="color:#F97583">&#x3C;int></span><span style="color:#E1E4E8"> a;</span></span>
+<span class="line"><span style="color:#E1E4E8">queue</span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8">pair</span><span style="color:#F97583">&#x3C;int</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int></span><span style="color:#F97583"> ></span><span style="color:#E1E4E8"> q;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#B392F0"> bfs</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#FFAB70"> y</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> x</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">    int</span><span style="color:#E1E4E8"> c </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">    q.</span><span style="color:#B392F0">push</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">make_pair</span><span style="color:#E1E4E8">(y, x));</span></span>
+<span class="line"><span style="color:#E1E4E8">    v[y][x] </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> true</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">    while</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">q.</span><span style="color:#B392F0">empty</span><span style="color:#E1E4E8">()) {</span></span>
+<span class="line"><span style="color:#F97583">        int</span><span style="color:#E1E4E8"> cy </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> q.</span><span style="color:#B392F0">front</span><span style="color:#E1E4E8">().first;</span></span>
+<span class="line"><span style="color:#F97583">        int</span><span style="color:#E1E4E8"> cx </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> q.</span><span style="color:#B392F0">front</span><span style="color:#E1E4E8">().second;</span></span>
+<span class="line"><span style="color:#E1E4E8">        q.</span><span style="color:#B392F0">pop</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">        c</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">        for</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">; i </span><span style="color:#F97583">&#x3C;</span><span style="color:#79B8FF"> 4</span><span style="color:#E1E4E8">; i</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">            int</span><span style="color:#E1E4E8"> ny </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> cy </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> dy[i];</span></span>
+<span class="line"><span style="color:#F97583">            int</span><span style="color:#E1E4E8"> nx </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> cx </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> dx[i];</span></span>
+<span class="line"><span style="color:#F97583">            if</span><span style="color:#E1E4E8">(ny </span><span style="color:#F97583">&#x3C;</span><span style="color:#79B8FF"> 0</span><span style="color:#F97583"> ||</span><span style="color:#E1E4E8"> ny </span><span style="color:#F97583">></span><span style="color:#E1E4E8"> M </span><span style="color:#F97583">-</span><span style="color:#79B8FF"> 1</span><span style="color:#F97583"> ||</span><span style="color:#E1E4E8"> nx </span><span style="color:#F97583">&#x3C;</span><span style="color:#79B8FF"> 0</span><span style="color:#F97583"> ||</span><span style="color:#E1E4E8"> nx </span><span style="color:#F97583">></span><span style="color:#E1E4E8"> N </span><span style="color:#F97583">-</span><span style="color:#79B8FF"> 1</span><span style="color:#F97583"> ||</span><span style="color:#E1E4E8"> v[ny][nx] </span><span style="color:#F97583">||</span><span style="color:#E1E4E8"> arr[ny][nx]) </span><span style="color:#F97583">continue</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">            v[ny][nx] </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> true</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">            q.</span><span style="color:#B392F0">push</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">make_pair</span><span style="color:#E1E4E8">(ny, nx));</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> c;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#B392F0"> main</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#B392F0">    ios</span><span style="color:#E1E4E8">::</span><span style="color:#B392F0">sync_with_stdio</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">    cin.</span><span style="color:#B392F0">tie</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">NULL</span><span style="color:#E1E4E8">); cout.</span><span style="color:#B392F0">tie</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">NULL</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    cin </span><span style="color:#F97583">>></span><span style="color:#E1E4E8"> M </span><span style="color:#F97583">>></span><span style="color:#E1E4E8"> N </span><span style="color:#F97583">>></span><span style="color:#E1E4E8"> K;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">; i </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> K; i</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">        int</span><span style="color:#E1E4E8"> lx, ly, rx, ry;</span></span>
+<span class="line"><span style="color:#E1E4E8">        cin </span><span style="color:#F97583">>></span><span style="color:#E1E4E8"> lx </span><span style="color:#F97583">>></span><span style="color:#E1E4E8"> ly </span><span style="color:#F97583">>></span><span style="color:#E1E4E8"> rx </span><span style="color:#F97583">>></span><span style="color:#E1E4E8"> ry;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">        int</span><span style="color:#E1E4E8"> si </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> M </span><span style="color:#F97583">-</span><span style="color:#B392F0"> max</span><span style="color:#E1E4E8">(ly, ry);</span></span>
+<span class="line"><span style="color:#F97583">        int</span><span style="color:#E1E4E8"> ei </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> si </span><span style="color:#F97583">+</span><span style="color:#B392F0"> abs</span><span style="color:#E1E4E8">(ly </span><span style="color:#F97583">-</span><span style="color:#E1E4E8"> ry);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">        int</span><span style="color:#E1E4E8"> sj </span><span style="color:#F97583">=</span><span style="color:#B392F0"> min</span><span style="color:#E1E4E8">(lx, rx);</span></span>
+<span class="line"><span style="color:#F97583">        int</span><span style="color:#E1E4E8"> ej </span><span style="color:#F97583">=</span><span style="color:#B392F0"> max</span><span style="color:#E1E4E8">(lx, rx);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">        for</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> j </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> si; j </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> ei; j</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">            for</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> k </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> sj; k </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> ej; k</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">                arr[j][k] </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">            }</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    int</span><span style="color:#E1E4E8"> cnt </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">; i </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> M; i</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">        for</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> j </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">; j </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> N; j</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">            if</span><span style="color:#E1E4E8">(v[i][j] </span><span style="color:#F97583">||</span><span style="color:#E1E4E8"> arr[i][j]) </span><span style="color:#F97583">continue</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">            v[i][j] </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> true</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">            cnt</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">            a.</span><span style="color:#B392F0">push_back</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">bfs</span><span style="color:#E1E4E8">(i, j));</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">    sort</span><span style="color:#E1E4E8">(a.</span><span style="color:#B392F0">begin</span><span style="color:#E1E4E8">(), a.</span><span style="color:#B392F0">end</span><span style="color:#E1E4E8">());</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    cout </span><span style="color:#F97583">&#x3C;&#x3C;</span><span style="color:#E1E4E8"> cnt </span><span style="color:#F97583">&#x3C;&#x3C;</span><span style="color:#9ECBFF"> '</span><span style="color:#79B8FF">\n</span><span style="color:#9ECBFF">'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">; i </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> a.</span><span style="color:#B392F0">size</span><span style="color:#E1E4E8">(); i</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">        cout </span><span style="color:#F97583">&#x3C;&#x3C;</span><span style="color:#E1E4E8"> a[i] </span><span style="color:#F97583">&#x3C;&#x3C;</span><span style="color:#9ECBFF"> ' '</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#문제" data-astro-cid-fzx4jmue>문제</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#접근" data-astro-cid-fzx4jmue>접근</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#풀이" data-astro-cid-fzx4jmue>풀이</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/boj-2583-area/";
+const pageId = "boj-2583-area";
+const pageTitle = "백준 2583 영역 구하기";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

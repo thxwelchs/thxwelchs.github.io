@@ -1,0 +1,114 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>코틀린 필드와 속성</title><meta name="description" content="안녕하세요 이번에 소개할 내용은 코틀린에서의 필드(field) 와 속성(property) 입니다. 얼핏 보면 비슷해보이지만 전혀 다른 개념인데요. 저도 너무 헷갈리고 대체 어떻게 이해해야 좋을까 고민하다가 이 글을 작성하게 되었습니다. </br 그럼 대체 필드와 속성이"><link rel="canonical" href="https://thxwelchs.github.io/kotlin-property/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="코틀린 필드와 속성"><meta property="og:description" content="안녕하세요 이번에 소개할 내용은 코틀린에서의 필드(field) 와 속성(property) 입니다. 얼핏 보면 비슷해보이지만 전혀 다른 개념인데요. 저도 너무 헷갈리고 대체 어떻게 이해해야 좋을까 고민하다가 이 글을 작성하게 되었습니다. </br 그럼 대체 필드와 속성이"><meta property="og:url" content="https://thxwelchs.github.io/kotlin-property/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/kotlin-property.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="코틀린 필드와 속성"><meta name="twitter:description" content="안녕하세요 이번에 소개할 내용은 코틀린에서의 필드(field) 와 속성(property) 입니다. 얼핏 보면 비슷해보이지만 전혀 다른 개념인데요. 저도 너무 헷갈리고 대체 어떻게 이해해야 좋을까 고민하다가 이 글을 작성하게 되었습니다. </br 그럼 대체 필드와 속성이"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/kotlin-property.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>코틀린 필드와 속성</h1> <div class="meta" data-astro-cid-fzx4jmue> 2020-02-10 · 엔지니어링  </div> <img class="cover" src="/img/covers/eng/kotlin-property.png" alt="코틀린 필드와 속성" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <p>안녕하세요 이번에 소개할 내용은 코틀린에서의 **필드(field)**와 <strong>속성(property)</strong> 입니다.</p>
+<p>얼핏 보면 비슷해보이지만 전혀 다른 개념인데요. 저도 너무 헷갈리고 대체 어떻게 이해해야 좋을까 고민하다가 이 글을 작성하게 되었습니다.
+<br></p>
+<p>그럼 대체 필드와 속성이 어떤 개념인지 차근차근 살펴보겠습니다.
+<br><br></p>
+<p>먼저 <strong>속성</strong>과 <strong>프로퍼티</strong>를 이해하기 위해서는 이 둘이 의미하는 바를 이해해야 하는데<br>
+먼저 속성(<code>property</code>)은 노출되어있는 필드를 의미하고,<br>
+필드(<code>field</code>)는 클래스에 비공개로 유지되며 <code>gettter</code> 혹은 <code>setter</code>를 통해 접근할 수 있어야 하는 것을 의미합니다.</p>
+<p>그런데 코틀린에서의 클래스는 무조건 <code>property</code>(속성)만 가질 수 있고 이 속성이란 것은 filed + 접근자를 의미합니다.</p>
+<p>코틀린이 속성만 가질 수 밖에 없는 이유는  코틀린에 클래스에서 지역 변수를 선언하면 <code>get</code> 과 <code>set</code> 함수도 함께 정의되기 때문입니다.  ( 물론 backing field를 통해서 임의로 정의할 수도 있습니다. )</p>
+<p>다음과 같이 코틀린에서는 속성 선언을 할 때 var(mutable) 혹은 val(immutable)로 선언할 수 있습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> Person</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">var</span><span style="color:#E1E4E8"> name: </span><span style="color:#B392F0">String</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">var</span><span style="color:#E1E4E8"> age: </span><span style="color:#B392F0">Int</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<p>위 코틀린 코드가 자바 코드로 디컴파일 되면 다음과 같습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#F97583">public</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> Person</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#E1E4E8"> String name;</span></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#E1E4E8"> Integer age;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#F97583"> void</span><span style="color:#B392F0"> setName</span><span style="color:#E1E4E8">(String </span><span style="color:#FFAB70">value</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#79B8FF">        this</span><span style="color:#E1E4E8">.name </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> value;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#E1E4E8"> String </span><span style="color:#B392F0">getName</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#79B8FF"> this</span><span style="color:#E1E4E8">.name;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#F97583"> void</span><span style="color:#B392F0"> setAge</span><span style="color:#E1E4E8">(Integer </span><span style="color:#FFAB70">value</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#79B8FF">        this</span><span style="color:#E1E4E8">.age</span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> value;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#E1E4E8"> String </span><span style="color:#B392F0">getAge</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#79B8FF"> this</span><span style="color:#E1E4E8">.age;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h1 id="추가-내용">추가 내용</h1>
+<h2 id="backing-field">backing field?</h2>
+<p>getter / setter 에 기본적으로 생성되는 속성</p>
+<p>그래서 Custom getter setter(Custom accessors) 를 구현할 때는 field라는 변수명으로 접근하여 getter, setter에 해당하는 필드를 접근할 수 있다. 이것을 <strong>backing field</strong>라고 한다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> Person</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    var</span><span style="color:#E1E4E8"> name: </span><span style="color:#B392F0">String</span></span>
+<span class="line"><span style="color:#F97583">        get</span><span style="color:#E1E4E8">() </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> name</span></span>
+<span class="line"><span style="color:#F97583">        set</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">value</span><span style="color:#E1E4E8">) { </span><span style="color:#F97583">field</span><span style="color:#F97583"> =</span><span style="color:#F97583"> value</span><span style="color:#E1E4E8"> } </span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h1 id="참고">참고</h1>
+<blockquote>
+<p><a href="https://wooooooak.github.io/kotlin/2019/05/24/property/">https://wooooooak.github.io/kotlin/2019/05/24/property/</a></p>
+</blockquote> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#추가-내용" data-astro-cid-fzx4jmue>추가 내용</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#backing-field" data-astro-cid-fzx4jmue>backing field?</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/kotlin-property/";
+const pageId = "kotlin-property";
+const pageTitle = "코틀린 필드와 속성";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

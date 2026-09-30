@@ -1,0 +1,170 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>JPA N+1현상 삽질</title><meta name="description" content="JPA N+1현상 querydsl fetchJoin 삽질한 경험 공유 - Kotlin - SpringBoot(2.2.4) - querydsl(4.2.1) <br/ 문제 JPA로 쿼리를 하다보면, N + 1 문제를 마주하게 될 수도 있는데요. 사실 저의 문제는 정확하게 "><link rel="canonical" href="https://thxwelchs.github.io/JPA-N+1/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="JPA N+1현상 삽질"><meta property="og:description" content="JPA N+1현상 querydsl fetchJoin 삽질한 경험 공유 - Kotlin - SpringBoot(2.2.4) - querydsl(4.2.1) <br/ 문제 JPA로 쿼리를 하다보면, N + 1 문제를 마주하게 될 수도 있는데요. 사실 저의 문제는 정확하게 "><meta property="og:url" content="https://thxwelchs.github.io/JPA-N+1/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/JPA-N+1.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="JPA N+1현상 삽질"><meta name="twitter:description" content="JPA N+1현상 querydsl fetchJoin 삽질한 경험 공유 - Kotlin - SpringBoot(2.2.4) - querydsl(4.2.1) <br/ 문제 JPA로 쿼리를 하다보면, N + 1 문제를 마주하게 될 수도 있는데요. 사실 저의 문제는 정확하게 "><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/JPA-N+1.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>JPA N+1현상 삽질</h1> <div class="meta" data-astro-cid-fzx4jmue> 2020-02-24 · 엔지니어링  </div> <img class="cover" src="/img/covers/eng/JPA-N+1.png" alt="JPA N+1현상 삽질" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <h1 id="jpa-n1현상-querydsl-fetchjoin-삽질한-경험-공유">JPA N+1현상 querydsl fetchJoin 삽질한 경험 공유</h1>
+<ul>
+<li>Kotlin</li>
+<li>SpringBoot(2.2.4)</li>
+<li>querydsl(4.2.1)</li>
+</ul>
+<br>
+<h1 id="문제">문제</h1>
+<p>JPA로 쿼리를 하다보면, N + 1 문제를 마주하게 될 수도 있는데요.</p>
+<p>사실 저의 문제는 정확하게 말하면 N+1 문제는 아닙니다. N+1이란
+@OneToMany의 관계에서 One에 해당하는 엔티티를 조회하면 Many의 해당하는 엔티티가 지연로딩 되어 그 갯수만큼 더 조회한다고 하여 One+N(Many) N+1현상이라고 하는데 저의 경우엔 @ManyToOne의 조회인데도 One에 해당하는
+엔티티가 영속성 컨텍스트에 존재하지 않으면 쿼리하게 되는 현상입니다.</p>
+<p>저는 보통  <code>@Query</code> 어노테이션에 JPQL 쿼리를 작성해서 해결하곤 했었습니다.</p>
+<p>근데 querydsl에도 fetchJoin이 있다는걸 최근(?)에서야 알고 사용해보려고 하는데 문제가 해결이 되지 않았습니다. 그 이유는.. 참 어처구니가 없었는데요 혹시나 이런 경우를 겪고 있는 분이 계실까 해서 공유차 포스팅합니다.</p>
+<p>이유는 저처럼 join 함수를 잘못 이해하고 사용하면 매개변수 타입에 따라 fetchJoin 함수를 호출하여도 N + 1 문제가 해결이 안될수도 있다는 것인데요 ㅋㅋ</p>
+<p><img src="/img/JPA-N+1/Untitled.png" alt="JPA%20N%201/Untitled.png"></p>
+<h1 id="예제-구성">예제 구성</h1>
+<p>먼저 상황을 설명하기 위해</p>
+<p>제가 구성한 예제 구성은 다음과 같습니다.</p>
+<p><code>Restaurant(식당)</code>과 <code>Menu(식당의 메뉴)</code>를 표현하는 다음과 같은 ERD와 엔티티가 있습니다.</p>
+<h2 id="데이터베이스-erd">데이터베이스 ERD</h2>
+<p><img src="/img/JPA-N+1/Untitled1.png" alt="JPA%20N%201/Untitled1.png"></p>
+<h2 id="엔티티-erd">엔티티 ERD</h2>
+<p><img src="/img/JPA-N+1/Untitled2.png" alt="JPA%20N%201/Untitled2.png"></p>
+<h2 id="restaurant-엔티티-코드">Restaurant 엔티티 코드</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#B392F0">@Entity</span></span>
+<span class="line"><span style="color:#F97583">data</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> Restaurant</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#F97583">        var</span><span style="color:#E1E4E8"> name: </span><span style="color:#B392F0">String</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> ""</span></span>
+<span class="line"><span style="color:#E1E4E8">): </span><span style="color:#B392F0">MutableEntity</span><span style="color:#E1E4E8">()</span></span></code></pre>
+<h2 id="menu-엔티티-코드">Menu 엔티티 코드</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#B392F0">@Entity</span></span>
+<span class="line"><span style="color:#F97583">data</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> Menu</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#B392F0">        @ManyToOne</span></span>
+<span class="line"><span style="color:#F97583">        var</span><span style="color:#E1E4E8"> restaurant: </span><span style="color:#B392F0">Restaurant</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#F97583">        var</span><span style="color:#E1E4E8"> price: </span><span style="color:#B392F0">BigDecimal</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> BigDecimal.ZERO,</span></span>
+<span class="line"><span style="color:#F97583">        var</span><span style="color:#E1E4E8"> name: </span><span style="color:#B392F0">String</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> ""</span></span>
+<span class="line"><span style="color:#E1E4E8">): </span><span style="color:#B392F0">MutableEntity</span><span style="color:#E1E4E8">()</span></span></code></pre>
+<h2 id="데이터">데이터</h2>
+<p><img src="/img/JPA-N+1/Untitled3.png" alt="JPA%20N%201/Untitled3.png">
+<img src="/img/JPA-N+1/Untitled4.png" alt="JPA%20N%201/Untitled4.png"></p>
+<h2 id="문제의-코드">문제의 코드</h2>
+<p>문제의 코드 입니다. (어떤게 문제인지 바로 아시겠나요?)</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> MenuRepositoryCustomImpl</span><span style="color:#E1E4E8">: </span><span style="color:#B392F0">MenuRepositoryCustom</span><span style="color:#E1E4E8">, </span><span style="color:#B392F0">QuerydslRepositorySupport</span><span style="color:#E1E4E8">(Menu::</span><span style="color:#B392F0">class</span><span style="color:#E1E4E8">.java) {</span></span>
+<span class="line"><span style="color:#F97583">    override</span><span style="color:#F97583"> fun</span><span style="color:#B392F0"> findAllJoinRestaurant</span><span style="color:#E1E4E8">(): </span><span style="color:#B392F0">MutableList</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">Menu</span><span style="color:#E1E4E8">> {</span></span>
+<span class="line"><span style="color:#F97583">        val</span><span style="color:#E1E4E8"> m </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> QMenu.menu</span></span>
+<span class="line"><span style="color:#F97583">        val</span><span style="color:#E1E4E8"> r </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> QRestaurant.restaurant</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#B392F0"> from</span><span style="color:#E1E4E8">(m)</span></span>
+<span class="line"><span style="color:#E1E4E8">                .</span><span style="color:#B392F0">leftJoin</span><span style="color:#E1E4E8">(r)</span></span>
+<span class="line"><span style="color:#E1E4E8">                .</span><span style="color:#B392F0">on</span><span style="color:#E1E4E8">(r.id.</span><span style="color:#B392F0">eq</span><span style="color:#E1E4E8">(m.restaurant.id))</span></span>
+<span class="line"><span style="color:#E1E4E8">                .</span><span style="color:#B392F0">fetchJoin</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"><span style="color:#E1E4E8">                .</span><span style="color:#B392F0">fetch</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>함수 호출을 위해 테스트코드를 작성하고 실행했습니다.
+( 테스트의 결과값 보다는 N+1 쿼리가 수행되는 것을 보기 위함이므로 일단 테스트는 통과하게끔 했습니다. )</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#B392F0">@Test</span></span>
+<span class="line"><span style="color:#F97583">fun</span><span style="color:#B392F0"> `Menu 만 조회했는데, Restaurant 가 조회되는 N+1 현상 테스트`</span><span style="color:#E1E4E8"> () {</span></span>
+<span class="line"><span style="color:#F97583">    val</span><span style="color:#E1E4E8"> menus </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> menuRepository.</span><span style="color:#B392F0">findAllJoinRestaurant</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">    assertTrue</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">true</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><img src="/img/JPA-N+1/idea64_xOWUXfJUQM.png" alt="JPA%20N%201/Untitled5.png"></p>
+<p><img src="/img/JPA-N+1/Untitled6.png" alt="JPA%20N%201/Untitled6.png">
+해당 함수를 호출해서 query하면!? N + 1현상이 발생합니다.</p>
+<p>첫번째 쿼리인 menu left outer join restaurant 를 했는데도 불구하고, 밑에 세개의 추가 쿼리가 실행되었습니다.</p>
+<p>왜 이럴까? 하고 querydsl의 <code>leftJoin</code> 함수가 정의된 <code>JPQLQuery</code> 인터페이스를 추적 해보았습니다.</p>
+<p><img src="/img/JPA-N+1/Untitled7.png" alt="JPA%20N%201/Untitled7.png"></p>
+<p>언뜻 보기에 함수의 주석 설명에는</p>
+<ul>
+<li>
+<p>주어진 target 매개변수를 기반으로 left join이 생성되어 질 것이고,</p>
+</li>
+<li>
+<p>fetchJoin을 사용하기 위해서는 fetchJoin 파라미터를 해당 join 에 추가 (<strong>정확하게는 파라미터로 이해하기보다는, fetch join 할 join 함수 뒤에 fetchJoin 함수를 추가해주면 됩니다.</strong>)</p>
+</li>
+</ul>
+<p>하라고 되어있습니다. 이렇게만 보면 제 코드에서 <code>leftJoin</code> 함수에 매개변수로 넘겨준 target이 restaurant이니 맞는 것 같기도 합니다만 현재 문제에서 안되는 이유를 찾기 위해 코드를 추적하다 querydsl fetchJoin은 다음과 같이 동작하여 JPQLQuery를 생성한다는 것을 알게되었습니다.</p>
+<p><img src="/img/JPA-N+1/idea64_G1UvBO54eI.png" alt="JPA%20N%201/Untitled8.png"></p>
+<p>디버그 된 변수를 살펴보시면 <code>self</code>에 <code>JPQLQuery</code>가 텍스트 로 표현되고 있습니다.</p>
+<p>가만살펴보니 뭔가 이상합니다. 흠 네.. 지금껏 멍청하게 target을 잘못 전달하고 있었던 것이었습니다.</p>
+<p><img src="/img/JPA-N+1/Untitled9.png" alt="JPA%20N%201/Untitled9.png"></p>
+<p>fetch Join이 되려면</p>
+<p>타겟이 restaurant가 아닌 menu의 프로퍼티로 존재하는 menu.restaurant가 되어야 하는것이었습니다.</p>
+<p><br>
+그래서 코드를 다음과 같이 수정하고 해결하였습니다!</p>
+<h2 id="수정된-코드">수정된 코드</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> MenuRepositoryCustomImpl</span><span style="color:#E1E4E8">: </span><span style="color:#B392F0">MenuRepositoryCustom</span><span style="color:#E1E4E8">, </span><span style="color:#B392F0">QuerydslRepositorySupport</span><span style="color:#E1E4E8">(Menu::</span><span style="color:#B392F0">class</span><span style="color:#E1E4E8">.java) {</span></span>
+<span class="line"><span style="color:#F97583">    override</span><span style="color:#F97583"> fun</span><span style="color:#B392F0"> findAllJoinRestaurant</span><span style="color:#E1E4E8">(): </span><span style="color:#B392F0">MutableList</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">Menu</span><span style="color:#E1E4E8">> {</span></span>
+<span class="line"><span style="color:#F97583">        val</span><span style="color:#E1E4E8"> m </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> QMenu.menu</span></span>
+<span class="line"><span style="color:#F97583">        val</span><span style="color:#E1E4E8"> r </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> QRestaurant.restaurant</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#B392F0"> from</span><span style="color:#E1E4E8">(m)</span></span>
+<span class="line"><span style="color:#6A737D">                //.leftJoin(r)</span></span>
+<span class="line"><span style="color:#E1E4E8">                .</span><span style="color:#B392F0">leftJoin</span><span style="color:#E1E4E8">(m.restaurant)</span></span>
+<span class="line"><span style="color:#6A737D">                //.on(r.id.eq(m.restaurant.id)) entity 연관관계 기반으로 어차피 맵핑되서 join함 on 조건을 주면 fetch 할 때 with 에 property를 에</span></span>
+<span class="line"><span style="color:#E1E4E8">                .</span><span style="color:#B392F0">fetchJoin</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"><span style="color:#E1E4E8">                .</span><span style="color:#B392F0">fetch</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h2 id="수정-후-쿼리">수정 후 쿼리</h2>
+<p><img src="/img/JPA-N+1/Untitled10.png" alt="JPA%20N%201/Untitled10.png"></p>
+<p>N + 1이 해결 되고 join 쿼리 한번만 수행 되었습니다.</p>
+<p><img src="/img/JPA-N+1/Untitled11.png" alt="JPA%20N%201/Untitled11.png"></p> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#jpa-n1현상-querydsl-fetchjoin-삽질한-경험-공유" data-astro-cid-fzx4jmue>JPA N+1현상 querydsl fetchJoin 삽질한 경험 공유</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#문제" data-astro-cid-fzx4jmue>문제</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#예제-구성" data-astro-cid-fzx4jmue>예제 구성</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#데이터베이스-erd" data-astro-cid-fzx4jmue>데이터베이스 ERD</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#엔티티-erd" data-astro-cid-fzx4jmue>엔티티 ERD</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#restaurant-엔티티-코드" data-astro-cid-fzx4jmue>Restaurant 엔티티 코드</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#menu-엔티티-코드" data-astro-cid-fzx4jmue>Menu 엔티티 코드</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#데이터" data-astro-cid-fzx4jmue>데이터</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#문제의-코드" data-astro-cid-fzx4jmue>문제의 코드</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#수정된-코드" data-astro-cid-fzx4jmue>수정된 코드</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#수정-후-쿼리" data-astro-cid-fzx4jmue>수정 후 쿼리</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/JPA-N+1/";
+const pageId = "JPA-N+1";
+const pageTitle = "JPA N+1현상 삽질";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

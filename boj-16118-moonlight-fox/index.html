@@ -1,0 +1,204 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>백준 16118 달빛여우</title><meta name="description" content="문제 그루터기 N개가 오솔길 M개로 이어져 있다(각 길의 길이 d ). 여우 는 1번 그루터기에서 출발해 모든 길을 같은 속도로 달린다. 늑대 도 1번에서 출발하지만, 오솔길을 지날 때마다 빠르게(2배속) ↔ 느리게(0.5배속) 를 번갈아 달린다. 각 그루터기에 대해 "><link rel="canonical" href="https://thxwelchs.github.io/boj-16118-moonlight-fox/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="백준 16118 달빛여우"><meta property="og:description" content="문제 그루터기 N개가 오솔길 M개로 이어져 있다(각 길의 길이 d ). 여우 는 1번 그루터기에서 출발해 모든 길을 같은 속도로 달린다. 늑대 도 1번에서 출발하지만, 오솔길을 지날 때마다 빠르게(2배속) ↔ 느리게(0.5배속) 를 번갈아 달린다. 각 그루터기에 대해 "><meta property="og:url" content="https://thxwelchs.github.io/boj-16118-moonlight-fox/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="백준 16118 달빛여우"><meta name="twitter:description" content="문제 그루터기 N개가 오솔길 M개로 이어져 있다(각 길의 길이 d ). 여우 는 1번 그루터기에서 출발해 모든 길을 같은 속도로 달린다. 늑대 도 1번에서 출발하지만, 오솔길을 지날 때마다 빠르게(2배속) ↔ 느리게(0.5배속) 를 번갈아 달린다. 각 그루터기에 대해 "><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>백준 16118 달빛여우</h1> <div class="meta" data-astro-cid-fzx4jmue> 2021-07-01 · PS  </div> <img class="cover" src="/img/covers/ps-algorithm.jpg" alt="백준 16118 달빛여우" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <h1 id="문제">문제</h1>
+<p>그루터기 N개가 오솔길 M개로 이어져 있다(각 길의 길이 <code>d</code>). <strong>여우</strong>는 1번 그루터기에서 출발해 모든 길을 같은 속도로 달린다. <strong>늑대</strong>도 1번에서 출발하지만, 오솔길을 지날 때마다 <strong>빠르게(2배속) ↔ 느리게(0.5배속)</strong> 를 번갈아 달린다. 각 그루터기에 대해 <strong>여우가 늑대보다 먼저 도착</strong>할 수 있는 곳이 몇 개인지 구하면 된다.</p>
+<ul>
+<li><strong>입력</strong>: 1번째 줄에 <code>N M</code>, 이어서 <code>M</code>줄에 <code>a b d</code>(오솔길과 길이).</li>
+<li><strong>출력</strong>: 여우가 늑대보다 먼저 도착하는 그루터기 수.</li>
+<li><strong>제한</strong>: <code>2 ≤ N ≤ 4,000</code>, <code>1 ≤ M ≤ 100,000</code>, 길이 <code>d</code>는 짝수.</li>
+</ul>
+<h1 id="접근">접근</h1>
+<p>속도가 0.5배·2배로 갈리면 시간에 소수(<code>d/2</code>)가 생긴다. 그래서 <strong>모든 시간을 2배로 스케일</strong>해 정수로만 다룬다.</p>
+<ul>
+<li><strong>여우</strong>: 길 하나 = <code>2d</code> 시간. 평범한 다익스트라 한 번.</li>
+<li><strong>늑대</strong>: “빠름/느림” <strong>상태</strong>를 같이 들고 다녀야 한다. 빠르면 그 길은 <code>d</code>(= <code>2d</code>의 절반), 느리면 <code>4d</code>(= <code>2d</code>의 두 배)가 걸리고, 길을 하나 지날 때마다 상태가 토글된다. 그래서 <code>dist2[그루터기][상태]</code> 로 상태를 하나 더 둔 다익스트라를 돌린다.</li>
+</ul>
+<p>마지막으로, 각 그루터기 <code>i</code>에서 <strong>여우 최단 <code>dist[i]</code> &#x3C; 늑대 최단 <code>min(dist2[i][0], dist2[i][1])</code></strong> 이면 여우가 이긴 것이니 세어 준다.</p>
+<h1 id="풀이">풀이</h1>
+<blockquote>
+<p>전체 코드: <a href="https://github.com/thxwelchs/algorithm/blob/master/%EB%B0%B1%EC%A4%80/16118.cpp">thxwelchs/algorithm</a></p>
+</blockquote>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="cpp"><code><span class="line"><span style="color:#F97583">#include</span><span style="color:#9ECBFF"> &#x3C;bits/stdc++.h></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">using</span><span style="color:#F97583"> namespace</span><span style="color:#B392F0"> std</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">typedef</span><span style="color:#E1E4E8"> pair</span><span style="color:#F97583">&#x3C;int</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int></span><span style="color:#E1E4E8"> pii;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">struct</span><span style="color:#B392F0"> Node</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">	int</span><span style="color:#E1E4E8"> d, n, s;</span></span>
+<span class="line"><span style="color:#E1E4E8">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">struct</span><span style="color:#B392F0"> cmp</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">	bool</span><span style="color:#F97583"> operator</span><span style="color:#B392F0">()</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">Node</span><span style="color:#FFAB70"> a</span><span style="color:#E1E4E8">, </span><span style="color:#B392F0">Node</span><span style="color:#FFAB70"> b</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">		return</span><span style="color:#E1E4E8"> a.d </span><span style="color:#F97583">></span><span style="color:#E1E4E8"> b.d;</span></span>
+<span class="line"><span style="color:#E1E4E8">	}</span></span>
+<span class="line"><span style="color:#E1E4E8">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#E1E4E8"> N, M;</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#F97583"> int</span><span style="color:#E1E4E8"> INF </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 2</span><span style="color:#F97583">e</span><span style="color:#79B8FF">9</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#E1E4E8"> dist[</span><span style="color:#79B8FF">4001</span><span style="color:#E1E4E8">];</span></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#E1E4E8"> dist2[</span><span style="color:#79B8FF">4001</span><span style="color:#E1E4E8">][</span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">];</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">vector</span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8">pii</span><span style="color:#F97583">></span><span style="color:#E1E4E8"> g[</span><span style="color:#79B8FF">4001</span><span style="color:#E1E4E8">];</span></span>
+<span class="line"><span style="color:#E1E4E8">vector</span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8">pii</span><span style="color:#F97583">></span><span style="color:#E1E4E8"> g2[</span><span style="color:#79B8FF">4001</span><span style="color:#E1E4E8">][</span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">];</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">void</span><span style="color:#B392F0"> dijkstra</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#E1E4E8">	priority_queue</span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8">pii, vector</span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8">pii</span><span style="color:#F97583">></span><span style="color:#E1E4E8">, greater</span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8">pii</span><span style="color:#F97583">>></span><span style="color:#E1E4E8"> pq;</span></span>
+<span class="line"><span style="color:#E1E4E8">	pq.</span><span style="color:#B392F0">emplace</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">	while</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">pq.</span><span style="color:#B392F0">empty</span><span style="color:#E1E4E8">()) {</span></span>
+<span class="line"><span style="color:#E1E4E8">		pii p </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> pq.</span><span style="color:#B392F0">top</span><span style="color:#E1E4E8">(); pq.</span><span style="color:#B392F0">pop</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">		int</span><span style="color:#E1E4E8"> hd </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> p.first, hh </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> p.second;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">		if</span><span style="color:#E1E4E8"> (hd </span><span style="color:#F97583">></span><span style="color:#E1E4E8"> dist[hh]) </span></span>
+<span class="line"><span style="color:#F97583">			continue</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">		for</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">; i </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> g[hh].</span><span style="color:#B392F0">size</span><span style="color:#E1E4E8">(); i</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">			pii th </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> g[hh][i];</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">			int</span><span style="color:#E1E4E8"> tt </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> th.first, td </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> th.second;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">			if</span><span style="color:#E1E4E8"> (dist[tt] </span><span style="color:#F97583">></span><span style="color:#E1E4E8"> dist[hh] </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> td) {</span></span>
+<span class="line"><span style="color:#E1E4E8">				dist[tt] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> dist[hh] </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> td;</span></span>
+<span class="line"><span style="color:#E1E4E8">				pq.</span><span style="color:#B392F0">emplace</span><span style="color:#E1E4E8">(dist[tt], tt);</span></span>
+<span class="line"><span style="color:#E1E4E8">			}</span></span>
+<span class="line"><span style="color:#E1E4E8">		}</span></span>
+<span class="line"><span style="color:#E1E4E8">	}</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">void</span><span style="color:#B392F0"> dijkstra2</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#E1E4E8">	priority_queue</span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8">Node, vector</span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8">Node</span><span style="color:#F97583">></span><span style="color:#E1E4E8">, cmp</span><span style="color:#F97583">></span><span style="color:#E1E4E8"> pq;</span></span>
+<span class="line"><span style="color:#E1E4E8">	pq.</span><span style="color:#B392F0">push</span><span style="color:#E1E4E8">({ </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8"> });</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">	while</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">pq.</span><span style="color:#B392F0">empty</span><span style="color:#E1E4E8">()) {</span></span>
+<span class="line"><span style="color:#E1E4E8">		Node node </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> pq.</span><span style="color:#B392F0">top</span><span style="color:#E1E4E8">(); pq.</span><span style="color:#B392F0">pop</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">		int</span><span style="color:#E1E4E8"> hd </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> node.d, hh </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> node.n, hs </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> node.s;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">		if</span><span style="color:#E1E4E8"> (hd </span><span style="color:#F97583">></span><span style="color:#E1E4E8"> dist2[hh][hs])</span></span>
+<span class="line"><span style="color:#F97583">			continue</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">		int</span><span style="color:#E1E4E8"> ns </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 1</span><span style="color:#F97583"> -</span><span style="color:#E1E4E8"> hs;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">		for</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">; i </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> g2[hh][hs].</span><span style="color:#B392F0">size</span><span style="color:#E1E4E8">(); i</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">			pii th </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> g2[hh][hs][i];</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">			int</span><span style="color:#E1E4E8"> tt </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> th.first, td </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> th.second;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">			if</span><span style="color:#E1E4E8"> (dist2[tt][ns] </span><span style="color:#F97583">></span><span style="color:#E1E4E8"> dist2[hh][hs] </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> td) {</span></span>
+<span class="line"><span style="color:#E1E4E8">				dist2[tt][ns] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> dist2[hh][hs] </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> td;</span></span>
+<span class="line"><span style="color:#E1E4E8">				pq.</span><span style="color:#B392F0">push</span><span style="color:#E1E4E8">({ dist2[tt][ns], tt, ns });</span></span>
+<span class="line"><span style="color:#E1E4E8">			}</span></span>
+<span class="line"><span style="color:#E1E4E8">		}</span></span>
+<span class="line"><span style="color:#E1E4E8">	}</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#B392F0"> main</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#B392F0">	ios_base</span><span style="color:#E1E4E8">::</span><span style="color:#B392F0">sync_with_stdio</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">	cin.</span><span style="color:#B392F0">tie</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">	cout.</span><span style="color:#B392F0">tie</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">	cin </span><span style="color:#F97583">>></span><span style="color:#E1E4E8"> N </span><span style="color:#F97583">>></span><span style="color:#E1E4E8"> M;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">	for</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">; i </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> M; i</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">		int</span><span style="color:#E1E4E8"> a, b, d;</span></span>
+<span class="line"><span style="color:#E1E4E8">		cin </span><span style="color:#F97583">>></span><span style="color:#E1E4E8"> a </span><span style="color:#F97583">>></span><span style="color:#E1E4E8"> b </span><span style="color:#F97583">>></span><span style="color:#E1E4E8"> d;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">		g[a].</span><span style="color:#B392F0">push_back</span><span style="color:#E1E4E8">({ b, d </span><span style="color:#F97583">*</span><span style="color:#79B8FF"> 2</span><span style="color:#E1E4E8"> });</span></span>
+<span class="line"><span style="color:#E1E4E8">		g[b].</span><span style="color:#B392F0">push_back</span><span style="color:#E1E4E8">({ a, d </span><span style="color:#F97583">*</span><span style="color:#79B8FF"> 2</span><span style="color:#E1E4E8"> });</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">		g2[a][</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">].</span><span style="color:#B392F0">push_back</span><span style="color:#E1E4E8">({ b, d });</span></span>
+<span class="line"><span style="color:#E1E4E8">		g2[a][</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">].</span><span style="color:#B392F0">push_back</span><span style="color:#E1E4E8">({ b, d </span><span style="color:#F97583">*</span><span style="color:#79B8FF"> 4</span><span style="color:#E1E4E8"> });</span></span>
+<span class="line"><span style="color:#E1E4E8">		g2[b][</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">].</span><span style="color:#B392F0">push_back</span><span style="color:#E1E4E8">({ a, d });</span></span>
+<span class="line"><span style="color:#E1E4E8">		g2[b][</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">].</span><span style="color:#B392F0">push_back</span><span style="color:#E1E4E8">({ a, d </span><span style="color:#F97583">*</span><span style="color:#79B8FF"> 4</span><span style="color:#E1E4E8"> });</span></span>
+<span class="line"><span style="color:#E1E4E8">	}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">	dist2[</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">][</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> INF;</span></span>
+<span class="line"><span style="color:#F97583">	for</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 2</span><span style="color:#E1E4E8">; i </span><span style="color:#F97583">&#x3C;=</span><span style="color:#E1E4E8"> N; i</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">		dist[i] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> INF;</span></span>
+<span class="line"><span style="color:#E1E4E8">		dist2[i][</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> INF;</span></span>
+<span class="line"><span style="color:#E1E4E8">		dist2[i][</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> INF;</span></span>
+<span class="line"><span style="color:#E1E4E8">	}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">	dijkstra</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#B392F0">	dijkstra2</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">	int</span><span style="color:#E1E4E8"> ans </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">	for</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 2</span><span style="color:#E1E4E8">; i </span><span style="color:#F97583">&#x3C;=</span><span style="color:#E1E4E8"> N; i</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">		if</span><span style="color:#E1E4E8"> (dist[i] </span><span style="color:#F97583">&#x3C;</span><span style="color:#B392F0"> min</span><span style="color:#E1E4E8">(dist2[i][</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">], dist2[i][</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">])) {</span></span>
+<span class="line"><span style="color:#E1E4E8">			ans</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">		}</span></span>
+<span class="line"><span style="color:#E1E4E8">	}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">	cout </span><span style="color:#F97583">&#x3C;&#x3C;</span><span style="color:#E1E4E8"> ans;</span></span>
+<span class="line"><span style="color:#E1E4E8">	</span></span>
+<span class="line"><span style="color:#F97583">	return</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#문제" data-astro-cid-fzx4jmue>문제</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#접근" data-astro-cid-fzx4jmue>접근</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#풀이" data-astro-cid-fzx4jmue>풀이</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/boj-16118-moonlight-fox/";
+const pageId = "boj-16118-moonlight-fox";
+const pageTitle = "백준 16118 달빛여우";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

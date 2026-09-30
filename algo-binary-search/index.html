@@ -1,0 +1,127 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>이분 탐색 (Binary Search) 정리</title><meta name="description" content="이분 탐색 정렬된 배열에서 탐색 범위를 절반씩 줄여 가며 원하는 값을 찾는 방법. 매번 후보가 반으로 줄어드니 O(log N) . 핵심 전제는 단조성(monotonicity) 이다. &#34;어떤 기준값 이전은 전부 참, 이후는 전부 거짓&#34;처럼 한 방향으로만 성질이 바뀌어야 "><link rel="canonical" href="https://thxwelchs.github.io/algo-binary-search/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="이분 탐색 (Binary Search) 정리"><meta property="og:description" content="이분 탐색 정렬된 배열에서 탐색 범위를 절반씩 줄여 가며 원하는 값을 찾는 방법. 매번 후보가 반으로 줄어드니 O(log N) . 핵심 전제는 단조성(monotonicity) 이다. &#34;어떤 기준값 이전은 전부 참, 이후는 전부 거짓&#34;처럼 한 방향으로만 성질이 바뀌어야 "><meta property="og:url" content="https://thxwelchs.github.io/algo-binary-search/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="이분 탐색 (Binary Search) 정리"><meta name="twitter:description" content="이분 탐색 정렬된 배열에서 탐색 범위를 절반씩 줄여 가며 원하는 값을 찾는 방법. 매번 후보가 반으로 줄어드니 O(log N) . 핵심 전제는 단조성(monotonicity) 이다. &#34;어떤 기준값 이전은 전부 참, 이후는 전부 거짓&#34;처럼 한 방향으로만 성질이 바뀌어야 "><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>이분 탐색 (Binary Search) 정리</h1> <div class="meta" data-astro-cid-fzx4jmue> 2018-08-12 · PS  </div> <img class="cover" src="/img/covers/ps-algorithm.jpg" alt="이분 탐색 (Binary Search) 정리" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <h1 id="이분-탐색">이분 탐색</h1>
+<p><strong>정렬된</strong> 배열에서 탐색 범위를 절반씩 줄여 가며 원하는 값을 찾는 방법. 매번 후보가 반으로 줄어드니 <code>O(log N)</code>.</p>
+<p>핵심 전제는 단조성(monotonicity) 이다. “어떤 기준값 이전은 전부 참, 이후는 전부 거짓”처럼 한 방향으로만 성질이 바뀌어야 절반을 버릴 수 있다.</p>
+<p><img src="/img/algo-binary-search/binary-search-v2.gif" alt="이분 탐색 동작 과정 - lo/hi/mid로 범위를 절반씩 줄여 값을 찾는다"></p>
+<h2 id="동작">동작</h2>
+<ul>
+<li><code>lo</code>, <code>hi</code> 두 경계를 두고 <code>mid</code>를 본다.</li>
+<li><code>mid</code>의 값과 목표를 비교해, 답이 있을 수 없는 절반을 통째로 버린다.</li>
+<li><code>lo > hi</code>가 되면 종료.</li>
+</ul>
+<h2 id="주의할-점">주의할 점</h2>
+<p>단순해 보이는데 왜 자꾸 경계에서 틀릴까요?</p>
+<ul>
+<li><code>mid = (lo + hi) / 2</code>는 <code>lo + hi</code>가 <code>int</code> 범위를 넘으면 <strong>오버플로</strong>가 난다. <code>mid = lo + (hi - lo) / 2</code>로 쓰는 습관.</li>
+<li>경계 조건(<code>&#x3C;</code>인지 <code>&#x3C;=</code>인지, <code>mid</code>인지 <code>mid±1</code>인지)에서 무한 루프가 자주 난다. 직접 작은 예시로 손으로 돌려 확인하는 게 안전하다.</li>
+</ul>
+<h2 id="lower_bound--upper_bound">lower_bound / upper_bound</h2>
+<ul>
+<li><strong>lower_bound</strong>: 찾는 값 <strong>이상</strong>이 처음 나오는 위치</li>
+<li><strong>upper_bound</strong>: 찾는 값을 <strong>초과</strong>하는 값이 처음 나오는 위치</li>
+</ul>
+<p>이 둘로 “값이 몇 개 있는지”, “이 값이 들어갈 자리는 어디인지” 같은 걸 <code>O(log N)</code>에 구할 수 있다.</p>
+<h2 id="조건식-vs-에-따라-탐색-방향이-갈린다-직접-정리">조건식(<code>>=</code> vs <code>></code>)에 따라 탐색 방향이 갈린다. 직접 정리</h2>
+<p>이게 한동안 헷갈렸다. 같은 정렬 배열, 같은 <code>target</code>인데도 조건식을 <code>>=</code>로 두느냐 <code>></code>로 두느냐에 따라 결과가 달라진다. 한참 손으로 돌려 보고 나서야 정리가 됐다.</p>
+<p>핵심은 결국 “<code>mid</code>를 버릴 것인가, 답 후보로 남길 것인가” 한 가지다.</p>
+<ul>
+<li><code>lo</code>: 탐색 범위 시작 인덱스</li>
+<li><code>hi</code>: 탐색 범위 끝 인덱스</li>
+<li><code>mid</code>: <code>lo + (hi - lo) / 2</code></li>
+</ul>
+<p>lower_bound (target 이상이 처음 나오는 위치). <code>>=</code> 조건</p>
+<p><code>arr[mid] >= target</code>이면, <code>mid</code> 자신도 답이 될 수 있으니 버리면 안 된다. 그래서 <code>mid</code>를 <strong>포함한 채</strong> 왼쪽으로 좁힌다(<code>hi = mid</code>). 아니라면(<code>arr[mid] &#x3C; target</code>) <code>mid</code>는 확실히 답이 아니니 <code>lo = mid + 1</code>.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="cpp"><code><span class="line"><span style="color:#6A737D">// target 이상이 처음 나오는 위치</span></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#B392F0"> lowerBound</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">vector</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#F97583">int</span><span style="color:#E1E4E8">></span><span style="color:#F97583">&#x26;</span><span style="color:#FFAB70"> arr</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> target</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">    int</span><span style="color:#E1E4E8"> lo </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">, hi </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> arr.</span><span style="color:#B392F0">size</span><span style="color:#E1E4E8">();</span><span style="color:#6A737D"> // hi는 끝 다음 칸까지</span></span>
+<span class="line"><span style="color:#F97583">    while</span><span style="color:#E1E4E8"> (lo </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> hi) {</span></span>
+<span class="line"><span style="color:#F97583">        int</span><span style="color:#E1E4E8"> mid </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> lo </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> (hi </span><span style="color:#F97583">-</span><span style="color:#E1E4E8"> lo) </span><span style="color:#F97583">/</span><span style="color:#79B8FF"> 2</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> (arr[mid] </span><span style="color:#F97583">>=</span><span style="color:#E1E4E8"> target) hi </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> mid;</span><span style="color:#6A737D">     // mid도 후보 → 포함해서 왼쪽</span></span>
+<span class="line"><span style="color:#F97583">        else</span><span style="color:#E1E4E8"> lo </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> mid </span><span style="color:#F97583">+</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">;</span><span style="color:#6A737D">                    // mid는 탈락 → 오른쪽</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> lo;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>upper_bound (target 초과가 처음 나오는 위치). <code>></code> 조건</p>
+<p>위와 거의 같고, 등호 위치만 바뀐다. <code>arr[mid] > target</code>일 때 <code>hi = mid</code>. 즉 <code>>=</code>는 <code>target</code> 자신을 만나도 더 왼쪽으로 밀어(첫 등장 위치를 찾고), <code>></code>는 <code>target</code> 자신은 통과시킨다(마지막 등장 <strong>다음</strong> 위치를 찾는다).</p>
+<p>결국 등호(<code>=</code>)를 어느 쪽 조건에 붙이느냐가 방향을 정한다. 그리고 이 둘을 같이 쓰면 <code>[lower, upper)</code>가 곧 <code>target</code>이 등장하는 구간이고, 등장 횟수 = upper - lower 가 된다.</p>
+<h2 id="파라메트릭-서치">파라메트릭 서치</h2>
+<p>“최댓값을 구하라” 같은 최적화 문제를, “X가 가능한가?”라는 결정 문제로 바꿔서 그 X에 대해 이분 탐색하는 기법. 결정 문제의 답이 단조롭게(어느 지점부터 가능→불가능) 변할 때 쓴다. 나무 자르기, 랜선 자르기 류가 대표적이다.</p>
+<h2 id="기본-코드-구조">기본 코드 구조</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="cpp"><code><span class="line"><span style="color:#6A737D">// 정렬된 arr에서 target의 위치를 찾기 (없으면 -1)</span></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#B392F0"> binarySearch</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">vector</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#F97583">int</span><span style="color:#E1E4E8">></span><span style="color:#F97583">&#x26;</span><span style="color:#FFAB70"> arr</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> target</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">    int</span><span style="color:#E1E4E8"> lo </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">, hi </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> arr.</span><span style="color:#B392F0">size</span><span style="color:#E1E4E8">() </span><span style="color:#F97583">-</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">    while</span><span style="color:#E1E4E8"> (lo </span><span style="color:#F97583">&#x3C;=</span><span style="color:#E1E4E8"> hi) {</span></span>
+<span class="line"><span style="color:#F97583">        int</span><span style="color:#E1E4E8"> mid </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> lo </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> (hi </span><span style="color:#F97583">-</span><span style="color:#E1E4E8"> lo) </span><span style="color:#F97583">/</span><span style="color:#79B8FF"> 2</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> (arr[mid] </span><span style="color:#F97583">==</span><span style="color:#E1E4E8"> target) </span><span style="color:#F97583">return</span><span style="color:#E1E4E8"> mid;</span></span>
+<span class="line"><span style="color:#F97583">        else</span><span style="color:#F97583"> if</span><span style="color:#E1E4E8"> (arr[mid] </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> target) lo </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> mid </span><span style="color:#F97583">+</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">        else</span><span style="color:#E1E4E8"> hi </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> mid </span><span style="color:#F97583">-</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#F97583"> -</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#이분-탐색" data-astro-cid-fzx4jmue>이분 탐색</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#동작" data-astro-cid-fzx4jmue>동작</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#주의할-점" data-astro-cid-fzx4jmue>주의할 점</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#lower_bound--upper_bound" data-astro-cid-fzx4jmue>lower_bound / upper_bound</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#조건식-vs-에-따라-탐색-방향이-갈린다-직접-정리" data-astro-cid-fzx4jmue>조건식(&gt;= vs &gt;)에 따라 탐색 방향이 갈린다. 직접 정리</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#파라메트릭-서치" data-astro-cid-fzx4jmue>파라메트릭 서치</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#기본-코드-구조" data-astro-cid-fzx4jmue>기본 코드 구조</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/algo-binary-search/";
+const pageId = "algo-binary-search";
+const pageTitle = "이분 탐색 (Binary Search) 정리";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

@@ -1,0 +1,163 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>코틀린 코루틴 3편 - 여러 값이 흐르는 스트림, Flow</title><meta name="description" content="들어가며 이번에는 Flow 입니다. 1편이 &#34;코루틴은 왜 도는가&#34;, 2편이 &#34;어떻게 안전하게 굴리는가&#34;였다면, 본편에서는 &#34;여러 값을 어떻게 흘려보내는가&#34;에 대한 내용을 다룹니다. 지금까지 본 suspend 함수는 결국 값 하나를 돌려주고 끝났습니다. 그런데 실제로는 "><link rel="canonical" href="https://thxwelchs.github.io/kotlin-coroutine-3/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="코틀린 코루틴 3편 - 여러 값이 흐르는 스트림, Flow"><meta property="og:description" content="들어가며 이번에는 Flow 입니다. 1편이 &#34;코루틴은 왜 도는가&#34;, 2편이 &#34;어떻게 안전하게 굴리는가&#34;였다면, 본편에서는 &#34;여러 값을 어떻게 흘려보내는가&#34;에 대한 내용을 다룹니다. 지금까지 본 suspend 함수는 결국 값 하나를 돌려주고 끝났습니다. 그런데 실제로는 "><meta property="og:url" content="https://thxwelchs.github.io/kotlin-coroutine-3/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/kotlin-coroutine-3.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="코틀린 코루틴 3편 - 여러 값이 흐르는 스트림, Flow"><meta name="twitter:description" content="들어가며 이번에는 Flow 입니다. 1편이 &#34;코루틴은 왜 도는가&#34;, 2편이 &#34;어떻게 안전하게 굴리는가&#34;였다면, 본편에서는 &#34;여러 값을 어떻게 흘려보내는가&#34;에 대한 내용을 다룹니다. 지금까지 본 suspend 함수는 결국 값 하나를 돌려주고 끝났습니다. 그런데 실제로는 "><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/kotlin-coroutine-3.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>코틀린 코루틴 3편 - 여러 값이 흐르는 스트림, Flow</h1> <div class="meta" data-astro-cid-fzx4jmue> 2023-10-24 · 엔지니어링  · <a class="series-badge" href="/series/" data-astro-cid-fzx4jmue>시리즈 · 코틀린 코루틴</a>  </div> <img class="cover" src="/img/covers/eng/kotlin-coroutine-3.png" alt="코틀린 코루틴 3편 - 여러 값이 흐르는 스트림, Flow" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <h1 id="들어가며">들어가며</h1>
+<p>이번에는 <code>Flow</code>입니다. 1편이 “코루틴은 왜 도는가”, 2편이 “어떻게 안전하게 굴리는가”였다면, 본편에서는 “여러 값을 어떻게 흘려보내는가”에 대한 내용을 다룹니다.</p>
+<p>지금까지 본 <code>suspend</code> 함수는 결국 값 하나를 돌려주고 끝났습니다. 그런데 실제로는 값이 하나가 아니라 시간차를 두고 여러 개가 흘러오는 경우가 많습니다. 페이지 단위로 계속 들어오는 응답, 주기적으로 갱신되는 센서값, DB 커서를 타고 나오는 행들처럼요. 이런 비동기 스트림을 코틀린에서 다루는 도구가 <code>Flow</code>입니다.</p>
+<br>
+<h1 id="suspend-하나로는-부족할-때">suspend 하나로는 부족할 때</h1>
+<p>값을 여러 개 돌려주고 싶으면 그냥 <code>List</code>를 반환하면 되지 않을까요? 됩니다. 다만 <code>List</code>는 다 모은 뒤 한꺼번에 옵니다. 100개를 만드는 데 각각 시간이 걸린다면, 100개가 다 만들어질 때까지 호출한 쪽은 아무것도 못 받고 기다려야 합니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#6A737D">// 다 모일 때까지 기다렸다가 한 번에 받는다</span></span>
+<span class="line"><span style="color:#F97583">suspend</span><span style="color:#F97583"> fun</span><span style="color:#B392F0"> loadAll</span><span style="color:#E1E4E8">(): </span><span style="color:#B392F0">List</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">Int</span><span style="color:#E1E4E8">> {</span></span>
+<span class="line"><span style="color:#F97583">    val</span><span style="color:#E1E4E8"> result </span><span style="color:#F97583">=</span><span style="color:#B392F0"> mutableListOf</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">Int</span><span style="color:#E1E4E8">>()</span></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> (i </span><span style="color:#F97583">in</span><span style="color:#79B8FF"> 1</span><span style="color:#F97583">..</span><span style="color:#79B8FF">3</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#B392F0">        delay</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">100</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">        result.</span><span style="color:#B392F0">add</span><span style="color:#E1E4E8">(i)</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> result</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><code>Flow</code>는 다릅니다. 만들어지는 족족 하나씩 내보냅니다(emit). 받는 쪽은 흘러오는 값을 하나씩 그때그때 처리할 수 있습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#F97583">fun</span><span style="color:#B392F0"> loadStream</span><span style="color:#E1E4E8">(): </span><span style="color:#B392F0">Flow</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">Int</span><span style="color:#E1E4E8">> </span><span style="color:#F97583">=</span><span style="color:#B392F0"> flow</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> (i </span><span style="color:#F97583">in</span><span style="color:#79B8FF"> 1</span><span style="color:#F97583">..</span><span style="color:#79B8FF">3</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#B392F0">        delay</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">100</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#B392F0">        emit</span><span style="color:#E1E4E8">(i)   </span><span style="color:#6A737D">// 하나 만들 때마다 바로 내보낸다</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><img src="/img/kotlin-coroutine-3/suspend-vs-flow-v1.png" alt="suspend 함수는 값 하나를 기다렸다 받고, Flow는 v1·v2·v3·v4 가 시간차로 흘러와 collect가 하나씩 받는 모습"></p>
+<br>
+<h1 id="flow의-기본기">Flow의 기본기</h1>
+<p><code>Flow</code>를 만드는 가장 일반적인 방법은 <code>flow { ... }</code> 빌더이고, 받는 쪽은 <code>collect</code>로 흘러오는 값을 하나씩 받습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#F97583">fun</span><span style="color:#B392F0"> main</span><span style="color:#E1E4E8">() </span><span style="color:#F97583">=</span><span style="color:#B392F0"> runBlocking</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#B392F0">    loadStream</span><span style="color:#E1E4E8">().</span><span style="color:#B392F0">collect</span><span style="color:#E1E4E8"> { </span><span style="color:#F97583">value</span><span style="color:#F97583"> -></span></span>
+<span class="line"><span style="color:#B392F0">        println</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"받음: </span><span style="color:#79B8FF">$value</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>여기서 꼭 짚어야 할 성질이 하나 있습니다. <code>Flow</code>는 콜드(cold) 스트림이라는 점입니다. <code>flow { ... }</code>로 정의해두기만 해서는 안에 있는 코드가 한 줄도 실행되지 않습니다. 누군가 <code>collect</code> 하는 순간, 그제서야 생산 블록이 처음부터 돕니다. 그리고 <code>collect</code> 할 때마다 매번 처음부터 다시 돕니다.</p>
+<p><img src="/img/kotlin-coroutine-3/cold-flow-v1.png" alt="flow 블록은 정의만 해두면 아무 일도 안 일어나고, collect를 호출해야 생산 블록이 실행되며 매 collect마다 처음부터 다시 도는 모습"></p>
+<p>항상 켜져서 값을 흘려보내는 핫(hot) 스트림(<code>StateFlow</code>·<code>SharedFlow</code>)도 있는데, 그건 상태나 이벤트를 여러 구독자에게 공유할 때 쓰입니다. 이 둘의 차이는 따로 정리하는 게 좋을 것 같아 여기선 “콜드가 기본”이라는 것만 기억하고 넘어가겠습니다.</p>
+<p>간단한 빌더도 몇 가지 있습니다. 정해진 값들은 <code>flowOf(1, 2, 3)</code>, 이미 있는 컬렉션은 <code>listOf(1, 2, 3).asFlow()</code>로 만들 수 있습니다.</p>
+<br>
+<h1 id="연산자도-결국-코루틴-위에서-돈다">연산자도 결국 코루틴 위에서 돈다</h1>
+<p><code>Flow</code>에는 <code>map</code>, <code>filter</code>, <code>transform</code>, <code>take</code> 같은 익숙한 연산자들이 있습니다. 컬렉션과 모양은 비슷한데 결정적인 차이가 있습니다. 중간 연산자 안에서 <code>suspend</code> 함수를 호출할 수 있다는 점입니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#B392F0">loadStream</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"><span style="color:#E1E4E8">    .</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8"> { it </span><span style="color:#F97583">-></span><span style="color:#B392F0"> requestDetail</span><span style="color:#E1E4E8">(it) }   </span><span style="color:#6A737D">// map 안에서 suspend 호출 OK</span></span>
+<span class="line"><span style="color:#E1E4E8">    .</span><span style="color:#B392F0">filter</span><span style="color:#E1E4E8"> { it.isValid }</span></span>
+<span class="line"><span style="color:#E1E4E8">    .</span><span style="color:#B392F0">collect</span><span style="color:#E1E4E8"> { </span><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(it) }</span></span></code></pre>
+<p><code>map</code>·<code>filter</code> 같은 중간 연산자도 콜드라, 정의만으로는 아무것도 안 합니다. 끝에서 <code>collect</code>(또는 <code>toList</code>, <code>first</code>, <code>reduce</code> 같은 터미널 연산자)를 호출해야 비로소 전체 파이프라인이 흐릅니다.</p>
+<br>
+<h1 id="어느-스레드에서-도는가-flowon">어느 스레드에서 도는가, flowOn</h1>
+<p>기본적으로 <code>Flow</code>의 생산 블록은 <code>collect</code>를 호출한 컨텍스트에서 같이 돕니다. 그래서 그 작업이 무겁다면(파일 읽기, 네트워크 등) 그 부분만 다른 디스패처로 옮기고 싶어질 수 있는데, 이때 쓰는 게 <code>flowOn</code>입니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#B392F0">loadStream</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"><span style="color:#E1E4E8">    .</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8"> { </span><span style="color:#B392F0">heavyParse</span><span style="color:#E1E4E8">(it) }</span></span>
+<span class="line"><span style="color:#E1E4E8">    .</span><span style="color:#B392F0">flowOn</span><span style="color:#E1E4E8">(Dispatchers.IO)   </span><span style="color:#6A737D">// 여기보다 '위(업스트림)'를 IO 스레드로</span></span>
+<span class="line"><span style="color:#E1E4E8">    .</span><span style="color:#B392F0">collect</span><span style="color:#E1E4E8"> { </span><span style="color:#B392F0">render</span><span style="color:#E1E4E8">(it) }   </span><span style="color:#6A737D">// collect는 호출한 컨텍스트(예: Main) 그대로</span></span></code></pre>
+<p><code>flowOn</code>은 자기보다 위쪽(업스트림)에만 적용됩니다. 그 아래 <code>collect</code>는 호출한 쪽 컨텍스트를 그대로 씁니다.</p>
+<p><img src="/img/kotlin-coroutine-3/flow-on-v1.png" alt="flow 생산과 중간 연산은 flowOn(Dispatchers.IO)로 IO 스레드에서, collect는 호출한 Main 컨텍스트에서 도는 구분"></p>
+<p>여기서 자주 하는 실수가 하나 있습니다. 스레드를 바꾸겠다고 <code>emit</code>을 <code>withContext(Dispatchers.IO) { emit(...) }</code>로 감싸는 건데, 이건 <code>Flow</code>가 막아둔 동작이라 <code>IllegalStateException</code>이 납니다. <code>Flow</code>는 “생산 컨텍스트가 도중에 바뀌지 않는다”는 규칙을 지키게 되어 있어서, 스레드를 바꾸려면 반드시 <code>flowOn</code>을 써야 합니다.</p>
+<br>
+<h1 id="생산이-소비보다-빠를-때">생산이 소비보다 빠를 때</h1>
+<p>만드는 쪽이 받는 쪽보다 빠르면 어떻게 될까요? 기본값으로는 <code>Flow</code>가 소비를 기다려가며 흐릅니다(생산자가 소비자 속도에 맞춰짐). 상황에 따라 다른 선택지도 있습니다.</p>
+<ul>
+<li><code>buffer()</code>: 생산과 소비를 병행시켜, 받는 쪽이 처리하는 동안 만드는 쪽이 미리 다음 값을 만들어 둡니다.</li>
+<li><code>conflate()</code>: 받는 쪽이 느린 동안 쌓인 중간 값들을 버리고 가장 최신 값만 넘깁니다.</li>
+<li><code>collectLatest { }</code>: 새 값이 오면 이전 값 처리를 취소하고 새 값으로 다시 시작합니다.</li>
+</ul>
+<p>전부 “느린 소비를 어떻게 다룰 것인가”에 대한 서로 다른 답입니다. 정답이 있다기보다, 중간 값을 버려도 되는지(<code>conflate</code>)·최신만 중요한지(<code>collectLatest</code>)·다 처리하되 병행만 하면 되는지(<code>buffer</code>)에 따라 고르는 느낌입니다.</p>
+<p>(리액티브 스트림즈를 공부할 때 봤던 배압 제어(백프레셔) 개념이, 코루틴에서도 비슷한 메커니즘으로 동작하는 것 같았습니다.)</p>
+<br>
+<h1 id="예외는-catch로">예외는 catch로</h1>
+<p><code>Flow</code> 중간에서 예외가 나면 <code>try/catch</code>로 감싸기보다 <code>catch</code> 연산자를 쓰는 게 깔끔합니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#B392F0">loadStream</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"><span style="color:#E1E4E8">    .</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8"> { </span><span style="color:#B392F0">riskyParse</span><span style="color:#E1E4E8">(it) }</span></span>
+<span class="line"><span style="color:#E1E4E8">    .</span><span style="color:#B392F0">catch</span><span style="color:#E1E4E8"> { e </span><span style="color:#F97583">-></span><span style="color:#B392F0"> emit</span><span style="color:#E1E4E8">(fallback) }      </span><span style="color:#6A737D">// 업스트림 예외를 여기서 받는다</span></span>
+<span class="line"><span style="color:#E1E4E8">    .</span><span style="color:#B392F0">onCompletion</span><span style="color:#E1E4E8"> { cause </span><span style="color:#F97583">-></span><span style="color:#B392F0"> println</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"끝: </span><span style="color:#79B8FF">$cause</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">) }</span></span>
+<span class="line"><span style="color:#E1E4E8">    .</span><span style="color:#B392F0">collect</span><span style="color:#E1E4E8"> { </span><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(it) }</span></span></code></pre>
+<p>다만 <code>catch</code>는 자기보다 위(업스트림)에서 난 예외만 잡습니다. <code>collect { ... }</code> 블록 안에서 난 예외는 <code>catch</code>가 못 잡으니, 그건 <code>collect</code> 쪽에서 직접 처리해야 합니다. 이 경계를 헷갈리면 “분명 catch를 달았는데 왜 안 잡히지?” 하게 됩니다.</p>
+<br>
+<h1 id="구조화된-동시성과-flow">구조화된 동시성과 Flow</h1>
+<p><code>Flow</code> 자체는 코루틴이 아니지만, <code>collect</code>가 <code>suspend</code> 함수라 결국 호출한 코루틴 스코프 안에서 돕니다. 그래서 2편에서 본 구조화된 동시성이 그대로 적용됩니다. <code>collect</code> 하던 코루틴이 취소되면 그 <code>Flow</code>의 생산도 같이 멈춥니다. 별도로 신경 쓸 게 줄어드는 셈입니다.</p>
+<br>
+<h1 id="마지막-정리">마지막 정리</h1>
+<p>3편 내용을 정리하면 이렇습니다.</p>
+<ul>
+<li><strong>Flow</strong>: 여러 값이 시간차로 흐르는 비동기 스트림. 기본은 콜드라 <code>collect</code> 해야 흐르고, 매 <code>collect</code>마다 처음부터 다시 돈다.</li>
+<li><strong>연산자</strong>: <code>map</code>·<code>filter</code> 같은 중간 연산자도 콜드. 터미널 연산자(<code>collect</code>·<code>toList</code> 등)에서 전체가 실행된다.</li>
+<li><strong>스레드</strong>: 업스트림만 <code>flowOn</code>으로 옮긴다. <code>emit</code>을 <code>withContext</code>로 감싸면 안 된다.</li>
+<li><strong>배압 제어</strong>: <code>buffer</code>·<code>conflate</code>·<code>collectLatest</code> 중 상황에 맞게 고른다.</li>
+<li><strong>예외</strong>: <code>catch</code>는 업스트림만 잡는다. <code>collect</code> 블록 예외는 별도로. 그리고 <code>Flow</code>는 구조화된 동시성에 묶여 함께 취소된다.</li>
+</ul>
+<p>여기까지 오니 코루틴이 “왜 도는가 → 어떻게 안전하게 → 여러 값을 어떻게” 세 축으로 어느 정도 정리된 느낌입니다. 그런데 정리하다 보니 한 가지가 계속 궁금했습니다. 우리가 이렇게 편하게 쓰는 <code>suspend</code>와 재개가, 도대체 내부에선 어떻게 도는 걸까요? 다음 4편에서는 그 컨티뉴에이션(continuation)과 yield·재개를 직접 흉내 내보려 합니다. C로 컴파일한 코드를 JNI로 불러, 아주 단순한 코루틴을 손으로 만들어보는 “코루틴 직접 구현해보기”를 해볼 생각입니다.</p>
+<br>
+<h1 id="참고">참고</h1>
+<blockquote>
+<ul>
+<li><a href="https://kotlinlang.org/docs/flow.html">https://kotlinlang.org/docs/flow.html</a></li>
+<li><a href="https://kotlinlang.org/docs/flow.html#flow-context">https://kotlinlang.org/docs/flow.html#flow-context</a></li>
+<li><a href="https://kotlinlang.org/docs/flow.html#buffering">https://kotlinlang.org/docs/flow.html#buffering</a></li>
+</ul>
+</blockquote> </div> <section class="series-foot" data-astro-cid-fzx4jmue> <p class="sf-h" data-astro-cid-fzx4jmue> <span class="sf-label" data-astro-cid-fzx4jmue>시리즈</span> <a href="/series/" data-astro-cid-fzx4jmue>코틀린 코루틴</a> <span class="sf-count" data-astro-cid-fzx4jmue>전 4편</span> </p> <ol class="sf-list" data-astro-cid-fzx4jmue> <li data-astro-cid-fzx4jmue> <a href="/kotlin-coroutine-intro/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>01</span> <span class="sf-text" data-astro-cid-fzx4jmue>개념과 동작 원리 제대로 보기</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/kotlin-coroutine-2/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>02</span> <span class="sf-text" data-astro-cid-fzx4jmue>구조화된 동시성, 취소와 예외</span> <span class="sf-tag" data-astro-cid-fzx4jmue>이전</span>   </a> </li><li class="cur" data-astro-cid-fzx4jmue> <a href="/kotlin-coroutine-3/" aria-current="page" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>03</span> <span class="sf-text" data-astro-cid-fzx4jmue>여러 값이 흐르는 스트림, Flow</span>  <span class="sf-tag cur" data-astro-cid-fzx4jmue>현재 글</span>  </a> </li><li data-astro-cid-fzx4jmue> <a href="/kotlin-coroutine-4/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>04</span> <span class="sf-text" data-astro-cid-fzx4jmue>코루틴 직접 구현해보기</span>   <span class="sf-tag" data-astro-cid-fzx4jmue>다음</span> </a> </li> </ol> </section> <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#들어가며" data-astro-cid-fzx4jmue>들어가며</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#suspend-하나로는-부족할-때" data-astro-cid-fzx4jmue>suspend 하나로는 부족할 때</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#flow의-기본기" data-astro-cid-fzx4jmue>Flow의 기본기</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#연산자도-결국-코루틴-위에서-돈다" data-astro-cid-fzx4jmue>연산자도 결국 코루틴 위에서 돈다</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#어느-스레드에서-도는가-flowon" data-astro-cid-fzx4jmue>어느 스레드에서 도는가, flowOn</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#생산이-소비보다-빠를-때" data-astro-cid-fzx4jmue>생산이 소비보다 빠를 때</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#예외는-catch로" data-astro-cid-fzx4jmue>예외는 catch로</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#구조화된-동시성과-flow" data-astro-cid-fzx4jmue>구조화된 동시성과 Flow</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#마지막-정리" data-astro-cid-fzx4jmue>마지막 정리</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/kotlin-coroutine-3/";
+const pageId = "kotlin-coroutine-3";
+const pageTitle = "코틀린 코루틴 3편 - 여러 값이 흐르는 스트림, Flow";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

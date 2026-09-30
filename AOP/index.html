@@ -1,0 +1,108 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>AOP 관점지향프로그래밍</title><meta name="description" content="AOP 직역하면 관점지향 프로그래밍(Aspect-Oriented Programming) 인데, 한국말로 들으면 영 와닿지 않습니다. 좀 더 쉽게 풀어보면, 여러 곳에 흩어져 반복되는 공통 기능을 한 군데로 모아 재사용하게 해주는 것 입니다. 로깅, 트랜잭션, 권한 체크"><link rel="canonical" href="https://thxwelchs.github.io/AOP/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="AOP 관점지향프로그래밍"><meta property="og:description" content="AOP 직역하면 관점지향 프로그래밍(Aspect-Oriented Programming) 인데, 한국말로 들으면 영 와닿지 않습니다. 좀 더 쉽게 풀어보면, 여러 곳에 흩어져 반복되는 공통 기능을 한 군데로 모아 재사용하게 해주는 것 입니다. 로깅, 트랜잭션, 권한 체크"><meta property="og:url" content="https://thxwelchs.github.io/AOP/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/AOP.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="AOP 관점지향프로그래밍"><meta name="twitter:description" content="AOP 직역하면 관점지향 프로그래밍(Aspect-Oriented Programming) 인데, 한국말로 들으면 영 와닿지 않습니다. 좀 더 쉽게 풀어보면, 여러 곳에 흩어져 반복되는 공통 기능을 한 군데로 모아 재사용하게 해주는 것 입니다. 로깅, 트랜잭션, 권한 체크"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/AOP.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>AOP 관점지향프로그래밍</h1> <div class="meta" data-astro-cid-fzx4jmue> 2019-11-22 · 엔지니어링  </div> <img class="cover" src="/img/covers/eng/AOP.png" alt="AOP 관점지향프로그래밍" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <h1 id="aop">AOP</h1>
+<p>직역하면 <strong>관점지향 프로그래밍(Aspect-Oriented Programming)</strong> 인데, 한국말로 들으면 영 와닿지 않습니다.</p>
+<p>좀 더 쉽게 풀어보면, <strong>여러 곳에 흩어져 반복되는 공통 기능을 한 군데로 모아 재사용하게 해주는 것</strong>입니다.</p>
+<p>로깅, 트랜잭션, 권한 체크, 실행 시간 측정처럼: 핵심 비즈니스 로직은 아니지만 여기저기 똑같이 끼어드는 코드가 있습니다. 이런 걸 <strong>횡단 관심사(cross-cutting concern)</strong> 라고 합니다.</p>
+<blockquote>
+<p>사실 ‘횡단’이라는 번역은 개인적으로 좀 어색하게 느껴집니다.</p>
+</blockquote>
+<p>직관적으로는 이렇게 이해하면 편합니다. 우리 코드가 기능별로 여러 층(주문, 결제, 회원…)으로 나뉘어 있다고 할 때, 로깅이나 트랜잭션 같은 기능은 특정 한 층에만 속하지 않고 <strong>모든 층을 가로질러 똑같이 필요</strong>합니다. 건물로 치면 층마다 따로 까는 게 아니라 <strong>전 층을 관통해 지나가는 전기·수도 배관</strong> 같은 거죠. 이렇게 여러 곳을 공통으로 가로지른다고 해서 ‘cross-cutting(가로지르는)‘이라고 부릅니다.</p>
+<p>AOP는 바로 이 공통 기능을 본 코드 곳곳에 흩뿌리지 않고, <strong>한 군데로 떼어내 따로 관리</strong>하게 해줍니다.</p>
+<p>예를 들어 모든 서비스 메서드 앞뒤에 로그를 남기고 싶다면, 메서드마다 로그 코드를 일일이 넣는 대신 “서비스 메서드가 실행되기 전후에 로그를 찍어라”라는 규칙 하나만 AOP로 정의하면 됩니다.</p>
+<p>이 글에서는 AOP를 <strong>구현하는 방법</strong>들만 이론적으로 짚어보겠습니다.</p>
+<h1 id="aop를-구현하는-방법">AOP를 구현하는 방법</h1>
+<ul>
+<li>
+<p><strong>컴파일 타임 위빙(weaving)</strong>
+소스를 컴파일할 때 <strong>AspectJ</strong>가 AOP 코드를 끼워 넣은 것처럼 컴파일해줍니다. (전용 컴파일러가 필요합니다.)</p>
+</li>
+<li>
+<p><strong>로드 타임 위빙 (바이트코드 조작)</strong>
+컴파일된 <code>.class</code> 파일 자체에는 AOP 코드가 들어있지 않지만, 클래스 로더가 클래스를 읽어 들이는 시점에 <strong>메모리상에서 바이트코드를 조작</strong>해 AOP를 적용합니다. (이것 역시 AspectJ가 지원합니다.)</p>
+</li>
+<li>
+<p><strong>런타임 프록시</strong>
+<strong>스프링이 사용하는 핵심 방식</strong>입니다. 원래 객체를 감싼 <strong>프록시(proxy) 객체</strong>를 만들어 두고, 클라이언트는 평소처럼 호출하지만 실제로는 프록시가 공통 기능을 먼저(혹은 나중에) 실행한 뒤 원본 객체를 호출합니다.</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>프록시(Proxy)</strong>: 같은 인터페이스를 구현해 원래 객체를 대신하는 대체 객체. 클라이언트 코드를 바꾸지 않으면서, 호출을 가로채 공통 기능을 끼워 넣을 수 있습니다. 스프링은 이 프록시 객체에 AOP를 적용합니다.</p>
+</blockquote>
+<h1 id="스프링-aop를-활용하다-마주치는-문제들">스프링 AOP를 활용하다 마주치는 문제들</h1>
+<p>이론은 위가 전부인데, 실제로 써보면 여기서부터 걸리는 게 나옵니다. 대표격 두 가지만 짚어보겠습니다.</p>
+<p><strong>① 같은 빈 안에서의 자기 호출은 프록시를 안 탄다.</strong> “분명 <code>@Transactional</code>을 붙였는데 트랜잭션이 안 걸려요” 하는 상황의 단골 원인입니다. 스프링 AOP는 외부에서 빈의 메서드를 호출할 때만 프록시가 가로채는데, 한 빈 안에서 <code>this.method()</code>로 자기 메서드를 부르면 프록시를 건너뛰고 원본에서 바로 실행됩니다. 그래서 그 메서드의 <code>@Transactional</code>이 무시됩니다. 해결은 메서드를 다른 빈으로 분리하는 식으로 합니다.</p>
+<p><strong>② <code>final</code>이면 프록시를 못 만든다.</strong> 스프링은 인터페이스가 있으면 JDK 동적 프록시를, 없으면 CGLIB으로 원본 클래스를 상속해 프록시를 만듭니다. 상속으로 만들다 보니 <code>final</code> 클래스나 메서드는 프록시 대상이 안 됩니다.</p>
+<h3 id="참고">참고</h3>
+<blockquote>
+<ul>
+<li><a href="https://jojoldu.tistory.com/71">https://jojoldu.tistory.com/71</a></li>
+<li>“백기선”님의 스프링 프레임워크 AOP 강좌</li>
+</ul>
+</blockquote> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#aop" data-astro-cid-fzx4jmue>AOP</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#aop를-구현하는-방법" data-astro-cid-fzx4jmue>AOP를 구현하는 방법</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#스프링-aop를-활용하다-마주치는-문제들" data-astro-cid-fzx4jmue>스프링 AOP를 활용하다 마주치는 문제들</a> </li><li class="lv2" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/AOP/";
+const pageId = "AOP";
+const pageTitle = "AOP 관점지향프로그래밍";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

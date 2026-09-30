@@ -1,0 +1,89 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>리액티브 스트림즈 5편 - 구현체들 둘러보기</title><meta name="description" content="이번에는 리액티브 스트림즈 인터페이스를 구현한 구현체들, 리액티브 라이브러리를 한번 알아보려고 합니다. 같은 명세, 여러 구현체 2편에서 본 Publisher · Subscriber · Subscription · Processor 는 인터페이스, 즉 약속일 뿐입니다. "><link rel="canonical" href="https://thxwelchs.github.io/reactive-streams-5/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="리액티브 스트림즈 5편 - 구현체들 둘러보기"><meta property="og:description" content="이번에는 리액티브 스트림즈 인터페이스를 구현한 구현체들, 리액티브 라이브러리를 한번 알아보려고 합니다. 같은 명세, 여러 구현체 2편에서 본 Publisher · Subscriber · Subscription · Processor 는 인터페이스, 즉 약속일 뿐입니다. "><meta property="og:url" content="https://thxwelchs.github.io/reactive-streams-5/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/reactive-streams-5.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="리액티브 스트림즈 5편 - 구현체들 둘러보기"><meta name="twitter:description" content="이번에는 리액티브 스트림즈 인터페이스를 구현한 구현체들, 리액티브 라이브러리를 한번 알아보려고 합니다. 같은 명세, 여러 구현체 2편에서 본 Publisher · Subscriber · Subscription · Processor 는 인터페이스, 즉 약속일 뿐입니다. "><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/reactive-streams-5.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>리액티브 스트림즈 5편 - 구현체들 둘러보기</h1> <div class="meta" data-astro-cid-fzx4jmue> 2022-08-21 · 엔지니어링  · <a class="series-badge" href="/series/" data-astro-cid-fzx4jmue>시리즈 · 리액티브 스트림즈</a>  </div> <img class="cover" src="/img/covers/eng/reactive-streams-5.png" alt="리액티브 스트림즈 5편 - 구현체들 둘러보기" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <p>이번에는 리액티브 스트림즈 인터페이스를 구현한 구현체들, 리액티브 라이브러리를 한번 알아보려고 합니다.</p>
+<h1 id="같은-명세-여러-구현체">같은 명세, 여러 구현체</h1>
+<p><a href="/reactive-streams-2/">2편</a>에서 본 <code>Publisher</code>·<code>Subscriber</code>·<code>Subscription</code>·<code>Processor</code>는 인터페이스, 즉 약속일 뿐입니다. 대표적으로 리액티브 스트림즈의 명세를 따르는 구현체는 다음과 같습니다.</p>
+<p><img src="/img/reactive-streams-5/rs-impls-v1.png" alt="같은 명세 위에 여러 구현체가 존재한다"></p>
+<ul>
+<li>RxJava: <code>Observable</code>(백프레셔 없음)과 <code>Flowable</code>(백프레셔 있음)을 구분해 제공합니다. 리액티브 흐름을 대중화한 라이브러리죠.</li>
+<li>Project Reactor: <code>Flux</code>(여러 개)와 <code>Mono</code>(0~1개). 스프링 진영에서 사실상 표준처럼 쓰입니다.</li>
+<li>Akka Streams: <code>Source</code>/<code>Flow</code>/<code>Sink</code>로 스트림을 조립합니다.</li>
+<li>Flow (JDK 9 이상): <code>java.util.concurrent.Flow</code> 안의 <code>Flow.Publisher</code>·<code>Flow.Subscriber</code>·<code>Flow.Subscription</code>이 리액티브 스트림즈 1.0 인터페이스와 같은 모양입니다.</li>
+</ul>
+<h1 id="구현체들끼리는-연결될-수-있다">구현체들끼리는 연결될 수 있다</h1>
+<p>이 라이브러리들은 같은 표준을 따르기 때문에 서로 연결됩니다. 한쪽 라이브러리의 <code>Publisher</code>를 다른 쪽이 그대로 <code>subscribe</code> 할 수 있습니다. 예를 들어 Reactor의 <code>Flux</code>는 그 자체가 리액티브 스트림즈 <code>Publisher</code>라, RxJava의 <code>Flowable</code>이 그걸 구독하는 것도 가능하다는 점이 장점입니다.</p>
+<p>그리고 JDK 9부터는 이 인터페이스가 아예 표준 라이브러리(<code>java.util.concurrent.Flow</code>)로 들어왔습니다. 다만 이름만 표준에 들어왔을 뿐, 연산자(<code>map</code>·<code>filter</code> 등)나 실제 구현은 여전히 위 라이브러리들의 몫입니다. <code>Flow</code>는 “타입 정의”고, RxJava·Reactor는 “그 타입으로 뭔가 할 수 있게 만든 것”에 가깝습니다.</p>
+<p>다음 편은 백엔드 개발을 하다 보면 가장 보편적으로 활용하게 되는 Spring의 꽃 WebFlux의 리액티브 스트림즈 구현체인 Reactor에 대해 알아보겠습니다.</p>
+<h1 id="참고">참고</h1>
+<blockquote>
+<ul>
+<li>김중철 역, <em>실전! 스프링 5를 활용한 리액티브 프로그래밍</em> (원서: <em>Hands-On Reactive Programming in Spring 5</em>)</li>
+<li><a href="https://www.reactive-streams.org/">Reactive Streams Specification</a> · <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/Flow.html">java.util.concurrent.Flow (JDK 21)</a></li>
+</ul>
+</blockquote> </div> <section class="series-foot" data-astro-cid-fzx4jmue> <p class="sf-h" data-astro-cid-fzx4jmue> <span class="sf-label" data-astro-cid-fzx4jmue>시리즈</span> <a href="/series/" data-astro-cid-fzx4jmue>리액티브 스트림즈</a> <span class="sf-count" data-astro-cid-fzx4jmue>전 9편</span> </p> <ol class="sf-list" data-astro-cid-fzx4jmue> <li data-astro-cid-fzx4jmue> <a href="/reactive-streams-1/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>01</span> <span class="sf-text" data-astro-cid-fzx4jmue>리액티브란 무엇인가, 옵저버 패턴에서 백프레셔로</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-2/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>02</span> <span class="sf-text" data-astro-cid-fzx4jmue>명세와 백프레셔, 네 개의 인터페이스</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-3/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>03</span> <span class="sf-text" data-astro-cid-fzx4jmue>직접 만들어보기, pull에서 push까지</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-4/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>04</span> <span class="sf-text" data-astro-cid-fzx4jmue>백프레셔, 흐름을 누가 통제하는가</span> <span class="sf-tag" data-astro-cid-fzx4jmue>이전</span>   </a> </li><li class="cur" data-astro-cid-fzx4jmue> <a href="/reactive-streams-5/" aria-current="page" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>05</span> <span class="sf-text" data-astro-cid-fzx4jmue>구현체들 둘러보기</span>  <span class="sf-tag cur" data-astro-cid-fzx4jmue>현재 글</span>  </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-6/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>06</span> <span class="sf-text" data-astro-cid-fzx4jmue>Project Reactor 입문, Flux와 Mono</span>   <span class="sf-tag" data-astro-cid-fzx4jmue>다음</span> </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-7/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>07</span> <span class="sf-text" data-astro-cid-fzx4jmue>Spring WebFlux와 논블로킹 스택</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-8/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>08</span> <span class="sf-text" data-astro-cid-fzx4jmue>끝까지 논블로킹, 그리고 한계</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-9/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>09</span> <span class="sf-text" data-astro-cid-fzx4jmue>가상 스레드와 리액티브의 미래</span>    </a> </li> </ol> </section> <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#같은-명세-여러-구현체" data-astro-cid-fzx4jmue>같은 명세, 여러 구현체</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#구현체들끼리는-연결될-수-있다" data-astro-cid-fzx4jmue>구현체들끼리는 연결될 수 있다</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/reactive-streams-5/";
+const pageId = "reactive-streams-5";
+const pageTitle = "리액티브 스트림즈 5편 - 구현체들 둘러보기";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

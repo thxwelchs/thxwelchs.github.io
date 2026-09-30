@@ -1,0 +1,212 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>다익스트라 (Dijkstra) 정리</title><meta name="description" content="다익스트라 어떤 그래프 G와 시작 정점 st가 주어질 때, st로부터 다른 모든 정점으로의 최단 경로 길이를 구하는 알고리즘. 이러한 특징으로 시작점 고정 최단거리 알고리즘 이라고도 한다. 다익스트라 알고리즘은 매 단계마다 도달할 수 있는 정점 중에서 시작점으로부터의 "><link rel="canonical" href="https://thxwelchs.github.io/algo-dijkstra/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="다익스트라 (Dijkstra) 정리"><meta property="og:description" content="다익스트라 어떤 그래프 G와 시작 정점 st가 주어질 때, st로부터 다른 모든 정점으로의 최단 경로 길이를 구하는 알고리즘. 이러한 특징으로 시작점 고정 최단거리 알고리즘 이라고도 한다. 다익스트라 알고리즘은 매 단계마다 도달할 수 있는 정점 중에서 시작점으로부터의 "><meta property="og:url" content="https://thxwelchs.github.io/algo-dijkstra/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="다익스트라 (Dijkstra) 정리"><meta name="twitter:description" content="다익스트라 어떤 그래프 G와 시작 정점 st가 주어질 때, st로부터 다른 모든 정점으로의 최단 경로 길이를 구하는 알고리즘. 이러한 특징으로 시작점 고정 최단거리 알고리즘 이라고도 한다. 다익스트라 알고리즘은 매 단계마다 도달할 수 있는 정점 중에서 시작점으로부터의 "><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>다익스트라 (Dijkstra) 정리</h1> <div class="meta" data-astro-cid-fzx4jmue> 2018-07-08 · PS  </div> <img class="cover" src="/img/covers/ps-algorithm.jpg" alt="다익스트라 (Dijkstra) 정리" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <h1 id="다익스트라">다익스트라</h1>
+<p>어떤 그래프 G와 시작 정점 st가 주어질 때, st로부터 다른 모든 정점으로의 최단 경로 길이를 구하는 알고리즘.</p>
+<p>이러한 특징으로 <strong>시작점 고정 최단거리 알고리즘</strong> 이라고도 한다.</p>
+<p>다익스트라 알고리즘은 매 단계마다 도달할 수 있는 정점 중에서 시작점으로부터의 거리가 가장 가까운 정점을 구해서 그 거리를 확정하는 방식으로 동작한다.</p>
+<h2 id="알고리즘-특징">알고리즘 특징</h2>
+<p>다익스트라 알고리즘은 다음과 같은 특징을 가진다.</p>
+<ul>
+<li>만약 <strong>간선의 가중치(어떤 정점에서 정점으로 이동하는 비용)가 음수라면 다익스트라는 동작할 수 없다.</strong> (만약 음수의 가중치를 가진 간선 그래프에서 최단거리를 구할때에는 벨만포드 알고리즘을 사용할 수 있다.)</li>
+</ul>
+<h2 id="비효율적인-다익스트라">비효율적인 다익스트라</h2>
+<p>방문하지 않은 정점들 중에서 최단 거리를 가진 정점을 모두 뒤져보는 <strong>선형 탐색</strong> 을 통해 찾는 방법, 이 작업은 <code>𝑂(𝑉)</code>시간이 소요된다.</p>
+<ul>
+<li>따라서, 모든 정점에 대한 <code>O(V)</code> 최단 거리 정점 선택에 드는 비용 <code>O(V)</code>가 소요되므로, <code>O(V^2)</code>의 시간복잡도를 가진다.</li>
+<li>비효율적인 다익스트라 알고리즘의 전체 시간복잡도는 <code>O(V^2 + E)</code> 이지만 <code>O(E)</code>는 <code>O(V^2)</code>에 비해 상대적으로 작으므로 무시하여 <code>O(V^2)</code>가 된다.</li>
+</ul>
+<h2 id="효율적인-다익스트라">효율적인 다익스트라</h2>
+<p>원소의 추가 및 조회/삭제 가 가능한 효율적인 자료구조인 Heap(Min Heap, Priority Queue)을 사용하여 최단거리를 찾는 방법.</p>
+<ul>
+<li>Heap에 있는 가장 작은 원소를 확인할때에는 <code>O(1)</code> 이 소요되지만, Heap에 원소를 추가할때에는 <code>O(log V)</code>이 소요되므로, 최단 거리 정점 선택 및 업데이트에 대해서는 <code>O(log V)</code> 시간이 소요된다.</li>
+<li>따라서 모든 정점에 대한 최단거리 정점 선택 및 업데이트에 대한 비용은 <code>O(E log V)</code>가 된다.</li>
+</ul>
+<h2 id="동작-과정">동작 과정</h2>
+<ol>
+<li>시작점에서 모든 정점까지의 거리를 초기화.
+2. 거리 초기화는 일반적으로 INF(<code>Integer.MAX_VALUE</code>)와 같은 존재할 수 없는 아주 큰값으로 설정 (최단거리를 찾는 알고리즘이기 때문에, 최단거리로 판단하지 않기 위해 최대한 큰값으로 설정해야 한다.)</li>
+<li>가장 가까운 정점을 선택하고 그 정점의 이웃(인접) 정점들의 거리를 <strong>업데이트</strong>
+3. 이 때 기존 거리보다 작은 경우에만 업데이트 한다.</li>
+<li>모든 정점을 방문할 때까지 반복.</li>
+</ol>
+<p><img src="/img/algo-dijkstra/%EB%8B%A4%EC%9D%B5%EC%8A%A4%ED%8A%B8%EB%9D%BC%EC%98%88%EC%8B%9C%EA%B7%B8%EB%9E%98%ED%94%84.png" alt="다익스트라예시그래프"></p>
+<h3 id="동작-과정-예시">동작 과정 예시</h3>
+<ul>
+<li>A에서 시작
+<ul>
+<li>A의 거리는 0, A에서 갈 수 있는 정점 B와 C.</li>
+<li>A에서 B: 1 (업데이트: B=1)</li>
+<li>A에서 C: 4 (업데이트: C=4)</li>
+</ul>
+</li>
+<li>가장 가까운 정점 B 선택
+<ul>
+<li>B의 거리는 1, B에서 갈 수 있는 정점 D와 C.</li>
+<li>B에서 D: 1 + 2 = 3 (업데이트: D=3)</li>
+<li>B에서 C: 1 + 2 = 3 (기존 C의 거리는 4이므로 업데이트: C=3)</li>
+</ul>
+</li>
+<li>가장 가까운 정점 D 선택
+<ul>
+<li>D의 거리는 3, D에서 갈 수 있는 정점 E.</li>
+<li>D에서 E: 3 + 1 = 4 (업데이트: E=4)</li>
+</ul>
+</li>
+<li>가장 가까운 정점 C 선택
+<ul>
+<li>C의 거리는 3, C에서 갈 수 있는 정점 E.</li>
+<li>C에서 E: 3 + 3 = 6 (기존 E의 거리는 4이므로 업데이트하지 않음)</li>
+</ul>
+</li>
+<li>가장 가까운 정점 E 선택
+<ul>
+<li>E의 거리는 4, 모든 정점을 방문했으므로 종료.</li>
+</ul>
+</li>
+</ul>
+<p>결과</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>정점</th><th>거리</th></tr></thead><tbody><tr><td>A</td><td>0</td></tr><tr><td>B</td><td>1</td></tr><tr><td>C</td><td>3</td></tr><tr><td>D</td><td>3</td></tr><tr><td>E</td><td>4</td></tr></tbody></table>
+<h3 id="동작-과정-시각화">동작 과정 시각화</h3>
+<p><img src="/img/algo-dijkstra/%EB%8B%A4%EC%9D%B5%EC%8A%A4%ED%8A%B8%EB%9D%BC.gif" alt="다익스트라 동작 과정 시각화"></p>
+<p><a href="https://visualgo.net/en/sssp">https://visualgo.net/en/sssp</a> 에서 시뮬레이션 가능</p>
+<p>다익스트라 기본 코드 구조</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="cpp"><code><span class="line"><span style="color:#F97583">#include</span><span style="color:#9ECBFF"> &#x3C;iostream></span></span>
+<span class="line"><span style="color:#F97583">#include</span><span style="color:#9ECBFF"> &#x3C;string></span></span>
+<span class="line"><span style="color:#F97583">#include</span><span style="color:#9ECBFF"> &#x3C;vector></span></span>
+<span class="line"><span style="color:#F97583">#include</span><span style="color:#9ECBFF"> &#x3C;queue></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">using</span><span style="color:#F97583"> namespace</span><span style="color:#B392F0"> std</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">vector</span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8">pair</span><span style="color:#F97583">&#x3C;int</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int>></span><span style="color:#E1E4E8"> a[</span><span style="color:#79B8FF">7</span><span style="color:#E1E4E8">];</span><span style="color:#6A737D"> // 다익스트라 최단거리 테이블</span></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#E1E4E8"> d[</span><span style="color:#79B8FF">7</span><span style="color:#E1E4E8">];</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// 1. 출발노드를 설정</span></span>
+<span class="line"><span style="color:#6A737D">// 2. 출발 노드를 기준으로 각 노드의 최소 비용을 저장</span></span>
+<span class="line"><span style="color:#6A737D">// 3. 방문하지 않은 노드 중에서 가장 비용이 적은 노드를 선택</span></span>
+<span class="line"><span style="color:#6A737D">//    - 인접노드를 N번만큼 탐색하여 최소값 찾는 방법</span></span>
+<span class="line"><span style="color:#6A737D">//    - Min Heap 우선순위큐를 활용, 하는 방법), C++의 priority_queue는 기본적으로 MaxHeap이기 때문에 음수로 부호를 변경하여 값을 삽입해주고 꺼낼때는 그 반대로 활용함으로써 MinHeap으로 활용할 수 있다.</span></span>
+<span class="line"><span style="color:#6A737D">// 4. 위 과정에서 3 ~ 4번을 반복</span></span>
+<span class="line"><span style="color:#F97583">void</span><span style="color:#B392F0"> dijkstar</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#FFAB70"> start</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">    d[start] </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">    priority_queue</span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8">pair</span><span style="color:#F97583">&#x3C;int</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int></span><span style="color:#F97583"> ></span><span style="color:#E1E4E8"> pq;</span><span style="color:#6A737D"> // first: 정점, second: 거리</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    pq.</span><span style="color:#B392F0">push</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">make_pair</span><span style="color:#E1E4E8">(start, </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">));</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    while</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">pq.</span><span style="color:#B392F0">empty</span><span style="color:#E1E4E8">()) {</span></span>
+<span class="line"><span style="color:#F97583">        int</span><span style="color:#E1E4E8"> current </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> pq.</span><span style="color:#B392F0">top</span><span style="color:#E1E4E8">().first;</span></span>
+<span class="line"><span style="color:#F97583">        int</span><span style="color:#E1E4E8"> distance </span><span style="color:#F97583">=</span><span style="color:#F97583"> -</span><span style="color:#E1E4E8">pq.</span><span style="color:#B392F0">top</span><span style="color:#E1E4E8">().second;</span></span>
+<span class="line"><span style="color:#E1E4E8">        pq.</span><span style="color:#B392F0">pop</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8">(d[current] </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> distance) </span><span style="color:#F97583">continue</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">        for</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">; i </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> a[current].</span><span style="color:#B392F0">size</span><span style="color:#E1E4E8">(); i</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">            int</span><span style="color:#E1E4E8"> next </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> a[current][i].first;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">            int</span><span style="color:#E1E4E8"> nextDistance </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> distance </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> a[current][i].second;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">            if</span><span style="color:#E1E4E8">(nextDistance </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> d[next]) {</span></span>
+<span class="line"><span style="color:#E1E4E8">                d[next] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> nextDistance;</span></span>
+<span class="line"><span style="color:#E1E4E8">                pq.</span><span style="color:#B392F0">push</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">make_pair</span><span style="color:#E1E4E8">(next, </span><span style="color:#F97583">-</span><span style="color:#E1E4E8">nextDistance));</span></span>
+<span class="line"><span style="color:#E1E4E8">            }</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#B392F0"> main</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#다익스트라" data-astro-cid-fzx4jmue>다익스트라</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#알고리즘-특징" data-astro-cid-fzx4jmue>알고리즘 특징</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#비효율적인-다익스트라" data-astro-cid-fzx4jmue>비효율적인 다익스트라</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#효율적인-다익스트라" data-astro-cid-fzx4jmue>효율적인 다익스트라</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#동작-과정" data-astro-cid-fzx4jmue>동작 과정</a> </li><li class="lv2" data-astro-cid-fzx4jmue> <a href="#동작-과정-예시" data-astro-cid-fzx4jmue>동작 과정 예시</a> </li><li class="lv2" data-astro-cid-fzx4jmue> <a href="#동작-과정-시각화" data-astro-cid-fzx4jmue>동작 과정 시각화</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/algo-dijkstra/";
+const pageId = "algo-dijkstra";
+const pageTitle = "다익스트라 (Dijkstra) 정리";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

@@ -1,0 +1,132 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>리액티브 스트림즈 2편 - 명세와 백프레셔, 네 개의 인터페이스</title><meta name="description" content="1편에서 &#34;왜 리액티브인가&#34;를 봤습니다. 이번엔 그 개념을 실제로 코드에서 합의할 수 있게 한 명세이자 약속인 Reactive Streams 명세를 정리해보겠습니다. 네 개의 인터페이스 명세라고 하기에는 민망할 정도로, 리액티브 스트림즈의 인터페이스 네 개가 전부입니다"><link rel="canonical" href="https://thxwelchs.github.io/reactive-streams-2/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="리액티브 스트림즈 2편 - 명세와 백프레셔, 네 개의 인터페이스"><meta property="og:description" content="1편에서 &#34;왜 리액티브인가&#34;를 봤습니다. 이번엔 그 개념을 실제로 코드에서 합의할 수 있게 한 명세이자 약속인 Reactive Streams 명세를 정리해보겠습니다. 네 개의 인터페이스 명세라고 하기에는 민망할 정도로, 리액티브 스트림즈의 인터페이스 네 개가 전부입니다"><meta property="og:url" content="https://thxwelchs.github.io/reactive-streams-2/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/reactive-streams-2.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="리액티브 스트림즈 2편 - 명세와 백프레셔, 네 개의 인터페이스"><meta name="twitter:description" content="1편에서 &#34;왜 리액티브인가&#34;를 봤습니다. 이번엔 그 개념을 실제로 코드에서 합의할 수 있게 한 명세이자 약속인 Reactive Streams 명세를 정리해보겠습니다. 네 개의 인터페이스 명세라고 하기에는 민망할 정도로, 리액티브 스트림즈의 인터페이스 네 개가 전부입니다"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/reactive-streams-2.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>리액티브 스트림즈 2편 - 명세와 백프레셔, 네 개의 인터페이스</h1> <div class="meta" data-astro-cid-fzx4jmue> 2022-05-08 · 엔지니어링  · <a class="series-badge" href="/series/" data-astro-cid-fzx4jmue>시리즈 · 리액티브 스트림즈</a>  </div> <img class="cover" src="/img/covers/eng/reactive-streams-2.png" alt="리액티브 스트림즈 2편 - 명세와 백프레셔, 네 개의 인터페이스" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <p><a href="/reactive-streams-1/">1편</a>에서 “왜 리액티브인가”를 봤습니다. 이번엔 그 개념을 실제로 코드에서 합의할 수 있게 한 명세이자 약속인 Reactive Streams 명세를 정리해보겠습니다.</p>
+<h1 id="네-개의-인터페이스">네 개의 인터페이스</h1>
+<p>명세라고 하기에는 민망할 정도로, 리액티브 스트림즈의 인터페이스 네 개가 전부입니다.</p>
+<p><img src="/img/reactive-streams-2/rs-interfaces-v3.png" alt="Reactive Streams 네 인터페이스: Publisher → Processor → Subscriber로 데이터(onNext)는 앞으로 흐르고, request(n)·cancel(Subscription을 통한 수요 제어)은 소비자에서 거꾸로 흐른다. Processor는 Publisher이자 Subscriber인 중간 단계"></p>
+<ul>
+<li><code>Publisher&#x3C;T></code>: 데이터를 만들어 내보내는 쪽. <code>subscribe(Subscriber)</code> 하나만 가집니다.</li>
+<li><code>Subscriber&#x3C;T></code>: 데이터를 받는 쪽. <code>onSubscribe</code>, <code>onNext</code>, <code>onError</code>, <code>onComplete</code> 네 콜백을 가집니다.</li>
+<li><code>Subscription</code>: 둘 사이의 연결. 소비자가 이걸 통해 <code>request(n)</code>(n개 더 달라)과 <code>cancel</code>(그만)을 호출합니다.</li>
+<li><code>Processor&#x3C;T, R></code>: <code>Publisher</code>이면서 동시에 <code>Subscriber</code>인, 중간 단계. 받아서 변환해 다시 내보냅니다.</li>
+</ul>
+<p>그럼 이 넷이 어떻게 맞물릴까요? 흐름을 따라가면 이렇습니다. 소비자가 <code>subscribe</code>로 붙으면, 생산자가 <code>onSubscribe(subscription)</code>으로 연결 고리를 건넵니다. 그러면 소비자가 그 <code>Subscription</code>에 대고 <code>request(n)</code>을 호출하고, 생산자는 그 수만큼만 <code>onNext</code>로 데이터를 흘립니다. 다 끝나면 <code>onComplete</code>, 문제가 생기면 <code>onError</code>입니다.</p>
+<h1 id="메소드를-하나씩-뜯어보기">메소드를 하나씩 뜯어보기</h1>
+<p>방금 흐름을 훑었으니, 이제 메소드 하나하나가 누가 부르고 언제 불리는지를 꼼꼼히 짚어보겠습니다. 헷갈릴 때 기준이 되는 한 가지는, 데이터는 생산자가 소비자에게 밀어주고(앞 방향), 제어는 소비자가 <code>Subscription</code>을 통해 되돌려 신호한다(뒤 방향)는 점입니다. 이 방향만 잡으면 각 메소드가 제자리를 찾습니다.</p>
+<h2 id="publisher-메소드는-subscribe-하나">Publisher, 메소드는 subscribe 하나</h2>
+<p><code>Publisher&#x3C;T></code>에는 <code>subscribe(Subscriber)</code> 메소드 하나뿐입니다.</p>
+<ul>
+<li>누가 부르나: 소비자(또는 그를 대신하는 프레임워크)가 “나 구독할게” 하고 부릅니다.</li>
+<li>생산자가 할 일: 이 안에서 반드시 <code>Subscriber.onSubscribe(subscription)</code>를 <strong>딱 한 번</strong> 불러줘야 합니다. 그게 첫 신호이자, 둘을 잇는 연결 고리(<code>Subscription</code>)를 건네는 순간입니다.</li>
+<li>주의: <code>subscribe</code>는 “데이터를 달라”가 아니라 “연결만 하자”입니다. 이걸 불렀다고 데이터가 곧장 흐르진 않습니다. 한 생산자에 여러 소비자가 각각 <code>subscribe</code>할 수도 있는데, 그럼 각자 자기 <code>Subscription</code>을 받습니다.</li>
+</ul>
+<h2 id="subscriber-생산자가-불러주는-네-콜백">Subscriber, 생산자가 불러주는 네 콜백</h2>
+<p><code>Subscriber&#x3C;T></code>의 네 메소드는 전부 생산자가 불러주는 콜백입니다. 내가 부르는 게 아니라, 나는 구현해두고 불리기를 기다리는 쪽이죠.</p>
+<ul>
+<li><code>onSubscribe(Subscription s)</code>: 맨 처음, 한 번 불립니다. 생산자가 “연결 고리 여기 있어” 하고 <code>Subscription</code>을 건네는 자리예요. 소비자는 보통 이걸 필드에 보관하고, <strong>여기서 <code>s.request(n)</code>을 불러야 비로소 데이터가 흐르기 시작</strong>합니다. 안 부르면 영영 아무것도 안 옵니다. 받을 준비가 됐다는 신호를 소비자가 직접 줘야 하는 셈이죠.</li>
+<li><code>onNext(T item)</code>: 데이터 한 개가 도착할 때마다 불립니다. 단, 내가 <code>request</code>로 요청한 총량을 넘겨서는 불리지 않습니다. 2개 요청했으면 <code>onNext</code>도 최대 2번입니다.</li>
+<li><code>onComplete()</code>: 더 보낼 게 없을 때, 정상 종료 신호로 딱 한 번 불립니다. 이후엔 어떤 신호도 오지 않습니다.</li>
+<li><code>onError(Throwable t)</code>: 도중에 문제가 났을 때 딱 한 번 불립니다. 역시 이후엔 침묵입니다. <code>onComplete</code>와는 둘 중 하나만 옵니다.</li>
+</ul>
+<h2 id="subscription-소비자가-쥔-제어-손잡이">Subscription, 소비자가 쥔 제어 손잡이</h2>
+<p><code>Subscription</code>은 생산자와 소비자 사이의 연결인데, 핵심은 이걸 호출하는 쪽이 소비자라는 점입니다. 받기만 하던 소비자가 이걸로 흐름을 거꾸로 제어합니다.</p>
+<ul>
+<li><code>request(long n)</code>: “나 지금 n개까지 더 받을 수 있어.” <strong>이게 백프레셔의 손잡이</strong>입니다. 호출할 때마다 수요가 누적됩니다(2 요청하고 또 3 요청하면 총 5). <code>n</code>은 양수여야 하고, 0 이하면 명세 규칙 3.9에 따라 <code>onError(IllegalArgumentException)</code>로 끝내야 합니다. 참고로 <code>Long.MAX_VALUE</code>를 요청하면 사실상 “무한정 줘”, 곧 백프레셔를 안 쓰겠다는 선언이 됩니다.</li>
+<li><code>cancel()</code>: “그만 보내.” 소비자가 더는 필요 없을 때 부르고, 생산자는 발행을 멈춰야 합니다. 여러 번 불러도 안전해야 합니다.</li>
+</ul>
+<p>한 가지 더. <code>request</code>와 <code>cancel</code>은 <code>onNext</code> 안에서 다시 불려도(재진입) 문제가 없게 만들어야 합니다. 소비자가 “하나 받았으니(<code>onNext</code>) 하나 더(<code>request(1)</code>)“처럼 <code>onNext</code> 안에서 <code>request</code>를 부르는 경우가 흔하거든요.</p>
+<h2 id="processor-받으면서-동시에-내보내는-중간-단계">Processor, 받으면서 동시에 내보내는 중간 단계</h2>
+<p><code>Processor&#x3C;T, R></code>는 <code>Subscriber&#x3C;T></code>이면서 동시에 <code>Publisher&#x3C;R></code>입니다. 위에서 데이터를 받아(<code>Subscriber</code> 역할) 변환한 뒤 아래로 다시 내보내는(<code>Publisher</code> 역할) 중간 단계죠. <code>map</code>이나 <code>filter</code> 같은 연산자가 결국 이 자리에 앉는 셈입니다.</p>
+<h2 id="신호가-오는-순서엔-규칙이-있다">신호가 오는 순서엔 규칙이 있다</h2>
+<p>이 메소드들은 아무 때나 막 불리는 게 아니라, 정해진 순서를 따릅니다. 문법으로 적으면 이렇습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>onSubscribe  →  onNext*  →  (onComplete | onError)?</span></span></code></pre>
+<p>말로 풀면,</p>
+<ul>
+<li><code>onSubscribe</code>가 <strong>항상 맨 먼저, 정확히 한 번</strong>.</li>
+<li>그다음 <code>onNext</code>가 요청한 양 이하로 0번 이상.</li>
+<li>마지막에 <code>onComplete</code>나 <code>onError</code>가 많아야 한 번. 이 종료 신호가 온 뒤엔 더 이상 아무 신호도 없음.</li>
+<li>한 소비자에게 가는 이 신호들은 겹치지 않게(직렬로) 전달됨. <code>onNext</code>가 둘이 동시에 불리는 일은 없으니, 소비자는 그 가정 위에서 안심하고 짜도 됨.</li>
+</ul>
+<p>정리하면 생산자는 <code>onSubscribe</code>로 연결을 열고, 소비자가 <code>request</code>로 수요를 밝히면, 그만큼 <code>onNext</code>로 흘리다, 끝에 <code>onComplete</code>나 <code>onError</code>로 한 번 닫는 흐름임. 이 순서와 횟수 규칙을 구현하는 쪽이 지켜야 한다는 게 명세의 핵심임.</p>
+<h1 id="생산자-소비자-문제">생산자-소비자 문제</h1>
+<p>그런데 왜 받을 양을 소비자가 정하는 장치가 필요할까요? 한 가지 배경을 깔면 이해가 더 쉽기에, 아주 유명한 생산자-소비자(producer-consumer) 문제부터 이야기해보겠습니다. 한쪽(생산자)은 데이터를 만들고 다른 쪽(소비자)은 그걸 처리하는데, 둘의 속도가 다를 때 무슨 일이 벌어지느냐는 거죠.</p>
+<p>생산자가 빠르면 만든 게 쌓이고, 소비자가 빠르면 놀게 됩니다. 그래서 보통 중간에 버퍼(큐)를 둬 속도의 차이를 커버할 수 있는 완충 역할을 하는데, 그 버퍼는 무한하지 않습니다. 생산이 계속 빠르면 버퍼가 가득 차고, 그때 “생산자를 어떻게 멈추거나 늦출 것인가”가 핵심 질문이 됩니다. 운영체제의 파이프, 스레드 사이의 블로킹 큐, 메시지 큐가 다 이 문제를 저마다의 방식으로 풀고 있습니다.</p>
+<p>리액티브 스트림즈에선 <code>Publisher</code>가 생산자, <code>Subscriber</code>가 소비자입니다. 그러니 이 둘을 비동기로 잇는 순간, 이 생산자-소비자 문제를 그대로 떠안게 됩니다. 그 답이 바로 다음에 볼 백프레셔입니다.</p>
+<h1 id="핵심은-백프레셔">핵심은 백프레셔</h1>
+<p>여기서 가장 중요한 한 가지가 백프레셔(backpressure)입니다. 보통 “생산자가 데이터를 밀어낸다(push)“고 생각하기 쉬운데, 리액티브 스트림즈의 명세에서는 실은 거꾸로입니다. 소비자가 <code>request(n)</code>으로 “나는 n개까지 받을 수 있어”라고 말하면, 생산자는 딱 그만큼만 보냅니다.</p>
+<p><img src="/img/reactive-streams-2/backpressure-v2.png" alt="백프레셔: 느린 소비자가 request(2)로 2개만 요청하면 빠른 생산자도 onNext를 2개만 보내고, 소비자가 더 받을 수 있을 때 다시 request 한다"></p>
+<p>왜 이렇게 만들었을까요? 빠른 생산자가 느린 소비자에게 데이터를 마구 쏟아부으면, 소비자 쪽 버퍼가 넘치거나 메모리가 과도하게 찰 수 있기 때문에, 받을 양을 소비자가 정하도록 선택권을 주어 흐름이 소비자 속도에 맞춰 자연스럽게 조절되게 하는 것입니다.</p>
+<h1 id="참고">참고</h1>
+<blockquote>
+<ul>
+<li>김중철 역, <em>실전! 스프링 5를 활용한 리액티브 프로그래밍</em> (원서: <em>Hands-On Reactive Programming in Spring 5</em>)</li>
+<li><a href="https://www.reactive-streams.org/">Reactive Streams Specification</a></li>
+<li>토비의 봄 TV: <a href="https://www.youtube.com/watch?v=8fenTR3KOJo">(1) Reactive Streams</a> · <a href="https://www.youtube.com/watch?v=DChIxy9g19o">(2) Operators</a> (Publisher·Subscriber·Subscription과 연산자를 직접 구현하며 설명)</li>
+</ul>
+</blockquote> </div> <section class="series-foot" data-astro-cid-fzx4jmue> <p class="sf-h" data-astro-cid-fzx4jmue> <span class="sf-label" data-astro-cid-fzx4jmue>시리즈</span> <a href="/series/" data-astro-cid-fzx4jmue>리액티브 스트림즈</a> <span class="sf-count" data-astro-cid-fzx4jmue>전 9편</span> </p> <ol class="sf-list" data-astro-cid-fzx4jmue> <li data-astro-cid-fzx4jmue> <a href="/reactive-streams-1/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>01</span> <span class="sf-text" data-astro-cid-fzx4jmue>리액티브란 무엇인가, 옵저버 패턴에서 백프레셔로</span> <span class="sf-tag" data-astro-cid-fzx4jmue>이전</span>   </a> </li><li class="cur" data-astro-cid-fzx4jmue> <a href="/reactive-streams-2/" aria-current="page" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>02</span> <span class="sf-text" data-astro-cid-fzx4jmue>명세와 백프레셔, 네 개의 인터페이스</span>  <span class="sf-tag cur" data-astro-cid-fzx4jmue>현재 글</span>  </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-3/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>03</span> <span class="sf-text" data-astro-cid-fzx4jmue>직접 만들어보기, pull에서 push까지</span>   <span class="sf-tag" data-astro-cid-fzx4jmue>다음</span> </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-4/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>04</span> <span class="sf-text" data-astro-cid-fzx4jmue>백프레셔, 흐름을 누가 통제하는가</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-5/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>05</span> <span class="sf-text" data-astro-cid-fzx4jmue>구현체들 둘러보기</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-6/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>06</span> <span class="sf-text" data-astro-cid-fzx4jmue>Project Reactor 입문, Flux와 Mono</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-7/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>07</span> <span class="sf-text" data-astro-cid-fzx4jmue>Spring WebFlux와 논블로킹 스택</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-8/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>08</span> <span class="sf-text" data-astro-cid-fzx4jmue>끝까지 논블로킹, 그리고 한계</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/reactive-streams-9/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>09</span> <span class="sf-text" data-astro-cid-fzx4jmue>가상 스레드와 리액티브의 미래</span>    </a> </li> </ol> </section> <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#네-개의-인터페이스" data-astro-cid-fzx4jmue>네 개의 인터페이스</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#메소드를-하나씩-뜯어보기" data-astro-cid-fzx4jmue>메소드를 하나씩 뜯어보기</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#publisher-메소드는-subscribe-하나" data-astro-cid-fzx4jmue>Publisher, 메소드는 subscribe 하나</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#subscriber-생산자가-불러주는-네-콜백" data-astro-cid-fzx4jmue>Subscriber, 생산자가 불러주는 네 콜백</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#subscription-소비자가-쥔-제어-손잡이" data-astro-cid-fzx4jmue>Subscription, 소비자가 쥔 제어 손잡이</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#processor-받으면서-동시에-내보내는-중간-단계" data-astro-cid-fzx4jmue>Processor, 받으면서 동시에 내보내는 중간 단계</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#신호가-오는-순서엔-규칙이-있다" data-astro-cid-fzx4jmue>신호가 오는 순서엔 규칙이 있다</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#생산자-소비자-문제" data-astro-cid-fzx4jmue>생산자-소비자 문제</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#핵심은-백프레셔" data-astro-cid-fzx4jmue>핵심은 백프레셔</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/reactive-streams-2/";
+const pageId = "reactive-streams-2";
+const pageTitle = "리액티브 스트림즈 2편 - 명세와 백프레셔, 네 개의 인터페이스";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

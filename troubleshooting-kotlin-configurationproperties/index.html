@@ -1,0 +1,124 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>통합테스트에서만 ConfigurationProperties 바인딩이 안 되던 문제</title><meta name="description" content="Spring + Kotlin으로 개발하면서, 통합테스트에서만 @ConfigurationProperties 바인딩이 안 돼 한참을 삽질했던 조금 민망한 후기를 공유합니다. 배경 코틀린 데이터 클래스로 불변 프로퍼티를 이렇게 선언해 두고 썼습니다. 로컬에서 애플리케이션을 "><link rel="canonical" href="https://thxwelchs.github.io/troubleshooting-kotlin-configurationproperties/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="통합테스트에서만 ConfigurationProperties 바인딩이 안 되던 문제"><meta property="og:description" content="Spring + Kotlin으로 개발하면서, 통합테스트에서만 @ConfigurationProperties 바인딩이 안 돼 한참을 삽질했던 조금 민망한 후기를 공유합니다. 배경 코틀린 데이터 클래스로 불변 프로퍼티를 이렇게 선언해 두고 썼습니다. 로컬에서 애플리케이션을 "><meta property="og:url" content="https://thxwelchs.github.io/troubleshooting-kotlin-configurationproperties/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/troubleshooting-kotlin-configurationproperties-v2.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="통합테스트에서만 ConfigurationProperties 바인딩이 안 되던 문제"><meta name="twitter:description" content="Spring + Kotlin으로 개발하면서, 통합테스트에서만 @ConfigurationProperties 바인딩이 안 돼 한참을 삽질했던 조금 민망한 후기를 공유합니다. 배경 코틀린 데이터 클래스로 불변 프로퍼티를 이렇게 선언해 두고 썼습니다. 로컬에서 애플리케이션을 "><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/troubleshooting-kotlin-configurationproperties-v2.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>통합테스트에서만 ConfigurationProperties 바인딩이 안 되던 문제</h1> <div class="meta" data-astro-cid-fzx4jmue> 2024-07-26 · 엔지니어링  · <a class="series-badge" href="/series/" data-astro-cid-fzx4jmue>시리즈 · 트러블슈팅</a>  </div> <img class="cover" src="/img/covers/eng/troubleshooting-kotlin-configurationproperties-v2.png" alt="통합테스트에서만 ConfigurationProperties 바인딩이 안 되던 문제" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <p>Spring + Kotlin으로 개발하면서, 통합테스트에서만 <code>@ConfigurationProperties</code> 바인딩이 안 돼 한참을 삽질했던 조금 민망한 후기를 공유합니다.</p>
+<h1 id="배경">배경</h1>
+<p>코틀린 데이터 클래스로 불변 프로퍼티를 이렇게 선언해 두고 썼습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#B392F0">@ConfigurationProperties</span><span style="color:#E1E4E8">(prefix </span><span style="color:#F97583">=</span><span style="color:#9ECBFF"> "my.props"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">data</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> MyProperties</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#F97583">    val</span><span style="color:#E1E4E8"> a: </span><span style="color:#B392F0">String</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#F97583">    val</span><span style="color:#E1E4E8"> b: </span><span style="color:#B392F0">String</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#F97583">    val</span><span style="color:#E1E4E8"> c: </span><span style="color:#B392F0">String</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span></code></pre>
+<p>로컬에서 애플리케이션을 띄우면 <code>application.yml</code>의 값이 잘 바인딩됩니다. 그런데 <code>@SpringBootTest</code> 통합테스트로 돌리면 이 프로퍼티 빈을 만들다가 컨텍스트 로딩이 깨졌습니다. 대략 이런 에러였습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>Parameter 0 of constructor in com.example.MyProperties</span></span>
+<span class="line"><span>required a bean of type 'java.lang.String' that could not be found.</span></span></code></pre>
+<p><code>String</code> 타입 빈을 찾는다는 메시지가 좀 이상했습니다. 이건 yml을 생성자에 바인딩하려는 게 아니라, 생성자 인자(<code>a</code>)를 빈으로 주입하려다 못 찾은 모양새였거든요. 로컬에선 멀쩡한데 통합테스트만 왜 이럴까요?</p>
+<h1 id="해결">해결</h1>
+<h2 id="원인은-테스트의-component-class-지정이었다">원인은 테스트의 component class 지정이었다</h2>
+<p>원인은 <code>@SpringBootTest</code>에 어떤 클래스를 빈으로 올릴지 직접 지정해둔 부분이었습니다. 설정 클래스와 프로퍼티 클래스를 둘 다 <code>classes</code>에 박아뒀던 게 화근이었던 듯합니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#6A737D">// 문제가 된 설정</span></span>
+<span class="line"><span style="color:#B392F0">@SpringBootTest</span><span style="color:#E1E4E8">(classes </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> [MyConfig::</span><span style="color:#B392F0">class</span><span style="color:#E1E4E8">, MyProperties::</span><span style="color:#B392F0">class</span><span style="color:#E1E4E8">])</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> MyIntegrationTest</span><span style="color:#E1E4E8"> { </span><span style="color:#6A737D">/* ... */</span><span style="color:#E1E4E8"> }</span></span></code></pre>
+<p><code>@SpringBootTest(classes = [...])</code>에 <code>MyProperties</code>를 직접 넣으면, 스프링은 이걸 <strong>프로퍼티 POJO가 아니라 평범한 컴포넌트 빈으로</strong> 보고 생성하려 듭니다. 그런데 <code>MyProperties</code>는 <code>val</code>만 가진 데이터 클래스라 생성자 인자가 셋(<code>a</code>, <code>b</code>, <code>c</code>)이고, 일반 빈으로 만들려면 그 인자들을 빈으로 주입해야 합니다. <code>String</code> 빈이 있을 리 없으니 “Parameter 0 … required a bean of type ‘java.lang.String‘“으로 깨진 것이었습니다.</p>
+<p>로컬에서 됐던 이유는, 프로퍼티 등록을 <code>MyConfig</code> 쪽 <code>@EnableConfigurationProperties</code>에 맡겨두고 있었기 때문입니다. 이 경로로 등록되면 스프링은 생성자 주입(autowiring)이 아니라 생성자 바인딩(constructor binding)으로, yml 값을 인자에 채워 인스턴스를 만듭니다. 그래서 같은 클래스라도 “누가 어떻게 등록하느냐”에 따라 결과가 갈렸던 거였습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#6A737D">// 고친 설정: 프로퍼티는 config가 @EnableConfigurationProperties로 등록하게 둔다</span></span>
+<span class="line"><span style="color:#B392F0">@SpringBootTest</span><span style="color:#E1E4E8">(classes </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> [MyConfig::</span><span style="color:#B392F0">class</span><span style="color:#E1E4E8">])</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> MyIntegrationTest</span><span style="color:#E1E4E8"> { </span><span style="color:#6A737D">/* ... */</span><span style="color:#E1E4E8"> }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@Configuration</span></span>
+<span class="line"><span style="color:#B392F0">@EnableConfigurationProperties</span><span style="color:#E1E4E8">(MyProperties::</span><span style="color:#B392F0">class</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> MyConfig</span><span style="color:#E1E4E8"> { </span><span style="color:#6A737D">/* ... */</span><span style="color:#E1E4E8"> }</span></span></code></pre>
+<p><code>MyConfig</code>만 올려도 거기 달린 <code>@EnableConfigurationProperties(MyProperties::class)</code>가 프로퍼티 클래스를 알아서 등록·바인딩해줍니다. 테스트의 <code>classes</code>에서 <code>MyProperties</code>를 빼는 것만으로 해결됐습니다.</p>
+<blockquote>
+<p>이 내용은 <a href="https://docs.spring.io/spring-boot/api/java/org/springframework/boot/test/context/SpringBootTest.html">스프링 공식 문서</a>에도 소개되어 있었습니다. <code>@SpringBootTest</code>의 <code>classes</code>는 “ApplicationContext를 로딩할 component class”를 지정하는 자리라, 여기에 넣은 클래스는 그 용도(컴포넌트/설정)로 다뤄집니다. 프로퍼티 클래스를 여기 직접 넣는 건 의도와 어긋났던 셈입니다.</p>
+</blockquote>
+<h2 id="그럼-왜-var--기본값일-땐-됐을까">그럼 왜 var + 기본값일 땐 됐을까</h2>
+<p>사실 처음엔 이 데이터 클래스를 <code>var</code>에 기본값까지 줘서 쓰고 있었는데, 그땐 통합테스트도 잘 됐습니다. 왜 그랬을까요?</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#B392F0">@ConfigurationProperties</span><span style="color:#E1E4E8">(prefix </span><span style="color:#F97583">=</span><span style="color:#9ECBFF"> "my.props"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">data</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> MyProperties</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#F97583">    var</span><span style="color:#E1E4E8"> a: </span><span style="color:#B392F0">String</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> ""</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#F97583">    var</span><span style="color:#E1E4E8"> b: </span><span style="color:#B392F0">String</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> ""</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#F97583">    var</span><span style="color:#E1E4E8"> c: </span><span style="color:#B392F0">String</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> ""</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span></code></pre>
+<ul>
+<li>주생성자의 모든 프로퍼티에 기본값이 있으면, 코틀린은 이 데이터 클래스에 인자 없는 기본 생성자(no-arg)도 만들어줍니다. 그래서 스프링이 일반 빈으로 생성하려 해도 빈 생성자로 일단 인스턴스를 만들 수 있었습니다.</li>
+<li>인스턴스가 만들어진 뒤에는 <code>ConfigurationPropertiesBindingPostProcessor</code>(바인더)가 yml 값을 setter로 채워 넣었습니다. <code>var</code>라 setter가 있으니 이 사후 바인딩이 동작했던 것입니다.</li>
+</ul>
+<p>즉 <code>var</code> + 기본값은 “일반 빈으로 생성 → 사후 setter 바인딩”이라는 다른 경로로 우연히 성공했던 거였고, <code>val</code>만 가진 불변 버전에선 그 경로가 막혀 잘못된 테스트 설정의 문제가 드러난 것이었습니다.</p>
+<h1 id="결과">결과</h1>
+<p>한동안 <code>val</code> 불변 프로퍼티가 문제인 줄 알고 애먼 데이터 클래스만 노려봤습니다. 사실 코드는 처음부터 멀쩡했고, 깨진 건 테스트의 <code>classes</code>에 프로퍼티 클래스를 직접 박아둔 제 설정이었습니다. “로컬에선 되는데 테스트에서만 안 된다”는 증상에 홀려서, 양쪽에 공통인 코드보다 다른 쪽(테스트 설정)을 먼저 의심했어야 했는데 순서가 거꾸로였던 셈입니다.</p>
+<p>정작 얄궂은 건 <code>var</code> + 기본값일 땐 됐다는 점이었습니다. 잘못된 설정이 “no-arg 생성 후 setter 바인딩”이라는 다른 경로 덕에 우연히 가려져 있었던 거라, <code>val</code>로 바꾸면서 오히려 숨어 있던 문제가 드러난 것이었습니다. 우연히 되던 게 안 되기 시작할 때가, 사실은 원래 틀려 있던 걸 마주하는 순간이기도 했습니다.</p>
+<p>그래서 결국 반영한 것은 두 가지입니다. 프로퍼티 클래스는 <code>@EnableConfigurationProperties</code>(또는 <code>@ConfigurationPropertiesScan</code>)에 등록을 맡기고, 테스트 <code>classes</code>엔 설정 클래스만 올릴 것. 그리고 Spring Boot 3부터 단일 주생성자면 <code>@ConstructorBinding</code>은 생략해도 된다는 것도 이참에 같이 정리해뒀습니다.</p>
+<h1 id="참고">참고</h1>
+<blockquote>
+<ul>
+<li><a href="https://docs.spring.io/spring-boot/api/java/org/springframework/boot/test/context/SpringBootTest.html">Spring Boot: @SpringBootTest (classes 설명)</a></li>
+<li><a href="https://docs.spring.io/spring-boot/reference/features/external-config.html#features.external-config.typesafe-configuration-properties.constructor-binding">Spring Boot Reference: Constructor Binding</a></li>
+</ul>
+</blockquote> </div> <section class="series-foot" data-astro-cid-fzx4jmue> <p class="sf-h" data-astro-cid-fzx4jmue> <span class="sf-label" data-astro-cid-fzx4jmue>시리즈</span> <a href="/series/" data-astro-cid-fzx4jmue>트러블슈팅</a> <span class="sf-count" data-astro-cid-fzx4jmue>전 4편</span> </p> <ol class="sf-list" data-astro-cid-fzx4jmue> <li data-astro-cid-fzx4jmue> <a href="/troubleshooting-es-unnecessary-fields-cpu/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>01</span> <span class="sf-text" data-astro-cid-fzx4jmue>ES 불필요 필드 역직렬화가 API 서버 CPU 스파이크를 일으킨 사건</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/troubleshooting-hashmap-concurrency/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>02</span> <span class="sf-text" data-astro-cid-fzx4jmue>HashMap 동시성으로 기준정보가 꼬인 사건</span> <span class="sf-tag" data-astro-cid-fzx4jmue>이전</span>   </a> </li><li class="cur" data-astro-cid-fzx4jmue> <a href="/troubleshooting-kotlin-configurationproperties/" aria-current="page" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>03</span> <span class="sf-text" data-astro-cid-fzx4jmue>통합테스트에서만 ConfigurationProperties 바인딩이 안 되던 문제</span>  <span class="sf-tag cur" data-astro-cid-fzx4jmue>현재 글</span>  </a> </li><li data-astro-cid-fzx4jmue> <a href="/troubleshooting-jobscope-jobparameters/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>04</span> <span class="sf-text" data-astro-cid-fzx4jmue>JobScope 밖에서 JobParameters가 동작하지 않은 이유</span>   <span class="sf-tag" data-astro-cid-fzx4jmue>다음</span> </a> </li> </ol> </section> <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#배경" data-astro-cid-fzx4jmue>배경</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#해결" data-astro-cid-fzx4jmue>해결</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#원인은-테스트의-component-class-지정이었다" data-astro-cid-fzx4jmue>원인은 테스트의 component class 지정이었다</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#그럼-왜-var--기본값일-땐-됐을까" data-astro-cid-fzx4jmue>그럼 왜 var + 기본값일 땐 됐을까</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#결과" data-astro-cid-fzx4jmue>결과</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/troubleshooting-kotlin-configurationproperties/";
+const pageId = "troubleshooting-kotlin-configurationproperties";
+const pageTitle = "통합테스트에서만 ConfigurationProperties 바인딩이 안 되던 문제";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

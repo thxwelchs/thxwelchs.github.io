@@ -1,0 +1,166 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>프로그래머스 무지의 먹방 라이브</title><meta name="description" content="문제 회전판에 음식 N개가 1 번부터 놓여 있다. 무지는 1 번부터 한 음식을 1초 먹고 다음 번호로 넘어가며, 마지막 번호 다음엔 다시 1 번으로 돈다. 이미 다 먹은 음식은 건너뛴다. 먹기 시작한 지 k 초가 지난 순간 방송이 끊겼을 때, 재개하면 몇 번 음식부터 "><link rel="canonical" href="https://thxwelchs.github.io/pg-42891-mukbang/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="프로그래머스 무지의 먹방 라이브"><meta property="og:description" content="문제 회전판에 음식 N개가 1 번부터 놓여 있다. 무지는 1 번부터 한 음식을 1초 먹고 다음 번호로 넘어가며, 마지막 번호 다음엔 다시 1 번으로 돈다. 이미 다 먹은 음식은 건너뛴다. 먹기 시작한 지 k 초가 지난 순간 방송이 끊겼을 때, 재개하면 몇 번 음식부터 "><meta property="og:url" content="https://thxwelchs.github.io/pg-42891-mukbang/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="프로그래머스 무지의 먹방 라이브"><meta name="twitter:description" content="문제 회전판에 음식 N개가 1 번부터 놓여 있다. 무지는 1 번부터 한 음식을 1초 먹고 다음 번호로 넘어가며, 마지막 번호 다음엔 다시 1 번으로 돈다. 이미 다 먹은 음식은 건너뛴다. 먹기 시작한 지 k 초가 지난 순간 방송이 끊겼을 때, 재개하면 몇 번 음식부터 "><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>프로그래머스 무지의 먹방 라이브</h1> <div class="meta" data-astro-cid-fzx4jmue> 2020-08-30 · PS  </div> <img class="cover" src="/img/covers/ps-algorithm.jpg" alt="프로그래머스 무지의 먹방 라이브" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <h1 id="문제">문제</h1>
+<p>회전판에 음식 N개가 <code>1</code>번부터 놓여 있다. 무지는 <code>1</code>번부터 한 음식을 <strong>1초</strong> 먹고 다음 번호로 넘어가며, 마지막 번호 다음엔 다시 <code>1</code>번으로 돈다. 이미 다 먹은 음식은 건너뛴다. 먹기 시작한 지 <code>k</code>초가 지난 순간 방송이 끊겼을 때, 재개하면 <strong>몇 번 음식부터</strong> 먹어야 하는지 구하면 된다.</p>
+<ul>
+<li><strong>입력</strong>: <code>food_times</code>(각 음식을 다 먹는 데 걸리는 시간, 번호 순), <code>k</code>(끊긴 시각).</li>
+<li><strong>출력</strong>: <code>k</code>초 후 다시 먹어야 할 음식 번호. <code>k</code>초 안에 모두 먹었으면 <code>-1</code>.</li>
+<li><strong>제한</strong>: <code>food_times</code> 길이 ≤ 200,000, 원소 ≤ 100,000,000. <code>k</code>가 매우 클 수 있어 <code>long long</code>.</li>
+</ul>
+<h1 id="접근">접근</h1>
+<p>1초씩 시뮬레이션하면 <code>k</code>가 수조 단위까지 가므로 시간 초과다. <strong>한 바퀴씩 묶어서</strong> 처리해야 한다.</p>
+<p>음식을 <strong>걸리는 시간 오름차순으로 정렬</strong>한다. 그러면 가장 적게 걸리는 음식이 가장 먼저 사라지므로, “지금 남아 있는 음식들을 다 같이 한 겹씩 먹는” 양을 한 번에 계산할 수 있다.</p>
+<ul>
+<li>현재 단계에서 한 겹 더 먹는 데 드는 양 = <code>(이번 음식 시간 - 이전 시간) × 남은 음식 수</code>.</li>
+<li>이 양이 <code>k</code> 이하면, 그만큼 통째로 빼고(이 음식은 다 먹힘) 다음 음식으로 간다.</li>
+<li><code>k</code>보다 크면, 바로 그 구간에서 방송이 끊긴 것이다. 남은 음식들을 <strong>원래 번호 순서로</strong> 다시 정렬한 뒤, <code>k % (남은 음식 수)</code> 번째 음식이 답이다.</li>
+</ul>
+<h1 id="풀이">풀이</h1>
+<blockquote>
+<p>전체 코드: <a href="https://github.com/thxwelchs/algorithm/blob/master/%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%A8%B8%EC%8A%A4/p42891_%EB%AC%B4%EC%A7%80%EC%9D%98%EB%A8%B9%EB%B0%A9%EB%9D%BC%EC%9D%B4%EB%B8%8C.cpp">thxwelchs/algorithm</a></p>
+</blockquote>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="cpp"><code><span class="line"><span style="color:#F97583">#include</span><span style="color:#9ECBFF"> &#x3C;iostream></span></span>
+<span class="line"><span style="color:#F97583">#include</span><span style="color:#9ECBFF"> &#x3C;string></span></span>
+<span class="line"><span style="color:#F97583">#include</span><span style="color:#9ECBFF"> &#x3C;vector></span></span>
+<span class="line"><span style="color:#F97583">#include</span><span style="color:#9ECBFF"> &#x3C;algorithm></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">using</span><span style="color:#F97583"> namespace</span><span style="color:#B392F0"> std</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">typedef</span><span style="color:#F97583"> long</span><span style="color:#F97583"> long</span><span style="color:#E1E4E8"> ll;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// 프로그래머스 42891 무지의 먹방라이브 </span></span>
+<span class="line"><span style="color:#6A737D">// https://www.welcomekakao.com/learn/courses/30/lessons/42891</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">struct</span><span style="color:#B392F0"> Food</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">	int</span><span style="color:#E1E4E8"> time;</span></span>
+<span class="line"><span style="color:#F97583">	int</span><span style="color:#E1E4E8"> index;</span></span>
+<span class="line"><span style="color:#E1E4E8">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">bool</span><span style="color:#B392F0"> timeComparator</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">Food</span><span style="color:#FFAB70"> a</span><span style="color:#E1E4E8">, </span><span style="color:#B392F0">Food</span><span style="color:#FFAB70"> b</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">	return</span><span style="color:#E1E4E8"> a.time </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> b.time;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">bool</span><span style="color:#B392F0"> indexComparator</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">Food</span><span style="color:#FFAB70"> a</span><span style="color:#E1E4E8">, </span><span style="color:#B392F0">Food</span><span style="color:#FFAB70"> b</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">	return</span><span style="color:#E1E4E8"> a.index </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> b.index;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#B392F0"> solution</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">vector</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#F97583">int</span><span style="color:#E1E4E8">> </span><span style="color:#FFAB70">food_times</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">long</span><span style="color:#F97583"> long</span><span style="color:#FFAB70"> k</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">	int</span><span style="color:#E1E4E8"> n </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> food_times.</span><span style="color:#B392F0">size</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">	vector</span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8">Food</span><span style="color:#F97583">></span><span style="color:#B392F0"> foods</span><span style="color:#E1E4E8">(n);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">	// 음식을 먹는데 걸리는 시간, 음식의 번호를 각 원소마다 매겨준다.</span></span>
+<span class="line"><span style="color:#F97583">	for</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">; i </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> n; i</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">		foods[i] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> {food_times[i], i </span><span style="color:#F97583">+</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">};</span></span>
+<span class="line"><span style="color:#E1E4E8">	}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">	// 음식시간 기준으로 오름차순하여 정렬 해놓는다.</span></span>
+<span class="line"><span style="color:#6A737D">	// k까지 도달할 때까지 여러 음식시간들을 한번에 처리하기 위함이다. (정렬 해놓아야 같은 시간이 걸리는 음식들은 한번에 처리가 가능하다.)</span></span>
+<span class="line"><span style="color:#B392F0">	sort</span><span style="color:#E1E4E8">(foods.</span><span style="color:#B392F0">begin</span><span style="color:#E1E4E8">(), foods.</span><span style="color:#B392F0">end</span><span style="color:#E1E4E8">(), timeComparator);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">	int</span><span style="color:#E1E4E8"> prev </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#B392F0">	vector</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">Food</span><span style="color:#E1E4E8">>::iterator it;</span></span>
+<span class="line"><span style="color:#F97583">	for</span><span style="color:#E1E4E8">(it </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> foods.</span><span style="color:#B392F0">begin</span><span style="color:#E1E4E8">(); it </span><span style="color:#F97583">!=</span><span style="color:#E1E4E8"> foods.</span><span style="color:#B392F0">end</span><span style="color:#E1E4E8">(); </span><span style="color:#F97583">++</span><span style="color:#E1E4E8">it, </span><span style="color:#F97583">--</span><span style="color:#E1E4E8">n) {</span></span>
+<span class="line"><span style="color:#6A737D">		// loop i마다 반드시 하나 이상의 음식을 모두 먹는다.</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">		int</span><span style="color:#E1E4E8"> time </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> it -> time, index </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> it -> index;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">		// 현재 존재하는 음식들 중 먹을 수 있는 음식의 최대 갯수</span></span>
+<span class="line"><span style="color:#6A737D">		// 현재 음식시간으로 정렬되어져 있는 음식 배열 기준에서 최대 한번에 처리 할 수 있는 음식 갯수를 뜻한다.</span></span>
+<span class="line"><span style="color:#E1E4E8">		ll eats </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> (ll) (time </span><span style="color:#F97583">-</span><span style="color:#E1E4E8"> prev) </span><span style="color:#F97583">*</span><span style="color:#E1E4E8"> n;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">		// 먹을 수 있는 음식 갯수가 존재하지 않으면, 그냥 넘어간다.</span></span>
+<span class="line"><span style="color:#F97583">		if</span><span style="color:#E1E4E8">(eats</span><span style="color:#F97583">==</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">continue</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">		// 만약 먹을 수 있는 음식 갯수가 k에 도달하지 않는 갯수라면 한번에 모두 처리한다.</span></span>
+<span class="line"><span style="color:#F97583">		if</span><span style="color:#E1E4E8">(eats </span><span style="color:#F97583">&#x3C;=</span><span style="color:#E1E4E8"> k) {</span></span>
+<span class="line"><span style="color:#6A737D">			// 처리 후에 k를 먹은 음식 갯수만큼 차감해주고 나머지 k만큼만 또 진행한다.</span></span>
+<span class="line"><span style="color:#E1E4E8">			k </span><span style="color:#F97583">-=</span><span style="color:#E1E4E8"> eats;</span></span>
+<span class="line"><span style="color:#E1E4E8">			prev </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> time;</span></span>
+<span class="line"><span style="color:#E1E4E8">		} </span><span style="color:#F97583">else</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#6A737D">			// 먹을 수 있는 음식이 k만큼 도달 할 수 있는 경우, 즉 네트워크 지연이 발생한 음식이 있는 구간</span></span>
+<span class="line"><span style="color:#E1E4E8">			k </span><span style="color:#F97583">%=</span><span style="color:#E1E4E8"> n;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">			// k 번째 위치만큼 이동한 다음 음식번호를 지정하기 위해 다시 인덱스 기준으로 오름차순 정렬한다.</span></span>
+<span class="line"><span style="color:#B392F0">			sort</span><span style="color:#E1E4E8">(it, foods.</span><span style="color:#B392F0">end</span><span style="color:#E1E4E8">(), indexComparator);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">			// 현재 위치에서 k번째 위치만큼 이동한 음식을 먹으면 된다. </span></span>
+<span class="line"><span style="color:#6A737D">			// [3, 1, 3, 4] 음식이 있을 때 k가 3이라면 4번째 음식부터 바로 먹으면 되는 것이다.</span></span>
+<span class="line"><span style="color:#F97583">			return</span><span style="color:#E1E4E8"> (it </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> k) -> index;</span></span>
+<span class="line"><span style="color:#E1E4E8">		}</span></span>
+<span class="line"><span style="color:#E1E4E8">	}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">	return</span><span style="color:#F97583"> -</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#B392F0"> main</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#6A737D">	// int answer = solution({3, 1, 2}, 5);</span></span>
+<span class="line"><span style="color:#F97583">	int</span><span style="color:#E1E4E8"> answer </span><span style="color:#F97583">=</span><span style="color:#B392F0"> solution</span><span style="color:#E1E4E8">({</span><span style="color:#79B8FF">7</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">3</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">4</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">3</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">}, </span><span style="color:#79B8FF">9</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">	cout </span><span style="color:#F97583">&#x3C;&#x3C;</span><span style="color:#E1E4E8"> answer </span><span style="color:#F97583">&#x3C;&#x3C;</span><span style="color:#E1E4E8"> endl;</span></span>
+<span class="line"><span style="color:#E1E4E8">	</span></span>
+<span class="line"><span style="color:#F97583">	return</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#문제" data-astro-cid-fzx4jmue>문제</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#접근" data-astro-cid-fzx4jmue>접근</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#풀이" data-astro-cid-fzx4jmue>풀이</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/pg-42891-mukbang/";
+const pageId = "pg-42891-mukbang";
+const pageTitle = "프로그래머스 무지의 먹방 라이브";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

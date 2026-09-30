@@ -1,0 +1,118 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>시스템 디자인 - Design A Key-Value Store</title><meta name="description" content="2편에서 데이터를 여러 노드에 어떻게 나눠 담는지를 살펴봤습니다. 그럼 그렇게 나눈 데이터를 복제하고, 일관성을 맞추는 건 어떻게 할까요. 분산 키-값 저장소(key-value store) 설계가 이 질문에 대한 해답을 어느 정도 제공해줍니다. 이 챕터는 제가 이 책에"><link rel="canonical" href="https://thxwelchs.github.io/sysdesign-3-kv-store/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="시스템 디자인 - Design A Key-Value Store"><meta property="og:description" content="2편에서 데이터를 여러 노드에 어떻게 나눠 담는지를 살펴봤습니다. 그럼 그렇게 나눈 데이터를 복제하고, 일관성을 맞추는 건 어떻게 할까요. 분산 키-값 저장소(key-value store) 설계가 이 질문에 대한 해답을 어느 정도 제공해줍니다. 이 챕터는 제가 이 책에"><meta property="og:url" content="https://thxwelchs.github.io/sysdesign-3-kv-store/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/sysdesign-3-kv-store.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="시스템 디자인 - Design A Key-Value Store"><meta name="twitter:description" content="2편에서 데이터를 여러 노드에 어떻게 나눠 담는지를 살펴봤습니다. 그럼 그렇게 나눈 데이터를 복제하고, 일관성을 맞추는 건 어떻게 할까요. 분산 키-값 저장소(key-value store) 설계가 이 질문에 대한 해답을 어느 정도 제공해줍니다. 이 챕터는 제가 이 책에"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/sysdesign-3-kv-store.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>시스템 디자인 - Design A Key-Value Store</h1> <div class="meta" data-astro-cid-fzx4jmue> 2022-07-20 · 엔지니어링  · <a class="series-badge" href="/series/" data-astro-cid-fzx4jmue>시리즈 · 시스템 디자인</a>  </div> <img class="cover" src="/img/covers/eng/sysdesign-3-kv-store.png" alt="시스템 디자인 - Design A Key-Value Store" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <p><a href="/sysdesign-2-consistent-hashing/">2편</a>에서 데이터를 여러 노드에 어떻게 나눠 담는지를 살펴봤습니다. 그럼 그렇게 나눈 데이터를 복제하고, 일관성을 맞추는 건 어떻게 할까요. 분산 키-값 저장소(key-value store) 설계가 이 질문에 대한 해답을 어느 정도 제공해줍니다. 이 챕터는 제가 이 책에서 가장 오래 붙들고 본 부분이었는데요. “일관성을 어디까지 포기해도 괜찮은 것인가?”에 대한 질문에서 적절한 트레이드오프 기준을 찾기 어려웠기 때문입니다.</p>
+<h1 id="단일-서버-키-값-저장소는-해시테이블">단일 서버 키-값 저장소는 해시테이블!?</h1>
+<p>키-값 저장소는 단일 노드만 보면 단순합니다. 키와 값을 메모리 해시 테이블에 담으면 끝입니다. 메모리가 부족하면 어떻게 할까요? 보통 두 가지 최적화를 더하는 것 같습니다. 데이터 압축, 그리고 자주 쓰는 것만 메모리에 두고 나머지는 디스크로 내리기.</p>
+<p>정작 어려워지는 건 한 대의 서버에서 감당하기 어렵고, 가용성·안정성 때문에 분산 환경을 고려해야 할 때입니다. (즉 분산과 복제가 들어오는 순간입니다.)</p>
+<h1 id="cap-이론cap-theorem">CAP 이론(CAP theorem)</h1>
+<p>분산 저장소를 얘기하려면 CAP 이론에 대해 정리하고 갈 필요가 있습니다. CAP란 결국 아래 세 가지 성질 중 두 가지만 택할 수 있다는 이야기입니다.</p>
+<ul>
+<li>일관성(Consistency): 어느 노드에 접근하든 같은(최신) 데이터를 본다.</li>
+<li>가용성(Availability): 일부 노드가 죽어도 시스템은 항상 응답한다.</li>
+<li>분단 내성(Partition tolerance): 노드 사이 네트워크가 끊겨도 시스템이 계속 동작한다.</li>
+</ul>
+<p>핵심은, 분산 시스템에서 네트워크 장애(P)는 선택이 아니라 반드시 일어나는 일입니다. 그래서 현실적인 대안은 “분단이 생겼을 때 C를 지킬 것인가(CP), A를 지킬 것인가(AP)“로 좁혀집니다.</p>
+<ul>
+<li>CP: 분단 중에는 일관성을 위해 일부 요청을 거부(에러)한다. “틀린 답을 줄 바엔 응답을 안 한다.” 은행 잔고처럼 일관성이 생명인 곳.</li>
+<li>AP: 분단 중에도 응답은 하되, 잠깐 옛 데이터를 줄 수 있다. “조금 틀려도 일단 응답한다.”</li>
+</ul>
+<p><img src="/img/sysdesign-3-kv-store/cap-quorum-v3.png" alt="CAP 삼각형(CP/AP 선택)과 정족수 W+R>N일 때 쓴 노드·읽은 노드가 겹쳐 최신 값을 보장하는 그림"></p>
+<h1 id="구성-요소-1-데이터-분할과-복제">구성 요소 1, 데이터 분할과 복제</h1>
+<p>데이터를 여러 노드에 나눠 담는 분할은 <a href="/sysdesign-2-consistent-hashing/">2편</a>의 일관성 해싱을 그대로 활용합니다. (노드 추가·제거 시 재배치를 줄이고, 가상 노드로 부하를 고르게 만드는 그 방식입니다.)</p>
+<p>복제는 가용성을 위해 데이터를 N개 노드에 복사해 두는 겁니다. 일관성 해싱 링에서 키 위치부터 시계방향으로 만나는 N개 노드에 같은 데이터를 둡니다(가상 노드는 건너뛰어 실제 물리 노드 N개를 고릅니다). 한 발 더 나가면 이 복제본들을 서로 다른 데이터센터에 흩어 두어, 데이터센터 하나가 통째로 죽어도 버티게 합니다.</p>
+<h1 id="구성-요소-2-정족수로-일관성을-눈금처럼-조절한다">구성 요소 2, 정족수로 일관성을 눈금처럼 조절한다</h1>
+<p>일관성을 켜고 끄는 스위치가 아니라 눈금처럼 조절할 수 있다면 어떨까요? 여기서 가장 인상 깊었던 개념이 정족수(quorum)였습니다. 데이터를 N개 노드에 복제한다고 할 때,</p>
+<ul>
+<li>W: 쓰기가 성공으로 인정되려면 응답해야 하는 노드 수</li>
+<li>R: 읽기가 응답을 모으는 노드 수</li>
+</ul>
+<p>이때 <code>W + R > N</code>이면, 읽는 노드 집합과 쓴 노드 집합이 반드시 한 곳 이상 겹칩니다. 그 겹치는 노드가 최신 값을 갖고 있으니 최신 데이터를 읽을 수 있게 됩니다. 일관성을 코드 한 줄의 숫자로 조절하는 셈입니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>N = 3 일 때</span></span>
+<span class="line"><span>- W=1, R=1 → W+R=2 ≤ 3 : 빠르지만 옛 값을 읽을 수 있음 (AP 쪽)</span></span>
+<span class="line"><span>- W=2, R=2 → W+R=4 > 3 : 겹침 보장, 강한 일관성에 가까움 (CP 쪽)</span></span>
+<span class="line"><span>- W=3, R=1 → 쓰기는 느리고 비싸지만 읽기는 빠름</span></span></code></pre>
+<p>함께 정리되는 게 일관성 모델입니다. 강한 일관성(항상 최신), 약한 일관성(최신 보장 안 함), 결과적 일관성(시간이 지나면 모든 복제본이 같아짐). 대부분의 분산 키-값 저장소는 결과적 일관성을 택하는 듯합니다. 결국 “어디까지 옛 값을 견딜 수 있나”를 도메인이 정하는 느낌으로 받아들여졌습니다.</p>
+<h1 id="충돌과-장애를-다루는-장치들">충돌과 장애를 다루는 장치들</h1>
+<p>위에서 계속 다루었듯, 복제를 하면 필연적으로 문제가 따라옵니다. 같은 데이터가 여러 벌이면 어긋나고 충돌하는 건 시간문제 아닐까요? 책은 각 문제마다 해결 장치를 하나씩 붙입니다.</p>
+<ul>
+<li>버전 충돌 해소, 벡터 시계: 같은 키를 두 노드가 동시에 다르게 쓰면 누가 최신인지 모호합니다. 벡터 시계로 버전의 인과관계를 추적해, 한쪽이 다른 쪽의 조상인지(그럼 자동 해소) 아니면 진짜 충돌인지(그럼 클라이언트가 해소)를 판별합니다.</li>
+<li>장애 감지, 가십 프로토콜: 중앙 감시자 없이 노드들이 서로의 상태(heartbeat)를 소문내듯 퍼뜨려 “누가 죽었는지”를 분산 합의합니다.</li>
+<li>일시적 장애, 느슨한 정족수와 힌티드 핸드오프: 노드가 잠깐 죽으면, 원래 받을 노드 대신 다른 노드가 임시로 쓰기를 받아 두었다가 그 노드가 살아나면 넘겨줍니다.</li>
+<li>영구적 장애, 머클 트리: 복제본끼리 데이터가 어긋났을 때, 전체를 비교하지 않고 해시 트리로 다른 부분만 빠르게 찾아 고칩니다.</li>
+</ul>
+<h1 id="쓰기읽기-경로">쓰기·읽기 경로</h1>
+<p>내부 저장 구조도 정리해두면 좋았습니다. 쓰기가 들어오면 먼저 커밋 로그에 적어 내구성을 확보하고, 메모리의 멤테이블에 담습니다. 멤테이블이 일정 크기에 차면 디스크에 정렬된 파일로 한꺼번에 내립니다. 읽을 땐 멤테이블을 먼저 보고, 없으면 여러 SSTable을 뒤지는데, 이때 블룸 필터(bloom filter)로 “이 파일엔 그 키가 없음”을 빠르게 걸러 디스크 접근을 줄입니다. 여기서도 쓰기를 빠른 순차 쓰기로 만드는 대신 읽기 복잡도를 감수하는 트레이드오프가 보였습니다.</p>
+<p>위에 다룬 두 개념 중, 멤테이블(memtable)은 쓰기가 들어오면 가장 먼저 담기는 메모리 안의 정렬된 자료구조입니다. 빠른 메모리에 모아 두다가 일정 크기를 넘으면 디스크의 SSTable로 한꺼번에 내리는데, 그래서 디스크 쓰기가 작은 단위로 흩어지지 않고 띄엄띄엄 순차로 일어납니다.</p>
+<p>블룸 필터(bloom filter)는 “이 집합에 이 원소가 있는가”를 아주 적은 메모리로 빠르게 가늠하는 확률적 자료구조입니다. 답이 한쪽으로만 정확한 게 특징인데, 없다의 답은 항상 맞고 있다의 답은 가끔 틀릴 수 있습니다. 이렇게 틀리는 경우를 거짓 양성이라고 합니다. 그래서 SSTable마다 블룸 필터를 두면 “이 파일엔 그 키가 확실히 없다”를 디스크를 읽기 전에 걸러낼 수 있어, 헛된 디스크 접근을 줄여줍니다.</p>
+<h1 id="정리">정리</h1>
+<p>키-값 저장소 챕터의 핵심은 “분산되면 CAP를 모두 만족할 수 없고, 정족수(W, R)로 일관성을 눈금처럼 조절한다”였음. <a href="/sysdesign-1-scale/">1편</a>부터 반복되는 그 문장, 확장과 분산은 일관성을 깎아 성능·가용성을 사는 일을 이 챕터에서 명확하게 소개해주었음.</p>
+<h1 id="참고">참고</h1>
+<blockquote>
+<p><a href="https://www.amazon.com/System-Design-Interview-insiders-Second/dp/B08CMF2CQF">Alex Xu, <em>System Design Interview — An Insider’s Guide</em> (Vol.1), Ch.6</a></p>
+</blockquote> </div> <section class="series-foot" data-astro-cid-fzx4jmue> <p class="sf-h" data-astro-cid-fzx4jmue> <span class="sf-label" data-astro-cid-fzx4jmue>시리즈</span> <a href="/series/" data-astro-cid-fzx4jmue>시스템 디자인</a> <span class="sf-count" data-astro-cid-fzx4jmue>전 6편</span> </p> <ol class="sf-list" data-astro-cid-fzx4jmue> <li data-astro-cid-fzx4jmue> <a href="/sysdesign-1-scale/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>01</span> <span class="sf-text" data-astro-cid-fzx4jmue>Scale From Zero To Millions Of Users</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/sysdesign-2-consistent-hashing/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>02</span> <span class="sf-text" data-astro-cid-fzx4jmue>Design Consistent Hashing</span> <span class="sf-tag" data-astro-cid-fzx4jmue>이전</span>   </a> </li><li class="cur" data-astro-cid-fzx4jmue> <a href="/sysdesign-3-kv-store/" aria-current="page" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>03</span> <span class="sf-text" data-astro-cid-fzx4jmue>Design A Key-Value Store</span>  <span class="sf-tag cur" data-astro-cid-fzx4jmue>현재 글</span>  </a> </li><li data-astro-cid-fzx4jmue> <a href="/sysdesign-4-read-fanout/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>04</span> <span class="sf-text" data-astro-cid-fzx4jmue>Design A News Feed System</span>   <span class="sf-tag" data-astro-cid-fzx4jmue>다음</span> </a> </li><li data-astro-cid-fzx4jmue> <a href="/sysdesign-5-search-es/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>05</span> <span class="sf-text" data-astro-cid-fzx4jmue>Design A Search Autocomplete System</span>    </a> </li><li data-astro-cid-fzx4jmue> <a href="/sysdesign-6-rate-limiter/" data-astro-cid-fzx4jmue> <span class="sf-num" data-astro-cid-fzx4jmue>06</span> <span class="sf-text" data-astro-cid-fzx4jmue>Design A Rate Limiter</span>    </a> </li> </ol> </section> <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#단일-서버-키-값-저장소는-해시테이블" data-astro-cid-fzx4jmue>단일 서버 키-값 저장소는 해시테이블!?</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#cap-이론cap-theorem" data-astro-cid-fzx4jmue>CAP 이론(CAP theorem)</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#구성-요소-1-데이터-분할과-복제" data-astro-cid-fzx4jmue>구성 요소 1, 데이터 분할과 복제</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#구성-요소-2-정족수로-일관성을-눈금처럼-조절한다" data-astro-cid-fzx4jmue>구성 요소 2, 정족수로 일관성을 눈금처럼 조절한다</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#충돌과-장애를-다루는-장치들" data-astro-cid-fzx4jmue>충돌과 장애를 다루는 장치들</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#쓰기읽기-경로" data-astro-cid-fzx4jmue>쓰기·읽기 경로</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#정리" data-astro-cid-fzx4jmue>정리</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/sysdesign-3-kv-store/";
+const pageId = "sysdesign-3-kv-store";
+const pageTitle = "시스템 디자인 - Design A Key-Value Store";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

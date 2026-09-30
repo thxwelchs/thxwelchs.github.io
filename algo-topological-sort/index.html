@@ -1,0 +1,116 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>위상 정렬 (Topological Sort) 정리</title><meta name="description" content="위상 정렬 방향 그래프에서 선후 관계(A 다음에 B)를 어기지 않도록 정점들을 한 줄로 나열하는 것. &#34;선수 과목을 다 들어야 다음 과목을 듣는다&#34;, &#34;이 작업이 끝나야 저 작업을 시작한다&#34; 같은 순서 제약을 만족하는 순서를 구할 때 쓴다. 전제 - DAG(사이클 없는"><link rel="canonical" href="https://thxwelchs.github.io/algo-topological-sort/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="위상 정렬 (Topological Sort) 정리"><meta property="og:description" content="위상 정렬 방향 그래프에서 선후 관계(A 다음에 B)를 어기지 않도록 정점들을 한 줄로 나열하는 것. &#34;선수 과목을 다 들어야 다음 과목을 듣는다&#34;, &#34;이 작업이 끝나야 저 작업을 시작한다&#34; 같은 순서 제약을 만족하는 순서를 구할 때 쓴다. 전제 - DAG(사이클 없는"><meta property="og:url" content="https://thxwelchs.github.io/algo-topological-sort/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="위상 정렬 (Topological Sort) 정리"><meta name="twitter:description" content="위상 정렬 방향 그래프에서 선후 관계(A 다음에 B)를 어기지 않도록 정점들을 한 줄로 나열하는 것. &#34;선수 과목을 다 들어야 다음 과목을 듣는다&#34;, &#34;이 작업이 끝나야 저 작업을 시작한다&#34; 같은 순서 제약을 만족하는 순서를 구할 때 쓴다. 전제 - DAG(사이클 없는"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>위상 정렬 (Topological Sort) 정리</h1> <div class="meta" data-astro-cid-fzx4jmue> 2019-03-10 · PS  </div> <img class="cover" src="/img/covers/ps-algorithm.jpg" alt="위상 정렬 (Topological Sort) 정리" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <h1 id="위상-정렬">위상 정렬</h1>
+<p>방향 그래프에서 선후 관계(A 다음에 B)를 어기지 않도록 정점들을 한 줄로 나열하는 것.</p>
+<p>“선수 과목을 다 들어야 다음 과목을 듣는다”, “이 작업이 끝나야 저 작업을 시작한다” 같은 순서 제약을 만족하는 순서를 구할 때 쓴다.</p>
+<p><img src="/img/algo-topological-sort/topological-sort-v2.gif" alt="위상 정렬 동작 과정 - 진입차수 0인 정점부터 차례로 빼낸다"></p>
+<h2 id="전제">전제</h2>
+<ul>
+<li>DAG(사이클 없는 방향 그래프) 에서만 가능하다. 사이클이 있으면 서로가 서로의 선행이 되어 순서를 정할 수 없다.</li>
+<li>정답 순서가 <strong>여러 개일 수 있다.</strong></li>
+</ul>
+<h2 id="방법-1-진입차수--큐-kahn-알고리즘">방법 1: 진입차수 + 큐 (Kahn 알고리즘)</h2>
+<ol>
+<li>각 정점의 <strong>진입차수</strong>(자기를 가리키는 간선 수)를 센다.</li>
+<li>진입차수가 0인 정점을 큐에 넣는다. (선행 조건이 없는 정점)</li>
+<li>큐에서 하나 꺼내 결과에 추가하고, 그 정점에서 나가는 간선을 제거하며 이웃의 진입차수를 줄인다.</li>
+<li>그 과정에서 진입차수가 0이 된 정점을 큐에 넣는다.</li>
+<li>큐가 빌 때까지 반복.</li>
+</ol>
+<p>결과에 들어간 정점 수가 전체보다 적으면 → <strong>사이클이 존재</strong>한다는 뜻.</p>
+<h2 id="방법-2-dfs-후위-순회">방법 2: DFS 후위 순회</h2>
+<p>DFS로 들어갔다가 빠져나오는 순간(후위)에 스택에 쌓고, 마지막에 스택을 뒤집으면 위상 순서가 된다.</p>
+<h2 id="시간복잡도">시간복잡도</h2>
+<p><code>O(V + E)</code></p>
+<h2 id="기본-코드-구조-kahn">기본 코드 구조 (Kahn)</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="cpp"><code><span class="line"><span style="color:#F97583">#include</span><span style="color:#9ECBFF"> &#x3C;vector></span></span>
+<span class="line"><span style="color:#F97583">#include</span><span style="color:#9ECBFF"> &#x3C;queue></span></span>
+<span class="line"><span style="color:#F97583">using</span><span style="color:#F97583"> namespace</span><span style="color:#B392F0"> std</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">vector</span><span style="color:#F97583">&#x3C;int></span><span style="color:#E1E4E8"> adj[</span><span style="color:#79B8FF">100001</span><span style="color:#E1E4E8">];</span></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#E1E4E8"> indegree[</span><span style="color:#79B8FF">100001</span><span style="color:#E1E4E8">];</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">vector</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#F97583">int</span><span style="color:#E1E4E8">> </span><span style="color:#B392F0">topologicalSort</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#FFAB70"> n</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">    queue</span><span style="color:#F97583">&#x3C;int></span><span style="color:#E1E4E8"> q;</span></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> i </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">; i </span><span style="color:#F97583">&#x3C;=</span><span style="color:#E1E4E8"> n; i</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> (indegree[i] </span><span style="color:#F97583">==</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">) q.</span><span style="color:#B392F0">push</span><span style="color:#E1E4E8">(i);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    vector</span><span style="color:#F97583">&#x3C;int></span><span style="color:#E1E4E8"> order;</span></span>
+<span class="line"><span style="color:#F97583">    while</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">q.</span><span style="color:#B392F0">empty</span><span style="color:#E1E4E8">()) {</span></span>
+<span class="line"><span style="color:#F97583">        int</span><span style="color:#E1E4E8"> cur </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> q.</span><span style="color:#B392F0">front</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">        q.</span><span style="color:#B392F0">pop</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">        order.</span><span style="color:#B392F0">push_back</span><span style="color:#E1E4E8">(cur);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">        for</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">int</span><span style="color:#E1E4E8"> next : adj[cur]) {</span></span>
+<span class="line"><span style="color:#F97583">            if</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">--</span><span style="color:#E1E4E8">indegree[next] </span><span style="color:#F97583">==</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">) q.</span><span style="color:#B392F0">push</span><span style="color:#E1E4E8">(next);</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#6A737D">    // order.size() &#x3C; n 이면 사이클 존재</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> order;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#위상-정렬" data-astro-cid-fzx4jmue>위상 정렬</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#전제" data-astro-cid-fzx4jmue>전제</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#방법-1-진입차수--큐-kahn-알고리즘" data-astro-cid-fzx4jmue>방법 1: 진입차수 + 큐 (Kahn 알고리즘)</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#방법-2-dfs-후위-순회" data-astro-cid-fzx4jmue>방법 2: DFS 후위 순회</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#시간복잡도" data-astro-cid-fzx4jmue>시간복잡도</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#기본-코드-구조-kahn" data-astro-cid-fzx4jmue>기본 코드 구조 (Kahn)</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/algo-topological-sort/";
+const pageId = "algo-topological-sort";
+const pageTitle = "위상 정렬 (Topological Sort) 정리";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

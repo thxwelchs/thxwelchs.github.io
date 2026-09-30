@@ -1,0 +1,235 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Kotlin JPA Entity 모델링하기</title><meta name="description" content="최근 스프링부트를 개발 할 때 Kotlin으로 많이 개발하고 있는데요, 특히나 이 포스팅에서는, JPA Entity 모델링 을 할 때 주의해야 할 점들을 살펴보겠습니다. Entity 모델링 먼저 코틀린에서 Entity 클래스를 작성할 때는 data class 로 선언 "><link rel="canonical" href="https://thxwelchs.github.io/Kotlin%20JPA%20Entity%20%EB%AA%A8%EB%8D%B8%EB%A7%81%ED%95%98%EA%B8%B0/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="Kotlin JPA Entity 모델링하기"><meta property="og:description" content="최근 스프링부트를 개발 할 때 Kotlin으로 많이 개발하고 있는데요, 특히나 이 포스팅에서는, JPA Entity 모델링 을 할 때 주의해야 할 점들을 살펴보겠습니다. Entity 모델링 먼저 코틀린에서 Entity 클래스를 작성할 때는 data class 로 선언 "><meta property="og:url" content="https://thxwelchs.github.io/Kotlin%20JPA%20Entity%20%EB%AA%A8%EB%8D%B8%EB%A7%81%ED%95%98%EA%B8%B0/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/eng/Kotlin%20JPA%20Entity%20%EB%AA%A8%EB%8D%B8%EB%A7%81%ED%95%98%EA%B8%B0.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Kotlin JPA Entity 모델링하기"><meta name="twitter:description" content="최근 스프링부트를 개발 할 때 Kotlin으로 많이 개발하고 있는데요, 특히나 이 포스팅에서는, JPA Entity 모델링 을 할 때 주의해야 할 점들을 살펴보겠습니다. Entity 모델링 먼저 코틀린에서 Entity 클래스를 작성할 때는 data class 로 선언 "><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/eng/Kotlin%20JPA%20Entity%20%EB%AA%A8%EB%8D%B8%EB%A7%81%ED%95%98%EA%B8%B0.png"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>Kotlin JPA Entity 모델링하기</h1> <div class="meta" data-astro-cid-fzx4jmue> 2020-03-06 · 엔지니어링  </div> <img class="cover" src="/img/covers/eng/Kotlin JPA Entity 모델링하기.png" alt="Kotlin JPA Entity 모델링하기" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <p>최근 스프링부트를 개발 할 때 Kotlin으로 많이 개발하고 있는데요,</p>
+<p>특히나 이 포스팅에서는, JPA Entity 모델링 을 할 때 주의해야 할 점들을 살펴보겠습니다.</p>
+<h1 id="entity-모델링">Entity 모델링</h1>
+<p>먼저 코틀린에서 Entity 클래스를 작성할 때는 <code>data class</code> 로 선언 하는 것보다는 일반 클래스로 선언하는 것이 좋습니다. 그 이유는, <code>data class</code> 는 <code>open</code> 혹은 <code>abstract</code>와 같은 키워드를 허용할 수 없으므로 다른 클래스의 부모클래스가 될 수 없기 때문입니다.  그래서 자바에서는 클래스 구분이 없어 신경쓰지 않았던 상속성을 가져가기 위함과, 연관되어있는 다른 Entity가 있다면 지연로딩을 위해서라도 일반 <code>class</code>로 선언 후 <code>open</code> 키워드를 붙여주어야 합니다.</p>
+<ol>
+<li>JPA에서 지향하는 Entity 객체는 Entity끼리도 상속성을 이룰 수 있어야 합니다.</li>
+<li>지연로딩 시 데이터 클래스에서 작동하지 않는 문제</li>
+</ol>
+<p><br><br></p>
+<h2 id="entity가-되기-위한-클래스-표준-entity-pojo-model">Entity가 되기 위한 클래스 표준 (Entity POJO Model)</h2>
+<h3 id="jpa에서-말하는-entity-pojo-model이란-jpa는-그저-java에서-정의한-orm-표준">JPA에서 말하는 Entity POJO Model이란? (JPA는 그저 java에서 정의한 ORM 표준)</h3>
+<ol>
+<li>Entity는 final 클래스이면 안된다. ( 메소드나, 인스턴스 변수 또한 마찬가지 )</li>
+<li>Entity는 최상위 클래스여야 한다.</li>
+<li>Entity는 추상클래스, 구체클래스 모두 될 수 있다. (Entity는 Entity class뿐만 아니라 Entity가 아닌 class도 확장 할 수 있으며 Entity가 아닌 class는 Entity class를 확장 할 수 있습니다.)</li>
+<li>Entity는 public 또는 protected 접근제한자를 가진 인수없는 생성자(no-arg) 가 있어야 한다. (추가적으로 생성자를 정의 할 수도 있음)</li>
+<li>Enum 또는 interface는 Entity가 될 수 없다.</li>
+</ol>
+<h3 id="hibernate에서-말하는-entity-model이란-hibernate는-jpa의-실질적인-구현체">Hibernate에서 말하는 Entity Model이란? (Hibernate는 JPA의 실질적인 구현체)</h3>
+<ol>
+<li>Entity는 public 또는 protected 접근제한자를 가진 인수없는 생성자(no-arg) 가 있어야 한다. (추가적으로 생성자를 정의 할 수도 있음)</li>
+<li>Entity는 최상위 클래스 일 필요는 없다.</li>
+<li>기술적으로 hibernate는  영속 클래스 혹은 비영속 클래스 상태의 접근 방법(getter, setter 메소드)을 사용하여 최종 영속상태에 접근할 수 있다.
+그러나 이것은 Hibernate가 Entity의 lazy loading을 위한 프록시를 생성할 수 없게 하므로 일반적으로는 좋지 않다. <strong>즉 하이버네이트에서는 final 클래스가 아닌 클래스를 선호한다! 왜? 영속 상태를 관리하기 위해 proxy를 사용하고, lazy loading을 proxy 객체로 처리해야 하기 때문에</strong></li>
+</ol>
+<p>위와 같이 Entity 클래스가 되기 위해 권장되는 규칙이 꽤나 있는데, 저런 규칙을 지키지 않으면 어떤 문제를 일으키는지 코드로 살펴보겠습니다.</p>
+<p>다음과 같은 양방향성을 가진 두 엔티티가 있습니다. ( 최근 연습중인 도메인 모델이 식당입니다. ㅋㅋ)</p>
+<p><img src="/img/KotlinJPAEntityModeling/Untitled.png" alt="img/KotlinJPAEntity모델링하기/Untitled.png"></p>
+<p><img src="/img/KotlinJPAEntityModeling/Untitled1.png" alt="img/KotlinJPAEntity모델링하기/Untitled%201.png"></p>
+<p><br><br></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#B392F0">@Entity</span></span>
+<span class="line"><span style="color:#F97583">data</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> Restaurant</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#F97583">        var</span><span style="color:#E1E4E8"> name: </span><span style="color:#B392F0">String</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> ""</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        @OneToMany</span><span style="color:#E1E4E8">(mappedBy </span><span style="color:#F97583">=</span><span style="color:#9ECBFF"> "restaurant"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#B392F0">        @OrderBy</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"name asc"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">        var</span><span style="color:#E1E4E8"> menus: </span><span style="color:#B392F0">MutableSet</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">Menu</span><span style="color:#E1E4E8">> </span><span style="color:#F97583">=</span><span style="color:#B392F0"> TreeSet</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"><span style="color:#E1E4E8">): </span><span style="color:#B392F0">MutableEntity</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">        fun</span><span style="color:#B392F0"> addMenu</span><span style="color:#E1E4E8">(menu: </span><span style="color:#B392F0">Menu</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">                menus.</span><span style="color:#B392F0">add</span><span style="color:#E1E4E8">(menu)</span></span>
+<span class="line"><span style="color:#E1E4E8">                menu.restaurant </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> this</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@Entity</span></span>
+<span class="line"><span style="color:#F97583">data</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> Menu</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#F97583">        var</span><span style="color:#E1E4E8"> name: </span><span style="color:#B392F0">String</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> ""</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#F97583">        var</span><span style="color:#E1E4E8"> price: </span><span style="color:#B392F0">BigDecimal</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> BigDecimal.ZERO,</span></span>
+<span class="line"><span style="color:#B392F0">        @ManyToOne</span><span style="color:#E1E4E8">(fetch </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> FetchType.LAZY)</span></span>
+<span class="line"><span style="color:#B392F0">        @JoinColumn</span><span style="color:#E1E4E8">(name </span><span style="color:#F97583">=</span><span style="color:#9ECBFF"> "restaurant_id"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">        var</span><span style="color:#E1E4E8"> restaurant: </span><span style="color:#B392F0">Restaurant</span></span>
+<span class="line"><span style="color:#E1E4E8">): </span><span style="color:#B392F0">MutableEntity</span><span style="color:#E1E4E8">()</span></span></code></pre>
+<p>보시는 것과 같이 두 엔티티는 <code>@OneToMany</code>, <code>@ManyToOne</code> 으로 양방향을 가지고 있고, <code>LAZY fetch</code> 되게 되어있습니다. (<code>@OneToMany</code>에서 fetch 는 default가 LAZY 방식이므로 생략 하였습니다.)</p>
+<p>앞서 말씀드렸다시피 data class는 <code>open</code>이나 <code>abstract</code>가 될 수 없고 기본적으로 <code>final</code>로 선언되어집니다. 위 두 클래스를 자바 코드로 변형해보면 다음과 같습니다.</p>
+<p><img src="/img/KotlinJPAEntityModeling/Untitled2.png" alt="img/KotlinJPAEntity모델링하기/Untitled%202.png">
+<br><br>
+<img src="/img/KotlinJPAEntityModeling/Untitled3.png" alt="img/KotlinJPAEntityModeling/Untitled%203.png"></p>
+<p>위 코드는 IntelliJ에서 kotlin → kotlin bytecode → decompile java code 한 결과라서 가독성은 떨어집니다.</p>
+<p>이제 간단한 repository test를 통해 Menu Entity를 조회 하고 Restaurant Entity를 지연로딩 해보겠습니다.</p>
+<p><strong>코드</strong></p>
+<p><img src="/img/KotlinJPAEntityModeling/Untitled4.png" alt="img/KotlinJPAEntityModeling/Untitled%204.png">
+<br><br>
+<strong>결과</strong></p>
+<p>정상적으로 초록막대와 함께 query 로그도 한번만 찍힌 것을 확인했습니다.</p>
+<p><img src="/img/KotlinJPAEntityModeling/Untitled5.png" alt="img/KotlinJPAEntityModeling/Untitled%205.png"></p>
+<p><img src="/img/KotlinJPAEntityModeling/Untitled6.png" alt="img/KotlinJPAEntityModeling/Untitled%206.png"></p>
+<p>그럼 정말로 문제 없는걸까요? 더 확실히 테스트해보기 위해 직렬화가 필요한 controller 테스트를 해보았습니다. ( 이 테스트는 service를 mocking하는 단위테스트로 작성하지 않고, 실질적인 테스트가 필요하여, 통합테스트로 진행했습니다. )</p>
+<p><strong>코드</strong></p>
+<p><img src="/img/KotlinJPAEntityModeling/Untitled7.png" alt="img/KotlinJPAEntityModeling/Untitled%207.png">
+<br><br>
+<strong>결과</strong></p>
+<p>테스트의 결과는 초록막대인데.. 찍힌 로그가 뭔가 이상합니다</p>
+<p><img src="/img/KotlinJPAEntityModeling/Untitled8.png" alt="img/KotlinJPAEntityModeling/Untitled%208.png"></p>
+<p><img src="/img/KotlinJPAEntityModeling/Untitled9.png" alt="img/KotlinJPAEntityModeling/Untitled%209.png"></p>
+<p>객체를 직렬화 하기전까지는 서로 참조하는 값을 계속해서 참조 할 일이 없지만, 직렬화를 하기 위해 참조하는 과정에서 뭔가 하이버네이트 엔진이 HIkariProxyResultSet으로 부터 결과 값을 가져오는데 무한적으로 재귀호출을 하는 것 같습니다. ( 개발환경에서 허용된 메모리만큼 재귀호출이 되다가 결국엔 StackOverFlow가 발생합니다. 내부적으로 예외처리가 되있어 직접적으로 에러로 표시되진 않는 것 같습니다. )</p>
+<p>로그를 자세히 보시면 HikariProxyResultSet의 HashCode가 계속해서 바뀌고, 계속해서 새로운 객체를 참조하여 DB 데이터의 결과값을 가져오려고 시도합니다.</p>
+<p>이 문제를 해결하기 위해 제가 시도한 방법은 다음과 같습니다.</p>
+<ul>
+<li><code>data class</code> 를 <code>일반 class</code> 로 변경 후 <code>Hibernate</code>가 <code>Lazy load 객체</code>를 가져올 때 정상적으로 작동 할 수 있게 open 키워드 달아주어 상속 가능하게 만들기</li>
+<li>직렬화 시 무한 재귀에 빠지지 않게 하기 위해 <code>HibernateModule</code>을 빈으로 등록하여 jackson에configuration 하기</li>
+</ul>
+<h3 id="data-class--class-로-변경-후-open-키워드-달기">Data class → class 로 변경 후 open 키워드 달기</h3>
+<p>먼저 data class를 일반 class로 바꾸기</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#B392F0">@Entity</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> Menu</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#F97583">        var</span><span style="color:#E1E4E8"> name: </span><span style="color:#B392F0">String</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> ""</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#F97583">        var</span><span style="color:#E1E4E8"> price: </span><span style="color:#B392F0">BigDecimal</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> BigDecimal.ZERO,</span></span>
+<span class="line"><span style="color:#B392F0">        @ManyToOne</span><span style="color:#E1E4E8">(fetch </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> FetchType.LAZY)</span></span>
+<span class="line"><span style="color:#B392F0">        @JoinColumn</span><span style="color:#E1E4E8">(name </span><span style="color:#F97583">=</span><span style="color:#9ECBFF"> "restaurant_id"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">        var</span><span style="color:#E1E4E8"> restaurant: </span><span style="color:#B392F0">Restaurant</span></span>
+<span class="line"><span style="color:#E1E4E8">): </span><span style="color:#B392F0">MutableEntity</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@Entity</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> Restaurant</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#F97583">        var</span><span style="color:#E1E4E8"> name: </span><span style="color:#B392F0">String</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> ""</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        @OneToMany</span><span style="color:#E1E4E8">(mappedBy </span><span style="color:#F97583">=</span><span style="color:#9ECBFF"> "restaurant"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#B392F0">        @OrderBy</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"name asc"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">        var</span><span style="color:#E1E4E8"> menus: </span><span style="color:#B392F0">MutableSet</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">Menu</span><span style="color:#E1E4E8">> </span><span style="color:#F97583">=</span><span style="color:#B392F0"> TreeSet</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"><span style="color:#E1E4E8">): </span><span style="color:#B392F0">MutableEntity</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">        internal</span><span style="color:#F97583"> fun</span><span style="color:#B392F0"> addMenu</span><span style="color:#E1E4E8">(menu: </span><span style="color:#B392F0">Menu</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">                menus.</span><span style="color:#B392F0">add</span><span style="color:#E1E4E8">(menu)</span></span>
+<span class="line"><span style="color:#E1E4E8">                menu.restaurant </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> this</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>아까 위에서 소개해드렸던 JPA 표준 POJO Model 객체가 되기 위해</p>
+<p>일일이 entity 마다 open 키워드와 빈 생성자를 작성하긴 귀찮으니,  kotlin jpa plugin 을 사용하여 자동적으로 모든 entity에 적용 시켜주겠습니다.</p>
+<p>적용하는 방법은 <code>build.gradle</code>(groovy dsl) 혹은 <code>build.gradle.kts</code> (kotlin dsl) 에서 설정 할 수 있습니다.</p>
+<p>저는 kotlin dsl을 사용하고 있으므로 다음과 같이 작성했습니다.</p>
+<p><em>build.grade.kts</em></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#B392F0">plugins</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">        ..</span><span style="color:#E1E4E8">.</span></span>
+<span class="line"><span style="color:#B392F0">    kotlin</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"plugin.jpa"</span><span style="color:#E1E4E8">) version </span><span style="color:#9ECBFF">"1.3.61"</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">noArg</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    annotation</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"javax.persistence.Entity"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    annotation</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"javax.persistence.MappedSuperclass"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    annotation</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"javax.persistence.Embeddable"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">allOpen</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    annotation</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"javax.persistence.Entity"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    annotation</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"javax.persistence.MappedSuperclass"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    annotation</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"javax.persistence.Embeddable"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>위와 같이 작성하고 나면 <code>Entity</code>, <code>MappedSuperclass</code>, <code>Embeddable</code> 의 어노테이션이 붙은 클래스에 빈 생성자와 open 키워드가 자동으로 정의됩니다.</p>
+<p><code>open</code> 키워드를 코드에서 정의하지 않았는데도, 자바로 변환한 코드에서는 원래의 <code>final class</code> 에서 <code>일반 class</code> 로 변경되었습니다.</p>
+<p><img src="/img/KotlinJPAEntityModeling/Untitled10.png" alt="img/KotlinJPAEntityModeling/Untitled%2010.png"></p>
+<h3 id="jackson-configuration">Jackson configuration</h3>
+<p>아직 lazy 로드 되기 전의 proxy 객체 또한 직렬화 하려고 하면 에러가 나기 때문에 다음과 같은 솔루션으로 직렬화 시 문제를 해결합니다. ( lazy 로드 되기 전의 proxy 객체는 null 처리 해줌 )</p>
+<p>저는 hibernate5 버전을 사용하고 있으므로 다음과 같이 작성 했습니다.</p>
+<p><em>build.gradle.kts</em></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#B392F0">dependencies</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    ..</span><span style="color:#E1E4E8">.</span></span>
+<span class="line"><span style="color:#6A737D">    // Hibernate5Module이 지연로딩 되는 객체의 프로퍼티 직렬화를 가능하게 해준다. (jackson ObjectMapper support)</span></span>
+<span class="line"><span style="color:#B392F0">    implementation</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"com.fasterxml.jackson.datatype:jackson-datatype-hibernate5:2.9.8"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><em>JacksonConfig.kt</em></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="kotlin"><code><span class="line"><span style="color:#B392F0">@Configuration</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> JacksonConfig</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">    @Bean</span></span>
+<span class="line"><span style="color:#F97583">    fun</span><span style="color:#B392F0"> hibernate5Module</span><span style="color:#E1E4E8">(): </span><span style="color:#B392F0">Hibernate5Module</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#6A737D">        // Hibernate5Module이 지연로딩 되는 객체의 프로퍼티 값이 비어있더라도 직렬화를 가능하게 해준다.</span></span>
+<span class="line"><span style="color:#6A737D">        // 이 모듈을 bean으로 등록 안하면 hibernateLazyInitializer 라는 하이버네이트 프록시 객체의 프로퍼티를 직렬화 하려다가 에러남</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#B392F0"> Hibernate5Module</span><span style="color:#E1E4E8">()</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>위 처럼 변경해준 뒤 다시 테스트를 돌려보면</p>
+<p>정상적으로 테스트 통과 후 한번만 쿼리하는 것을 볼 수 있습니다</p>
+<p><img src="/img/KotlinJPAEntityModeling/Untitled11.png" alt="img/KotlinJPAEntityModeling/Untitled%2011.png">
+<br><br>
+<img src="/img/KotlinJPAEntityModeling/Untitled12.png" alt="img/KotlinJPAEntityModeling/Untitled%2012.png"></p>
+<p>실제로 데이터가 조회되었고, lazy fetch 모드로 설정되있고, 아직 꺼내지 않은 객체 restaurant.menus에 대해서는 null 처리가 되어있습니다.</p>
+<p>하지만 여기서 끝이 아닙니다. 현재까지는양방향관계에서  <code>@ManyToOne</code> 를 가진 쪽의 엔티티 조회에서 문제를 해결했는데요,</p>
+<p>아직 <code>@OneToMany</code>의 관계를 가진 엔티티를 lazy load 조회 할 때 문제가 있습니다.
+<br>
+이 부분까지 해결하기 위해서는 여러가지의 솔루션이 있는데 그 중 하나를 다음 포스팅에서 소개하겠습니다.
+<a href="https://thxwelchs.github.io/JPA%20%EC%96%91%EB%B0%A9%ED%96%A5%20Entity%20%EB%AC%B4%ED%95%9C%20%EC%9E%AC%EA%B7%80%20%EB%AC%B8%EC%A0%9C%20%ED%95%B4%EA%B2%B0/">JPA 양방향 관계 무한재귀 해결 포스팅 보러가기</a></p>
+<p>감사합니다.</p>
+<h1 id="참고">참고</h1>
+<blockquote>
+<p>하이버네이트 공식 엔티티 모델링 가이드 <a href="https://docs.jboss.org/hibernate/orm/5.4/userguide/html_single/Hibernate_User_Guide.html#entity">https://docs.jboss.org/hibernate/orm/5.4/userguide/html_single/Hibernate_User_Guide.html#entity</a>
+kotlin compiler-plugins(no-arg, all-open) <a href="https://kotlinlang.org/docs/reference/compiler-plugins.html">https://kotlinlang.org/docs/reference/compiler-plugins.html</a>
+코틀린 JPA <a href="https://github.com/spring-guides/tut-spring-boot-kotlin#persistence-with-jpa">https://github.com/spring-guides/tut-spring-boot-kotlin#persistence-with-jpa</a>
+객체지향적 상속성 활용한 엔티티 설계하기 <a href="https://victorydntmd.tistory.com/209">https://victorydntmd.tistory.com/209</a></p>
+</blockquote> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#entity-모델링" data-astro-cid-fzx4jmue>Entity 모델링</a> </li><li class="lv1" data-astro-cid-fzx4jmue> <a href="#entity가-되기-위한-클래스-표준-entity-pojo-model" data-astro-cid-fzx4jmue>Entity가 되기 위한 클래스 표준 (Entity POJO Model)</a> </li><li class="lv2" data-astro-cid-fzx4jmue> <a href="#jpa에서-말하는-entity-pojo-model이란-jpa는-그저-java에서-정의한-orm-표준" data-astro-cid-fzx4jmue>JPA에서 말하는 Entity POJO Model이란? (JPA는 그저 java에서 정의한 ORM 표준)</a> </li><li class="lv2" data-astro-cid-fzx4jmue> <a href="#hibernate에서-말하는-entity-model이란-hibernate는-jpa의-실질적인-구현체" data-astro-cid-fzx4jmue>Hibernate에서 말하는 Entity Model이란? (Hibernate는 JPA의 실질적인 구현체)</a> </li><li class="lv2" data-astro-cid-fzx4jmue> <a href="#data-class--class-로-변경-후-open-키워드-달기" data-astro-cid-fzx4jmue>Data class → class 로 변경 후 open 키워드 달기</a> </li><li class="lv2" data-astro-cid-fzx4jmue> <a href="#jackson-configuration" data-astro-cid-fzx4jmue>Jackson configuration</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#참고" data-astro-cid-fzx4jmue>참고</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/Kotlin%20JPA%20Entity%20%EB%AA%A8%EB%8D%B8%EB%A7%81%ED%95%98%EA%B8%B0/";
+const pageId = "Kotlin JPA Entity 모델링하기";
+const pageTitle = "Kotlin JPA Entity 모델링하기";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>

@@ -1,0 +1,149 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>[간만에 스터디] LeetCode Next Permutation</title><meta name="description" content="Next Permutation 코드 접근 및 풀이방법 - nums.length가 최대 100까지 가므로 실제 순열을 구하는 dfs 방식으로는 100! 까지 될 수 있기 때문에 불가능하다. - 뭔가.. 최대 N^2 까지 할 수 있도록 해봐야 하지 않을까? 최선은 N까지?"><link rel="canonical" href="https://thxwelchs.github.io/lc-next-permutation/"><link rel="alternate" type="application/rss+xml" title="thxwelchs" href="/rss.xml"><meta name="google-site-verification" content="UmC3XVyURzZvYpCnPCNrBm9iSHl2jCTKg-IseLODcaA"><link rel="icon" type="image/png" href="/img/welchs-icon.png"><meta property="og:site_name" content="thxwelchs"><meta property="og:type" content="article"><meta property="og:title" content="[간만에 스터디] LeetCode Next Permutation"><meta property="og:description" content="Next Permutation 코드 접근 및 풀이방법 - nums.length가 최대 100까지 가므로 실제 순열을 구하는 dfs 방식으로는 100! 까지 될 수 있기 때문에 불가능하다. - 뭔가.. 최대 N^2 까지 할 수 있도록 해봐야 하지 않을까? 최선은 N까지?"><meta property="og:url" content="https://thxwelchs.github.io/lc-next-permutation/"><meta property="og:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="[간만에 스터디] LeetCode Next Permutation"><meta name="twitter:description" content="Next Permutation 코드 접근 및 풀이방법 - nums.length가 최대 100까지 가므로 실제 순열을 구하는 dfs 방식으로는 100! 까지 될 수 있기 때문에 불가능하다. - 뭔가.. 최대 N^2 까지 할 수 있도록 해봐야 하지 않을까? 최선은 N까지?"><meta name="twitter:image" content="https://thxwelchs.github.io/img/covers/ps-algorithm.jpg"><style>:root{--ink: #1a1a1a;--sub: #8a8f98;--line: #ececec;--accent: #2b6cb0;--bg: #fff;--maxw: 880px;--mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace}*{box-sizing:border-box}html{font-size:62.5%;-webkit-text-size-adjust:100%}body{margin:0;color:var(--ink);background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,Apple SD Gothic Neo,Pretendard,Segoe UI,Roboto,sans-serif;font-size:1.7rem;line-height:1.75;letter-spacing:-.01em}a{color:inherit;text-decoration:none}.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}.container.wide{max-width:1320px}.site-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:40px;padding-bottom:36px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:9px;font-size:1.9rem;font-weight:700;letter-spacing:-.02em}.brand-ico{width:26px;height:26px;border-radius:6px;object-fit:cover}.nav{display:flex;align-items:center;gap:18px;margin-left:auto}.nav a{color:var(--sub);font-size:1.5rem;transition:color .15s}.nav a:hover,.nav a.on{color:var(--ink)}.site-header .search{margin-left:18px}.site-header .search input{width:150px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font-family:var(--mono);font-size:1.25rem;color:var(--ink);outline:none;transition:width .2s,border-color .2s}.site-header .search input::placeholder{color:var(--sub)}.site-header .search input:focus{width:200px;border-color:var(--ink)}main.container{padding-top:8px;padding-bottom:80px;min-height:60vh}.post-list{list-style:none;margin:0;padding:0}.page-title{font-size:2.4rem;letter-spacing:-.02em;margin:0 0 20px}.page-title .cnt{color:var(--sub);font-size:1.7rem}.site-footer{color:var(--sub);padding-top:40px;padding-bottom:48px;font-size:1.3rem;border-top:1px solid var(--line);margin-top:40px}.post h1{font-size:3.2rem;line-height:1.25;letter-spacing:-.03em;margin:0 0 10px}.post .cover{width:100%;border-radius:10px;margin:22px 0}.post .content{margin-top:28px;font-size:1.7rem}.post .content>*+*{margin-top:1.3em}.post .content img{max-width:100%;border-radius:8px}.post .content h1{font-size:2.4rem;margin-top:2em;letter-spacing:-.02em}.post .content h2{font-size:2.05rem;margin-top:1.8em}.post .content h3{font-size:1.8rem;margin-top:1.6em}.post .content pre{padding:16px 18px;border-radius:10px;overflow:auto;font-size:1.45rem;line-height:1.6}.post .content :not(pre)>code{background:#f3f4f6;padding:1px 6px;border-radius:5px;font-size:.9em}.post .content table{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:1.5rem;display:block;overflow-x:auto}.post .content th,.post .content td{border:1px solid var(--line);padding:8px 12px;text-align:left;white-space:nowrap}.post .content thead th{background:#f6f7f9;font-weight:700}.post .content tbody tr:nth-child(2n){background:#fafbfc}.post .content blockquote{margin:1.3em 0;padding:2px 0 2px 18px;border-left:3px solid var(--line);color:#555}.post .content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}.meta{color:var(--sub);font-size:1.4rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.CdVLfKU-.css"></head> <body> <header class="site-header container"> <a href="/" class="brand"> <img src="/img/welchs-icon.png" alt="" class="brand-ico"> <span>thxwelchs</span> </a> <nav class="nav"> <a href="/category/엔지니어링/">엔지니어링</a> <a href="/category/PS/">PS</a> <a href="/series/">Series</a> <a href="/tags/">Tags</a> </nav> <form class="search" action="/search/" method="get" role="search"> <input type="search" name="q" placeholder="검색…" aria-label="검색"> </form> </header> <main class="container wide">  <div class="layout has-toc" data-astro-cid-fzx4jmue> <article class="post" data-astro-cid-fzx4jmue> <h1 data-astro-cid-fzx4jmue>[간만에 스터디] LeetCode Next Permutation</h1> <div class="meta" data-astro-cid-fzx4jmue> 2024-03-31 · PS  </div> <img class="cover" src="/img/covers/ps-algorithm.jpg" alt="[간만에 스터디] LeetCode Next Permutation" data-astro-cid-fzx4jmue> <div class="content" data-astro-cid-fzx4jmue> <h1 id="next-permutation"><a href="https://leetcode.com/problems/next-permutation/">Next Permutation</a></h1>
+<h1 id="코드">코드</h1>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> Solution</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#F97583"> void</span><span style="color:#B392F0"> nextPermutation</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#E1E4E8">[] </span><span style="color:#FFAB70">nums</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#6A737D">        // 1. 사전순 정렬이 만족되는 가장 첫번째 왼쪽 인덱스</span></span>
+<span class="line"><span style="color:#F97583">        int</span><span style="color:#E1E4E8"> i1 </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> nums.length </span><span style="color:#F97583">-</span><span style="color:#79B8FF"> 2</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">        while</span><span style="color:#E1E4E8"> (i1 </span><span style="color:#F97583">>=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">            if</span><span style="color:#E1E4E8"> (nums[i1] </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> nums[i1 </span><span style="color:#F97583">+</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">]) {</span></span>
+<span class="line"><span style="color:#F97583">                break</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">            }</span></span>
+<span class="line"><span style="color:#E1E4E8">            i1</span><span style="color:#F97583">--</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">        // 1에서 찾은 값보다는 크면서 그 중에 가장 작은 값(원소)의 오른쪽 인덱스</span></span>
+<span class="line"><span style="color:#6A737D">        // ex) [1, 3, 5, 4, 2] --> 3보다 크면서 가장 작은 값은 4이므로 4의 인덱스를 찾아야함</span></span>
+<span class="line"><span style="color:#F97583">        int</span><span style="color:#E1E4E8"> i2 </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> nums.length </span><span style="color:#F97583">-</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">        while</span><span style="color:#E1E4E8"> (i1 </span><span style="color:#F97583">>=</span><span style="color:#79B8FF"> 0</span><span style="color:#F97583"> &#x26;&#x26;</span><span style="color:#E1E4E8"> i2 </span><span style="color:#F97583">></span><span style="color:#E1E4E8"> i1) {</span></span>
+<span class="line"><span style="color:#F97583">            if</span><span style="color:#E1E4E8"> (nums[i2] </span><span style="color:#F97583">></span><span style="color:#E1E4E8"> nums[i1]) {</span></span>
+<span class="line"><span style="color:#F97583">                break</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">            }</span></span>
+<span class="line"><span style="color:#E1E4E8">            i2</span><span style="color:#F97583">--</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        System.out.</span><span style="color:#B392F0">println</span><span style="color:#E1E4E8">(String.</span><span style="color:#B392F0">format</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"left: %d, right: %d"</span><span style="color:#E1E4E8">, i1, i2));</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">        // 다음 순열 기준을 만족시킬 첫번째 두 인덱스의 원소를 교환</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> (i1 </span><span style="color:#F97583">>=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">) { </span><span style="color:#6A737D">// 1에서 못찾은 경우가 있을수도 있다.</span></span>
+<span class="line"><span style="color:#B392F0">            swap</span><span style="color:#E1E4E8">(nums, i1, i2);</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">        // 위에서 교환한 인덱스 이외의 인덱스들은 모두 사전순으로 정렬되어 있어야 다음 순열을 만족하므로, 나머지들을 사전순으로 정렬</span></span>
+<span class="line"><span style="color:#6A737D">        // 만약 1에서 못찾았을 경우에는 그냥 전체를 다 사전순으로 만들어주면 된다</span></span>
+<span class="line"><span style="color:#F97583">        int</span><span style="color:#E1E4E8"> left </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> i1 </span><span style="color:#F97583">+</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">        int</span><span style="color:#E1E4E8"> right </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> nums.length </span><span style="color:#F97583">-</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">        while</span><span style="color:#E1E4E8"> (left </span><span style="color:#F97583">&#x3C;</span><span style="color:#E1E4E8"> right) {</span></span>
+<span class="line"><span style="color:#B392F0">            ifLeftGreaterThanSwap</span><span style="color:#E1E4E8">(nums, left</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">, right</span><span style="color:#F97583">--</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">        // System.out.println(Arrays.toString(nums));</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#F97583"> void</span><span style="color:#B392F0"> ifLeftGreaterThanSwap</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#E1E4E8">[] </span><span style="color:#FFAB70">nums</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> left</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> right</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> (nums[left] </span><span style="color:#F97583">>=</span><span style="color:#E1E4E8"> nums[right]) {</span></span>
+<span class="line"><span style="color:#B392F0">            swap</span><span style="color:#E1E4E8">(nums, left, right);</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#F97583"> void</span><span style="color:#B392F0"> swap</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">int</span><span style="color:#E1E4E8">[] </span><span style="color:#FFAB70">nums</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> left</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">int</span><span style="color:#FFAB70"> right</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">        int</span><span style="color:#E1E4E8"> tmp </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> nums[left];</span></span>
+<span class="line"><span style="color:#E1E4E8">        nums[left] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> nums[right];</span></span>
+<span class="line"><span style="color:#E1E4E8">        nums[right] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> tmp;</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h1 id="접근-및-풀이방법">접근 및 풀이방법</h1>
+<ul>
+<li>
+<p>nums.length가 최대 100까지 가므로 실제 순열을 구하는 dfs 방식으로는 100! 까지 될 수 있기 때문에 불가능하다.</p>
+<ul>
+<li>뭔가.. 최대 N^2 까지 할 수 있도록 해봐야 하지 않을까? 최선은 N까지?</li>
+</ul>
+</li>
+<li>
+<p>순열의 특성상 가능한 오른쪽에 있는 수를 교체해주면 바로 다음번의 경우의 수 순열이 된다.</p>
+<ul>
+<li>예를 들면 1,2,3,4 -> 1,2,<strong>4,3</strong>
+<ul>
+<li>하지만 이런 아름다운 케이스만 존재하는것은 아니다.</li>
+</ul>
+</li>
+<li>1,3,4,2 의 경우 1,4,2,3이 되어야 하는데, 이러한 경우까지 모두 고려해줄 수 있도록 가능한 오른쪽에 있는 수 중 현재 사전순 정렬이
+만족되는 가장 첫번째값을 찾고 그 값은 그보다 큰 값들 중 가장 작은 값과 교환해주면 된다.
+<ul>
+<li>대신 이때 교환한 인덱스 이후의 값들은 사전순으로 정렬되어 있어야 다음 순열이 될 수 있다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>전체 풀이 기록: <a href="https://github.com/initi8ors/algorithm2024/blob/main/002week/next-permutation_lth.md">initi8ors/algorithm2024</a></p>
+</blockquote> </div>  <section class="comments" data-astro-cid-fzx4jmue> <div class="comments-top" data-astro-cid-fzx4jmue> <h2 class="comments-h" data-astro-cid-fzx4jmue>댓글</h2> <div class="cmt-tabs" role="tablist" data-astro-cid-fzx4jmue> <button type="button" class="cmt-tab" data-tab="giscus" data-astro-cid-fzx4jmue>GitHub</button> <button type="button" class="cmt-tab" data-tab="disqus" data-astro-cid-fzx4jmue>Disqus</button> </div> </div> <div class="cmt-panel" data-panel="giscus" data-astro-cid-fzx4jmue> <p class="cmt-note" data-astro-cid-fzx4jmue>GitHub(giscus) 댓글은 설정 완료 후 활성화됩니다.</p> </div> <div class="cmt-panel" data-panel="disqus" hidden data-astro-cid-fzx4jmue> <div id="disqus_thread" data-astro-cid-fzx4jmue></div> </div> </section> </article> <aside class="toc" data-astro-cid-fzx4jmue> <div class="toc-inner" data-astro-cid-fzx4jmue> <nav data-astro-cid-fzx4jmue> <p class="toc-h" data-astro-cid-fzx4jmue>목차</p> <ul data-astro-cid-fzx4jmue> <li class="lv0" data-astro-cid-fzx4jmue> <a href="#next-permutation" data-astro-cid-fzx4jmue>Next Permutation</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#코드" data-astro-cid-fzx4jmue>코드</a> </li><li class="lv0" data-astro-cid-fzx4jmue> <a href="#접근-및-풀이방법" data-astro-cid-fzx4jmue>접근 및 풀이방법</a> </li> </ul> </nav> </div> </aside> </div>  </main> <footer class="site-footer container"> <span>© thxwelchs</span> </footer>  </body> </html>  <script>(function(){const pageUrl = "https://thxwelchs.github.io/lc-next-permutation/";
+const pageId = "lc-next-permutation";
+const pageTitle = "[간만에 스터디] LeetCode Next Permutation";
+const giscus = {"repo":"thxwelchs/thxwelchs.github.io","repoId":"","category":"Comments","categoryId":""};
+const gReady = false;
+
+  // 한 섹션 안 GitHub(giscus) / Disqus 탭. 둘 다 활성, 탭 열릴 때만 로드.
+  (function () {
+    var loaded = { giscus: false, disqus: false };
+
+    function loadDisqus() {
+      if (loaded.disqus) return;
+      loaded.disqus = true;
+      window.disqus_config = function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+        this.page.title = pageTitle;
+      };
+      var s = document.createElement('script');
+      s.src = 'https://thxwelchs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', String(+new Date()));
+      document.body.appendChild(s);
+    }
+
+    function loadGiscus() {
+      if (loaded.giscus || !gReady) return;
+      loaded.giscus = true;
+      var mount = document.querySelector('.cmt-panel[data-panel="giscus"] .giscus-mount');
+      if (!mount) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      var attrs = {
+        'data-repo': giscus.repo,
+        'data-repo-id': giscus.repoId,
+        'data-category': giscus.category,
+        'data-category-id': giscus.categoryId,
+        'data-mapping': 'pathname',
+        'data-strict': '0',
+        'data-reactions-enabled': '1',
+        'data-emit-metadata': '0',
+        'data-input-position': 'bottom',
+        'data-theme': 'light',
+        'data-lang': 'ko',
+      };
+      Object.keys(attrs).forEach(function (k) { s.setAttribute(k, attrs[k]); });
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      mount.appendChild(s);
+    }
+
+    function show(tab) {
+      document.querySelectorAll('.cmt-panel').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== tab;
+      });
+      document.querySelectorAll('.cmt-tab').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      });
+      if (tab === 'disqus') loadDisqus();
+      if (tab === 'giscus') loadGiscus();
+    }
+
+    document.querySelectorAll('.cmt-tab').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-tab')); });
+    });
+    show(gReady ? 'giscus' : 'disqus');
+  })();
+})();</script> <script type="module">const r=document.querySelector(".post .content");if(r){const t=document.createElement("div");t.className="lightbox",t.hidden=!0,t.innerHTML='<button class="lb-close" type="button" aria-label="닫기">✕</button><img alt="" />',document.body.appendChild(t);const l=t.querySelector("img"),a=(e,n)=>{l.src=e,l.alt=n,t.hidden=!1,document.body.style.overflow="hidden"},d=()=>{t.hidden=!0,l.removeAttribute("src"),document.body.style.overflow=""};t.addEventListener("click",e=>{const n=e.target;(n===t||n.classList.contains("lb-close"))&&d()}),document.addEventListener("keydown",e=>{e.key==="Escape"&&!t.hidden&&d()}),r.querySelectorAll("img").forEach(e=>{const n=e.getAttribute("alt")||"",c=document.createElement("figure");c.className="img-fig",e.replaceWith(c),c.appendChild(e);const o=document.createElement("button");o.type="button",o.className="img-zoom-btn",o.textContent="크게 보기",c.appendChild(o);const s=()=>a(e.currentSrc||e.src,n);o.addEventListener("click",s),e.addEventListener("click",s)})}</script>  <script type="module">const c=Array.from(document.querySelectorAll(".toc a")),o=new Map;c.forEach(e=>{const t=decodeURIComponent(e.getAttribute("href").slice(1));o.set(t,e)});const s=Array.from(o.keys()).map(e=>document.getElementById(e)).filter(Boolean);if(s.length){const e=new IntersectionObserver(t=>{t.forEach(r=>{r.isIntersecting&&(c.forEach(n=>n.classList.remove("active")),o.get(r.target.id)?.classList.add("active"))})},{rootMargin:"0px 0px -75% 0px",threshold:0});s.forEach(t=>e.observe(t))}</script>
